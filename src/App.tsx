@@ -1,11 +1,14 @@
-import { ThemeProvider } from "./hooks";
+import { AuthProvider, ThemeProvider } from "@/hooks/index";
+
 import { Dashboard } from "./pages/Dashboard";
 
 function App() {
   return (
     <ThemeProvider defaultTheme="light">
       <div className="h-screen w-full flex justify-center">
-        <Dashboard />
+        <AuthProvider>
+          <Dashboard />
+        </AuthProvider>
       </div>
     </ThemeProvider>
   );
