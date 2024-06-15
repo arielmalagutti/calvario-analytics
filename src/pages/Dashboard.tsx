@@ -5,6 +5,7 @@ import { supabase } from "@/lib/supabase";
 import { MusicDTO } from "@/dtos/MusicDTO";
 import { OrganizationDTO } from "@/dtos/OrganizationDTO";
 
+import { MusicsTable, LoginSheet } from "@/components/index";
 import {
   Select,
   SelectContent,
@@ -14,9 +15,7 @@ import {
 } from "@/components/ui/select";
 import { ThemeToggle } from "@/components/ui/ThemeToggle";
 
-import { ChevronRight } from "lucide-react";
-import { MusicsTable } from "@/components/Table";
-import { LoginSheet } from "@/components/LoginSheet";
+import { ChevronRight, LoaderCircle } from "lucide-react";
 
 const ORGS: {
   name: OrganizationDTO;
@@ -27,8 +26,10 @@ const ORGS: {
 ];
 
 export function Dashboard() {
-  const [musics, setMusics] = useState<MusicDTO[]>([]);
   const [selectedOrg, setSelectedOrg] = useState("ibc");
+  const [musics, setMusics] = useState<MusicDTO[]>([]);
+
+  const [isLoading, setIsLoading] = useState(false);
   const [loginOpen, setLoginOpen] = useState(false);
 
   let eventCalled = 0;
@@ -40,11 +41,14 @@ export function Dashboard() {
 
   async function fetchMusics() {
     try {
-      // const { data } = await supabase.from("Music").select();
-      const data = [];
+      setIsLoading(true);
+      const { data } = await supabase.rpc("music_info");
       if (data) setMusics(data);
+      console.log(data);
     } catch (error) {
       console.error(error);
+    } finally {
+      setIsLoading(false);
     }
   }
 
@@ -107,7 +111,13 @@ export function Dashboard() {
         </div>
 
         <div className="flex flex-1">
-          <MusicsTable />
+          {!isLoading ? (
+            <MusicsTable data={musics} onRefresh={fetchMusics} />
+          ) : (
+            <div className="flex flex-1 items-center justify-center">
+              <LoaderCircle className="w-14 h-14 text-gray-600 animate-spin" />
+            </div>
+          )}
         </div>
       </div>
     </>
