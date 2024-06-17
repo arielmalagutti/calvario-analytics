@@ -1,50 +1,35 @@
 import { useEffect, useState } from "react";
 
 import { supabase } from "@/lib/supabase";
+import { WorshipDTO } from "@/dtos/index";
 
-import { MusicDTO } from "@/dtos/MusicDTO";
-import { OrganizationDTO } from "@/dtos/OrganizationDTO";
+import { Header, Loading, LoginSheet, Select } from "@/components";
+import { WorshipTable } from "@/components/Tables/WorshipTable";
 
-import { MusicsTable, LoginSheet } from "@/components/index";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-import { ThemeToggle } from "@/components/ui/ThemeToggle";
-
-import { ChevronRight, LoaderCircle } from "lucide-react";
-
-const ORGS: {
-  name: OrganizationDTO;
-  Icon?: string;
-}[] = [
-  { name: "jubac", Icon: "" },
-  { name: "ibc", Icon: "" },
-];
+import { ChevronRight } from "lucide-react";
 
 export function Dashboard() {
   const [selectedOrg, setSelectedOrg] = useState("ibc");
-  const [musics, setMusics] = useState<MusicDTO[]>([]);
+  const [worships, setWorships] = useState<WorshipDTO[]>([]);
 
+  const [eventCalled, setEventCalled] = useState(0);
   const [isLoading, setIsLoading] = useState(false);
   const [loginOpen, setLoginOpen] = useState(false);
 
-  let eventCalled = 0;
-
   function openLogin() {
     if (eventCalled >= 5) setLoginOpen(true);
-    eventCalled++;
+    setEventCalled((prev) => prev + 1);
   }
 
-  async function fetchMusics() {
+  async function fetchWorships() {
     try {
       setIsLoading(true);
-      const { data } = await supabase.rpc("music_info");
-      if (data) setMusics(data);
+
+      const { data } = await supabase
+        .rpc("worship_info", { org: selectedOrg })
+        .select();
       console.log(data);
+      if (data) setWorships(data);
     } catch (error) {
       console.error(error);
     } finally {
@@ -53,73 +38,40 @@ export function Dashboard() {
   }
 
   useEffect(() => {
-    console.log(musics);
-  }, [musics]);
-
-  useEffect(() => {
-    fetchMusics();
+    fetchWorships();
   }, []);
 
   return (
     <>
-      {loginOpen && <LoginSheet />}
-      <div className="max-w-screen-xl w-full flex flex-col justify-center p-12">
-        <div className="w-full sticky flex items-center justify-between">
-          <div className="flex items-center gap-2">
-            <button
-              onClick={() => openLogin()}
-              className="
-          cursor-default"
-            >
-              <h1 className="text-lg font-medium text-gray-500 dark:text-gray-400">
-                DASHBOARD
-              </h1>
-            </button>
+      <Header />
 
-            <ChevronRight className="w-10 h-10 text-gray-500" />
+      <div className="flex flex-1 justify-center">
+        <div className="flex w-full max-w-screen-xl flex-1 flex-col gap-6">
+          <div className="sticky flex w-full items-center justify-between">
+            <div className="flex items-center gap-2">
+              <button onClick={() => openLogin()} className="cursor-default">
+                <h1 className="text-lg font-medium text-gray-500 dark:text-gray-400">
+                  DASHBOARD
+                </h1>
+              </button>
 
-            <Select
-              defaultValue={selectedOrg}
-              value={selectedOrg}
-              onValueChange={(value) => setSelectedOrg(value)}
-            >
-              <SelectTrigger className="p-0 gap-2 text-xl font-medium border-none">
-                <SelectValue />
-              </SelectTrigger>
+              <ChevronRight className="h-10 w-10 font-medium text-gray-500" />
 
-              <SelectContent>
-                {ORGS.map((org, id) => (
-                  <SelectItem
-                    key={id}
-                    value={org.name}
-                    className="font-medium text-gray-500"
-                  >
-                    {org.Icon && (
-                      <img
-                        src={org.Icon}
-                        alt={`${org.name.toUpperCase()} icon`}
-                      />
-                    )}
-                    {org.name.toUpperCase()}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
+              <Select selectedOrg={selectedOrg} setOrg={setSelectedOrg} />
+            </div>
           </div>
 
-          <ThemeToggle />
-        </div>
-
-        <div className="flex flex-1">
-          {!isLoading ? (
-            <MusicsTable data={musics} onRefresh={fetchMusics} />
-          ) : (
-            <div className="flex flex-1 items-center justify-center">
-              <LoaderCircle className="w-14 h-14 text-gray-600 animate-spin" />
-            </div>
-          )}
+          <div className="flex flex-1">
+            {isLoading ? (
+              <Loading />
+            ) : (
+              <WorshipTable data={worships} onRefresh={fetchWorships} />
+            )}
+          </div>
         </div>
       </div>
+
+      {loginOpen && <LoginSheet />}
     </>
   );
 }

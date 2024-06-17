@@ -1,0 +1,15 @@
+export const data = [
+  {title: 'Ao que é digno de receber a glória', last_played_date: "2024-06-16", times_played_this_month: 0, times_played_this_year: 0},
+  {title: 'Grande Deus', last_played_date: null, times_played_this_month: 0, times_played_this_year: 0},
+  {title: 'Tua fidelidade é grande', last_played_date: null, times_played_this_month: 0, times_played_this_year: 0},
+  {title: 'Quando ele vem', last_played_date: null, times_played_this_month: 0, times_played_this_year: 0}, 
+  {title: 'Hino 366', last_played_date: null, times_played_this_month: 0, times_played_this_year: 0},
+  {title: 'Tu não és um Deus de barro', last_played_date: null, times_played_this_month: 0, times_played_this_year: 0},
+  {title: 'Senhor preciso de ti', last_played_date: null, times_played_this_month: 0, times_played_this_year: 0},
+  {title: 'Que se abram os céus', last_played_date: null, times_played_this_month: 0, times_played_this_year: 0}, 
+  {title: 'Meu coração te pertence', last_played_date: null, times_played_this_month: 0, times_played_this_year: 0},
+  {title: 'Tu és bem vindo aqui', last_played_date: null, times_played_this_month: 0, times_played_this_year: 0},
+  {title: 'Ao único que é digno', last_played_date: null, times_played_this_month: 0, times_played_this_year: 0},
+  {title: 'A ele a glória', last_played_date: null, times_played_this_month: 0, times_played_this_year: 0},
+  {title: 'Hino 239', last_played_date: null, times_played_this_month: 0, times_played_this_year: 0},
+]

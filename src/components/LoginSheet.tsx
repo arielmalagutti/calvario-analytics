@@ -28,7 +28,7 @@ export function LoginSheet() {
   return (
     <Sheet>
       <SheetTrigger asChild>
-        <Button variant="outline">Open</Button>
+        <Button variant="outline">Login</Button>
       </SheetTrigger>
       <SheetContent>
         <SheetHeader>

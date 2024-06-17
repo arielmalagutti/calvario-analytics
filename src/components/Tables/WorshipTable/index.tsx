@@ -1,6 +1,6 @@
 import * as React from "react";
 
-import { MusicInfoDTO } from "@/dtos/index";
+import { WorshipDTO } from "@/dtos/index";
 
 import {
   ColumnFiltersState,
@@ -35,12 +35,12 @@ import { columns } from "./columns";
 
 import { ChevronDown, RotateCw } from "lucide-react";
 
-type MusicsTableProps = {
-  data: MusicInfoDTO[];
+type WorshipTableProps = {
+  data: WorshipDTO[];
   onRefresh: () => void;
 };
 
-export function MusicsTable({ data, onRefresh }: MusicsTableProps) {
+export function WorshipTable({ data, onRefresh }: WorshipTableProps) {
   const [sorting, setSorting] = React.useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
     []

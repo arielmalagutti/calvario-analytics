@@ -1,7 +1,7 @@
 import { supabase } from "@/lib/supabase";
 
 import { format } from "date-fns";
-import { MusicInfoDTO } from "@/dtos";
+import { WorshipDTO } from "@/dtos";
 
 import { ColumnDef } from "@tanstack/react-table";
 import { Button } from "@/components/ui/button";
@@ -15,25 +15,9 @@ import {
 
 import { ArrowUpDown, MoreHorizontal, Trash } from "lucide-react";
 
-export const columns: ColumnDef<MusicInfoDTO>[] = [
+export const columns: ColumnDef<WorshipDTO>[] = [
   {
-    accessorKey: "title",
-    header: ({ column }) => (
-      <Button
-        variant="ghost"
-        onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-        className="p-0"
-      >
-        Music
-        <ArrowUpDown className="ml-2 h-4 w-4" />
-      </Button>
-    ),
-    cell: ({ row }) => (
-      <div className="capitalize">{row.getValue("title")}</div>
-    ),
-  },
-  {
-    accessorKey: "last_played_date",
+    accessorKey: "date",
     header: ({ column }) => {
       return (
         <Button
@@ -47,20 +31,19 @@ export const columns: ColumnDef<MusicInfoDTO>[] = [
       );
     },
     cell: ({ row }) => {
-      const lastPlayedDate: string | undefined =
-        row.getValue("last_played_date");
+      const date: string | undefined = row.getValue("date");
 
-      if (lastPlayedDate) {
-        const date = new Date(lastPlayedDate);
-        const formattedDate = format(date, `MMMM dd yyyy`);
+      if (date) {
+        const formattedDate = format(new Date(date), `MMMM dd yyyy`);
         return <div className="max-w-64 w-full">{formattedDate}</div>;
       }
 
       return <div className="max-w-64 w-full">-</div>;
     },
   },
+
   {
-    accessorKey: "times_played_this_month",
+    accessorKey: "lead",
     header: ({ column }) => {
       return (
         <Button
@@ -68,23 +51,24 @@ export const columns: ColumnDef<MusicInfoDTO>[] = [
           onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
           className="p-0"
         >
-          This month
+          Lead
           <ArrowUpDown className="ml-2 h-4 w-4" />
         </Button>
       );
     },
+
     cell: ({ row }) => {
-      const playedThisMonth: number | undefined = row.getValue(
-        "times_played_this_month"
-      );
+      const name = row.getValue("singers");
 
-      if (!playedThisMonth) return <div className="max-w-64 w-full">-</div>;
+      console.log(name);
 
-      return <div className="max-w-64 w-full">{playedThisMonth}</div>;
+      const leadName = `${name} $lastName`;
+      return <div className="max-w-64 w-full">{leadName}</div>;
     },
   },
+
   {
-    accessorKey: "times_played_this_month",
+    accessorKey: "musics",
     header: ({ column }) => {
       return (
         <Button
@@ -92,26 +76,46 @@ export const columns: ColumnDef<MusicInfoDTO>[] = [
           onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
           className="p-0"
         >
-          This year
-          <ArrowUpDown className="ml-2 h-4 w-4" />
+          Musics
         </Button>
       );
     },
     cell: ({ row }) => {
-      const playedThisYear: number | undefined = row.getValue(
-        "times_played_this_month"
-      );
+      const musics: string[] = row.getValue("musics");
 
-      if (!playedThisYear) return <div className="max-w-64 w-full">-</div>;
+      if (!musics) return <div className="max-w-64 w-full">-</div>;
 
-      return <div className="max-w-64 w-full">{playedThisYear}</div>;
+      return <div className="max-w-64 w-full">{musics.join(", ")}</div>;
     },
   },
+
+  {
+    accessorKey: "singers",
+    header: ({ column }) => {
+      return (
+        <Button
+          variant="ghost"
+          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+          className="p-0"
+        >
+          Singers
+        </Button>
+      );
+    },
+    cell: ({ row }) => {
+      const musics: string[] = row.getValue("singers");
+
+      if (!musics) return <div className="max-w-64 w-full">-</div>;
+
+      return <div className="max-w-64 w-full">{musics.join(", ")}</div>;
+    },
+  },
+
   {
     id: "actions",
     enableHiding: false,
     cell: ({ row }) => {
-      const music = row.original;
+      const worship = row.original;
 
       async function deleteItem(id: string) {
         try {
@@ -133,7 +137,7 @@ export const columns: ColumnDef<MusicInfoDTO>[] = [
           <DropdownMenuContent align="start">
             <DropdownMenuLabel>Actions</DropdownMenuLabel>
             <DropdownMenuItem
-              onClick={() => deleteItem(music.id)}
+              onClick={() => deleteItem(worship.id)}
               className="text-red-700 dark:text-red-600 focus:text-red-500"
             >
               <Trash />
