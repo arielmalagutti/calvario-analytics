@@ -35,10 +35,10 @@ export const columns: ColumnDef<WorshipDTO>[] = [
 
       if (date) {
         const formattedDate = format(new Date(date), `MMMM dd yyyy`);
-        return <div className="max-w-64 w-full">{formattedDate}</div>;
+        return <div className="w-full max-w-64">{formattedDate}</div>;
       }
 
-      return <div className="max-w-64 w-full">-</div>;
+      return <div className="w-full max-w-64">-</div>;
     },
   },
 
@@ -60,10 +60,8 @@ export const columns: ColumnDef<WorshipDTO>[] = [
     cell: ({ row }) => {
       const name = row.getValue("singers");
 
-      console.log(name);
-
       const leadName = `${name} $lastName`;
-      return <div className="max-w-64 w-full">{leadName}</div>;
+      return <div className="w-full max-w-64">{leadName}</div>;
     },
   },
 
@@ -83,9 +81,9 @@ export const columns: ColumnDef<WorshipDTO>[] = [
     cell: ({ row }) => {
       const musics: string[] = row.getValue("musics");
 
-      if (!musics) return <div className="max-w-64 w-full">-</div>;
+      if (!musics) return <div className="w-full max-w-64">-</div>;
 
-      return <div className="max-w-64 w-full">{musics.join(", ")}</div>;
+      return <div className="w-full max-w-64">{musics.join(", ")}</div>;
     },
   },
 
@@ -105,9 +103,9 @@ export const columns: ColumnDef<WorshipDTO>[] = [
     cell: ({ row }) => {
       const musics: string[] = row.getValue("singers");
 
-      if (!musics) return <div className="max-w-64 w-full">-</div>;
+      if (!musics) return <div className="w-full max-w-64">-</div>;
 
-      return <div className="max-w-64 w-full">{musics.join(", ")}</div>;
+      return <div className="w-full max-w-64">{musics.join(", ")}</div>;
     },
   },
 
@@ -138,7 +136,7 @@ export const columns: ColumnDef<WorshipDTO>[] = [
             <DropdownMenuLabel>Actions</DropdownMenuLabel>
             <DropdownMenuItem
               onClick={() => deleteItem(worship.id)}
-              className="text-red-700 dark:text-red-600 focus:text-red-500"
+              className="text-red-700 focus:text-red-500 dark:text-red-600"
             >
               <Trash />
               Delete

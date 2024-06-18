@@ -2,6 +2,10 @@ import * as React from "react";
 
 import { WorshipDTO } from "@/dtos/index";
 
+import { useAuth } from "@/hooks";
+
+import { WorshipSheet } from "@/components";
+
 import {
   ColumnFiltersState,
   SortingState,
@@ -41,9 +45,11 @@ type WorshipTableProps = {
 };
 
 export function WorshipTable({ data, onRefresh }: WorshipTableProps) {
+  const { user } = useAuth();
+
   const [sorting, setSorting] = React.useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
-    []
+    [],
   );
   const [columnVisibility, setColumnVisibility] =
     React.useState<VisibilityState>({});
@@ -70,14 +76,9 @@ export function WorshipTable({ data, onRefresh }: WorshipTableProps) {
       <div className="flex items-center justify-between py-4">
         <Input
           placeholder={"Filter dates..."}
-          value={
-            (table.getColumn("last_played_date")?.getFilterValue() as string) ??
-            ""
-          }
+          value={(table.getColumn("date")?.getFilterValue() as string) ?? ""}
           onChange={(event) =>
-            table
-              .getColumn("last_played_date")
-              ?.setFilterValue(event.target.value)
+            table.getColumn("date")?.setFilterValue(event.target.value)
           }
           className="max-w-72"
         />
@@ -111,8 +112,10 @@ export function WorshipTable({ data, onRefresh }: WorshipTableProps) {
             </DropdownMenuContent>
           </DropdownMenu>
 
-          <Button variant="outline" className="ml-auto" onClick={onRefresh}>
-            <RotateCw className="h-4 w-4 font-medium hover:animate-spin-once" />
+          {user.name && <WorshipSheet />}
+
+          <Button variant="outline" className="group" onClick={onRefresh}>
+            <RotateCw className="h-4 w-4 font-medium group-hover:animate-spin-once" />
           </Button>
         </div>
       </div>
@@ -129,7 +132,7 @@ export function WorshipTable({ data, onRefresh }: WorshipTableProps) {
                         ? null
                         : flexRender(
                             header.column.columnDef.header,
-                            header.getContext()
+                            header.getContext(),
                           )}
                     </TableHead>
                   );
@@ -149,7 +152,7 @@ export function WorshipTable({ data, onRefresh }: WorshipTableProps) {
                     <TableCell key={cell.id}>
                       {flexRender(
                         cell.column.columnDef.cell,
-                        cell.getContext()
+                        cell.getContext(),
                       )}
                     </TableCell>
                   ))}
