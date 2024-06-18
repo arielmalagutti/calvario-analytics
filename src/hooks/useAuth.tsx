@@ -1,5 +1,5 @@
 import { UserDTO } from "@/dtos";
-import { createContext, useContext, useEffect, useState } from "react";
+import { createContext, useContext, useState } from "react";
 import * as z from "zod";
 
 type AuthProviderType = {
@@ -12,7 +12,7 @@ const loginSchema = z.object({
     .string({ message: "Invalid username" })
     .includes(import.meta.env.VITE_USERNAME),
   password: z
-    .string({ message: "Invalid username" })
+    .string({ message: "Invalid password" })
     .includes(import.meta.env.VITE_PASSWORD),
 });
 
@@ -22,17 +22,11 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const [user, setUser] = useState({} as UserDTO);
 
   function validateUser(user: UserDTO) {
-    try {
-      const validatedLogin = loginSchema.parse(user);
-      if (validatedLogin) setUser(validatedLogin);
-    } catch (error) {
-      console.error(error);
-    }
-  }
+    const login = loginSchema.safeParse(user);
+    if (!login.data) throw login.error;
 
-  useEffect(() => {
-    console.log(user);
-  }, [user]);
+    setUser(login.data);
+  }
 
   return (
     <AuthContext.Provider value={{ user, validateUser }}>

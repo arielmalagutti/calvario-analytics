@@ -1,5 +1,6 @@
 // import {} from 'react'
 import { ThemeToggle } from "@/components/ui/ThemeToggle";
+import { LoginSheet } from "@/components";
 
 export function Header() {
   return (
@@ -8,7 +9,10 @@ export function Header() {
         Louvores IBC/JUBAC
       </h1>
 
-      <ThemeToggle />
+      <div className="flex items-center gap-4">
+        <LoginSheet />
+        <ThemeToggle />
+      </div>
     </div>
   );
 }

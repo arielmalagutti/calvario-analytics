@@ -73,12 +73,14 @@ export function WorshipTable({ data, onRefresh }: WorshipTableProps) {
 
   return (
     <div className="w-full">
-      <div className="flex items-center justify-between py-4">
+      <div className="flex items-center justify-between gap-8 py-4">
         <Input
           placeholder={"Filter dates..."}
-          value={(table.getColumn("date")?.getFilterValue() as string) ?? ""}
+          value={
+            (table.getColumn("worship_date")?.getFilterValue() as string) ?? ""
+          }
           onChange={(event) =>
-            table.getColumn("date")?.setFilterValue(event.target.value)
+            table.getColumn("worship_date")?.setFilterValue(event.target.value)
           }
           className="max-w-72"
         />
@@ -186,6 +188,7 @@ export function WorshipTable({ data, onRefresh }: WorshipTableProps) {
           >
             Previous
           </Button>
+
           <Button
             variant="outline"
             size="sm"

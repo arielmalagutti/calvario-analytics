@@ -4,8 +4,7 @@ import { supabase } from "@/lib/supabase";
 
 import { MusicInfoDTO } from "@/dtos/MusicDTO";
 
-import { MusicsTable, LoginSheet, Loading } from "@/components/index";
-import { Header } from "@/components/Header";
+import { Header, MusicsTable, LoginSheet, Loading } from "@/components/index";
 
 export function Home() {
   const [musics, setMusics] = useState<MusicInfoDTO[]>([]);
@@ -40,17 +39,21 @@ export function Home() {
     <>
       <Header />
 
-      <div className="max-w-screen-xl w-full flex flex-col justify-center p-12">
-        <div className="flex flex-1">
-          {!isLoading ? (
-            <MusicsTable data={musics} onRefresh={fetchMusics} />
-          ) : (
-            <Loading />
-          )}
+      <div className="flex flex-1 justify-center">
+        <div className="flex w-full max-w-screen-xl flex-1 flex-col">
+          <h1 className="text-lg font-bold text-gray-400">All Musics</h1>
+
+          <div className="flex flex-1">
+            {!isLoading ? (
+              <MusicsTable data={musics} onRefresh={fetchMusics} />
+            ) : (
+              <Loading />
+            )}
+          </div>
         </div>
       </div>
 
-      {loginOpen && <LoginSheet onClose={() => (eventCalled = 0)} />}
+      {loginOpen && <LoginSheet />}
     </>
   );
 }

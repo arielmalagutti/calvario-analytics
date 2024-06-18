@@ -49,14 +49,14 @@ export function WorshipSheet() {
 
   const [date, setDate] = useState<Date>();
   const [org, setOrg] = useState<OrganizationDTO>("ibc");
-  const [musics, setMusics] = useState<string[]>();
-  const [singers, setSingers] = useState<string[]>();
+  const [musics, setMusics] = useState<string>();
+  const [singers, setSingers] = useState<string>();
   const [lead, setLead] = useState("");
 
   async function handleWorship(data: CreateWorshipSchema) {
     try {
       if (user && data) console.log({ data });
-      await supabase.from("worship").insert([data]).select();
+      // await supabase.from("worship").insert([data]).select();
     } catch (error) {
       if (error instanceof Error) {
         toast({
