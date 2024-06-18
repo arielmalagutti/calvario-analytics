@@ -82,7 +82,9 @@ export const columns: ColumnDef<WorshipDTO>[] = [
       return (
         <ul className="w-full max-w-64">
           {musics.sort().map((title, id) => (
-            <li key={id}>- {title};</li>
+            <li key={id} className="dark:text-gray-300">
+              - {title}
+            </li>
           ))}
         </ul>
       );
@@ -99,12 +101,22 @@ export const columns: ColumnDef<WorshipDTO>[] = [
 
       if (!singers) return <div className="w-full max-w-44">-</div>;
 
-      if (singers.length === 1) return <p>{singers[0].name}</p>;
+      if (singers.length === 1)
+        return (
+          <p className="dark:text-gray-300">
+            {singers[0].role === "lead" ? "-" : singers[0].name}
+          </p>
+        );
 
       return (
         <ul className="w-full max-w-64">
           {singers.sort().map((singer, id) => {
-            return <li key={id}>- {singer.name};</li>;
+            if (singer.role === "lead") return;
+            return (
+              <li key={id} className="dark:text-gray-300">
+                - {singer.name}
+              </li>
+            );
           })}
         </ul>
       );
