@@ -10,7 +10,7 @@ import {
 
 type SelectProps = {
   selectedOrg: string;
-  setOrg: (value: string) => void;
+  setOrg: (value: OrganizationDTO) => void;
 };
 
 const ORGS: {
@@ -21,7 +21,7 @@ const ORGS: {
   { name: "ibc", Icon: "" },
 ];
 
-export function Select({ selectedOrg, setOrg }: SelectProps) {
+export function OrgSelection({ selectedOrg, setOrg }: SelectProps) {
   return (
     <ShadSelect
       defaultValue={selectedOrg}

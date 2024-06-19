@@ -1,46 +1,19 @@
 import { useEffect, useState } from "react";
 
-import { supabase } from "@/lib/supabase";
-import { WorshipDTO } from "@/dtos/index";
+import { OrganizationDTO } from "@/dtos";
+import { useWorship } from "@/hooks";
 
-import { Header, Loading, Select } from "@/components";
-import { WorshipTable } from "@/components/Tables/WorshipTable";
+import { Header, OrgSelection, WorshipTable } from "@/components";
 
 import { ChevronRight } from "lucide-react";
-import { useToast } from "@/components/ui/use-toast";
 
 export function Dashboard() {
-  const { toast } = useToast();
+  const { fetchWorships, worships } = useWorship();
 
-  const [selectedOrg, setSelectedOrg] = useState("ibc");
-  const [worships, setWorships] = useState<WorshipDTO[]>([]);
-
-  const [isLoading, setIsLoading] = useState(false);
-
-  async function fetchWorships() {
-    try {
-      setIsLoading(true);
-
-      const { data } = await supabase
-        .rpc("worship_info", { p_org: selectedOrg })
-        .select("*");
-
-      if (data) setWorships(data);
-    } catch (error) {
-      console.error(error);
-
-      toast({
-        title: "Error",
-        description: "Error fetching data. Try again later",
-        variant: "destructive",
-      });
-    } finally {
-      setIsLoading(false);
-    }
-  }
+  const [selectedOrg, setSelectedOrg] = useState<OrganizationDTO>("ibc");
 
   useEffect(() => {
-    fetchWorships();
+    fetchWorships(selectedOrg);
   }, [selectedOrg]);
 
   return (
@@ -57,16 +30,17 @@ export function Dashboard() {
 
               <ChevronRight className="h-10 w-10 font-medium text-gray-500" />
 
-              <Select selectedOrg={selectedOrg} setOrg={setSelectedOrg} />
+              <OrgSelection selectedOrg={selectedOrg} setOrg={setSelectedOrg} />
             </div>
           </div>
 
           <div className="flex flex-1">
-            {isLoading ? (
-              <Loading />
-            ) : (
-              <WorshipTable data={worships} onRefresh={fetchWorships} />
-            )}
+            {
+              <WorshipTable
+                data={worships}
+                onRefresh={() => fetchWorships(selectedOrg)}
+              />
+            }
           </div>
         </div>
       </div>

@@ -21,11 +21,11 @@ const AuthContext = createContext<AuthProviderType>({} as AuthProviderType);
 export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const [user, setUser] = useState({} as UserDTO);
 
-  function validateUser(user: UserDTO) {
+  function validateUser(user: z.infer<typeof loginSchema>) {
     const login = loginSchema.safeParse(user);
     if (!login.data) throw login.error;
 
-    setUser(login.data);
+    setUser({ ...login.data, role: "admin" });
   }
 
   return (

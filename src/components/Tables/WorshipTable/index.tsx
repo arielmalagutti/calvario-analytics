@@ -2,9 +2,9 @@ import * as React from "react";
 
 import { WorshipDTO } from "@/dtos/index";
 
-import { useAuth } from "@/hooks";
+import { useAuth, useWorship } from "@/hooks";
 
-import { WorshipSheet } from "@/components";
+import { Loading, WorshipSheet } from "@/components";
 
 import {
   ColumnFiltersState,
@@ -46,6 +46,7 @@ type WorshipTableProps = {
 
 export function WorshipTable({ data, onRefresh }: WorshipTableProps) {
   const { user } = useAuth();
+  const { isWorshipLoading: isLoading } = useWorship();
 
   const [sorting, setSorting] = React.useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
@@ -70,6 +71,20 @@ export function WorshipTable({ data, onRefresh }: WorshipTableProps) {
       columnVisibility,
     },
   });
+
+  const tableRow = isLoading ? (
+    <TableRow>
+      <TableCell colSpan={columns.length} className="h-24 text-center">
+        <Loading iconClasses="h-6 w-6" />
+      </TableCell>
+    </TableRow>
+  ) : (
+    <TableRow>
+      <TableCell colSpan={columns.length} className="h-24 text-center">
+        No results.
+      </TableCell>
+    </TableRow>
+  );
 
   return (
     <div className="w-full">
@@ -114,7 +129,7 @@ export function WorshipTable({ data, onRefresh }: WorshipTableProps) {
             </DropdownMenuContent>
           </DropdownMenu>
 
-          {user.name && <WorshipSheet />}
+          {user.role === "admin" && <WorshipSheet />}
 
           <Button variant="outline" className="group" onClick={onRefresh}>
             <RotateCw className="h-4 w-4 font-medium group-hover:animate-spin-once" />
@@ -144,32 +159,23 @@ export function WorshipTable({ data, onRefresh }: WorshipTableProps) {
           </TableHeader>
 
           <TableBody>
-            {table.getRowModel().rows?.length ? (
-              table.getRowModel().rows.map((row) => (
-                <TableRow
-                  key={row.id}
-                  data-state={row.getIsSelected() && "selected"}
-                >
-                  {row.getVisibleCells().map((cell) => (
-                    <TableCell key={cell.id}>
-                      {flexRender(
-                        cell.column.columnDef.cell,
-                        cell.getContext(),
-                      )}
-                    </TableCell>
-                  ))}
-                </TableRow>
-              ))
-            ) : (
-              <TableRow>
-                <TableCell
-                  colSpan={columns.length}
-                  className="h-24 text-center"
-                >
-                  No results.
-                </TableCell>
-              </TableRow>
-            )}
+            {table.getRowModel().rows?.length
+              ? table.getRowModel().rows.map((row) => (
+                  <TableRow
+                    key={row.id}
+                    data-state={row.getIsSelected() && "selected"}
+                  >
+                    {row.getVisibleCells().map((cell) => (
+                      <TableCell key={cell.id}>
+                        {flexRender(
+                          cell.column.columnDef.cell,
+                          cell.getContext(),
+                        )}
+                      </TableCell>
+                    ))}
+                  </TableRow>
+                ))
+              : tableRow}
           </TableBody>
         </Table>
       </div>

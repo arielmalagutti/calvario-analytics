@@ -1,4 +1,4 @@
-import { AuthProvider, ThemeProvider } from "@/hooks/index";
+import { AuthProvider, ThemeProvider, WorshipProvider } from "@/hooks/index";
 
 // import { Home } from "./pages/Home";
 import { Dashboard } from "./pages/Dashboard";
@@ -10,10 +10,12 @@ function App() {
     <ThemeProvider defaultTheme="light">
       <div className="flex h-screen w-full flex-col">
         <AuthProvider>
-          {/* <Home /> */}
-          <Dashboard />
+          <WorshipProvider>
+            {/* <Home /> */}
+            <Dashboard />
 
-          <Toaster />
+            <Toaster />
+          </WorshipProvider>
         </AuthProvider>
       </div>
     </ThemeProvider>
