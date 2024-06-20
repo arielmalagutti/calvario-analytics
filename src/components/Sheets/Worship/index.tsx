@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
@@ -24,6 +24,8 @@ import {
 import { useToast } from "@/components/ui/use-toast";
 
 import { Plus } from "lucide-react";
+import { FancyMultiSelect } from "@/components/ui/multiselect";
+import { mock, mock2 } from "./mock";
 
 const createWorshipSchema = z.object({
   date: z.string(),
@@ -49,8 +51,8 @@ export function WorshipSheet() {
 
   const [date, setDate] = useState<Date>();
   const [org, setOrg] = useState<OrganizationDTO>("ibc");
-  const [musics, setMusics] = useState<string>();
-  const [singers, setSingers] = useState<string>();
+  // const [musics, setMusics] = useState<string>();
+  // const [singers, setSingers] = useState<string>();
   const [lead, setLead] = useState("");
 
   async function handleWorship(data: CreateWorshipSchema) {
@@ -69,6 +71,42 @@ export function WorshipSheet() {
       console.error({ error });
     }
   }
+
+  const [musics, setMusics] = useState<{ id: string; title: string }[]>([]);
+  async function fetchMusics() {
+    try {
+      // const { data, error } = await supabase.from("singer").select("*");
+      const data = mock;
+      const error = null as unknown as { message: string };
+      console.error(data);
+      if (error) throw new Error(error.message);
+
+      setMusics(data);
+    } catch (err) {
+      console.error(err);
+    }
+  }
+  const [singers, setSingers] = useState<
+    { id: string; name: string; last_name: string | null }[]
+  >([]);
+  async function fetchSingers() {
+    try {
+      // const { data, error } = await supabase.from("singer").select("*");
+      const data = mock2;
+      const error = null as unknown as { message: string };
+      console.error(data);
+      if (error) throw new Error(error.message);
+
+      setSingers(data);
+    } catch (err) {
+      console.error(err);
+    }
+  }
+
+  useEffect(() => {
+    fetchMusics();
+    fetchSingers();
+  }, []);
 
   return (
     <Sheet>
@@ -100,17 +138,16 @@ export function WorshipSheet() {
               Org
             </Label>
 
-            <Input
+            {/* <Input
               {...register("org")}
               id="org"
               type="text"
               autoComplete="false"
               autoCorrect="false"
               placeholder="Organization (e.g. IBC)"
-              value={org}
-              onChange={(e) => setOrg(e.target.value)}
+              // onChange={(e) => setOrg(e.target.value)}
               className="col-span-3"
-            />
+            /> */}
           </div>
 
           <div className="grid grid-cols-4 items-center gap-4">
@@ -132,7 +169,12 @@ export function WorshipSheet() {
               Musics
             </Label>
 
-            <Input
+            <FancyMultiSelect
+              data={musics.map((a) => {
+                return { value: a.id, label: a.title };
+              })}
+            />
+            {/* <Input
               {...register("musics")}
               id="musics"
               type="text"
@@ -141,7 +183,7 @@ export function WorshipSheet() {
               value={musics}
               onChange={(e) => setMusics(e.target.value)}
               className="col-span-3"
-            />
+            /> */}
           </div>
 
           <div className="grid grid-cols-4 items-center gap-4">
@@ -149,22 +191,20 @@ export function WorshipSheet() {
               Singers
             </Label>
 
-            <Input
-              {...register("singers")}
-              id="singers"
-              type="text"
-              autoComplete="false"
-              autoCorrect="false"
-              value={singers}
-              onChange={(e) => setSingers(e.target.value)}
-              className="col-span-3"
+            <FancyMultiSelect
+              data={singers.map((a) => {
+                return { value: a.id, label: `${a.name} ${a.last_name}` };
+              })}
             />
           </div>
         </form>
 
         <SheetFooter>
           <SheetClose asChild>
-            <Button type="submit" onClick={() => handleWorship()}>
+            <Button
+              type="submit"
+              onClick={/* () => handleWorship() */ () => {}}
+            >
               Create worship
             </Button>
           </SheetClose>
