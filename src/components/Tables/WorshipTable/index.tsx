@@ -129,7 +129,7 @@ export function WorshipTable({ data, onRefresh }: WorshipTableProps) {
             </DropdownMenuContent>
           </DropdownMenu>
 
-          {user.role === "admin" && <WorshipSheet />}
+          {user.role === "authenticated" && <WorshipSheet />}
 
           <Button variant="outline" className="group" onClick={onRefresh}>
             <RotateCw className="h-4 w-4 font-medium group-hover:animate-spin-once" />

@@ -1,13 +1,14 @@
 import { useEffect, useState } from "react";
 
 import { OrganizationDTO } from "@/dtos";
-import { useWorship } from "@/hooks";
+import { useAuth, useWorship } from "@/hooks";
 
 import { Header, OrgSelection, WorshipTable } from "@/components";
 
 import { ChevronRight } from "lucide-react";
 
 export function Dashboard() {
+  const { user } = useAuth();
   const { fetchWorships, worships } = useWorship();
 
   const [selectedOrg, setSelectedOrg] = useState<OrganizationDTO>("ibc");
@@ -18,7 +19,7 @@ export function Dashboard() {
 
   return (
     <>
-      <Header />
+      <Header user={user} />
 
       <div className="flex flex-1 justify-center px-12 py-6">
         <div className="flex w-full max-w-screen-xl flex-1 flex-col gap-6">

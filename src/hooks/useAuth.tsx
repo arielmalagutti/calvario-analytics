@@ -1,10 +1,14 @@
-import { UserDTO } from "@/dtos";
-import { createContext, useContext, useState } from "react";
+import { createContext, useContext, useEffect, useState } from "react";
 import * as z from "zod";
 
+import { UserDTO } from "@/dtos";
+
+import { supabase } from "@/lib/supabase";
+import { User as UserType } from "@supabase/supabase-js";
+
 type AuthProviderType = {
-  user: UserDTO;
-  validateUser: (user: UserDTO) => void;
+  user: UserType;
+  signIn: (user: UserDTO) => Promise<void>;
 };
 
 const loginSchema = z.object({
@@ -19,17 +23,32 @@ const loginSchema = z.object({
 const AuthContext = createContext<AuthProviderType>({} as AuthProviderType);
 
 export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
-  const [user, setUser] = useState({} as UserDTO);
+  const [user, setUser] = useState({} as UserType);
 
-  function validateUser(user: z.infer<typeof loginSchema>) {
-    const login = loginSchema.safeParse(user);
-    if (!login.data) throw login.error;
+  async function getUser() {
+    const { data: userData, error } = await supabase.auth.getUser();
+    if (error) throw new Error(error.message);
 
-    setUser({ ...login.data, role: "admin" });
+    setUser(userData.user);
   }
 
+  async function signIn(user: UserDTO) {
+    const login = loginSchema.safeParse(user);
+    if (login.error) throw new Error("Wrong credentials.");
+
+    const { error } = await supabase.auth.signInWithOAuth({
+      provider: "github",
+    });
+
+    if (error) throw new Error(error.message);
+  }
+
+  useEffect(() => {
+    getUser();
+  }, []);
+
   return (
-    <AuthContext.Provider value={{ user, validateUser }}>
+    <AuthContext.Provider value={{ user, signIn }}>
       {children}
     </AuthContext.Provider>
   );
