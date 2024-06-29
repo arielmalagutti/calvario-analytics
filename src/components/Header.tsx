@@ -15,7 +15,7 @@ export function Header({ user }: HeaderProps) {
       </h1>
 
       <div className="flex items-center gap-4">
-        {(user?.role === "authenticated" && null) ?? <LoginSheet />}
+        {user.id ? <p className="font-medium">LOGGED IN</p> : <LoginSheet />}
         <ThemeToggle />
       </div>
     </div>
