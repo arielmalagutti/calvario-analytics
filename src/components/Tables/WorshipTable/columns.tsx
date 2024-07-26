@@ -131,7 +131,7 @@ export const columns: ColumnDef<WorshipDTO>[] = [
 
       async function deleteItem(id: string) {
         try {
-          await supabase.from("music").delete().eq("id", id);
+          // await supabase.from("music").delete().eq("id", id);
         } catch (error) {
           console.error(error);
         }

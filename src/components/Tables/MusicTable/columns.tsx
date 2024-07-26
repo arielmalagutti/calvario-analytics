@@ -53,10 +53,10 @@ export const columns: ColumnDef<MusicInfoDTO>[] = [
       if (lastPlayedDate) {
         const date = new Date(lastPlayedDate);
         const formattedDate = format(date, `MMMM dd yyyy`);
-        return <div className="max-w-64 w-full">{formattedDate}</div>;
+        return <div className="w-full max-w-64">{formattedDate}</div>;
       }
 
-      return <div className="max-w-64 w-full">-</div>;
+      return <div className="w-full max-w-64">-</div>;
     },
   },
   {
@@ -75,12 +75,12 @@ export const columns: ColumnDef<MusicInfoDTO>[] = [
     },
     cell: ({ row }) => {
       const playedThisMonth: number | undefined = row.getValue(
-        "times_played_this_month"
+        "times_played_this_month",
       );
 
-      if (!playedThisMonth) return <div className="max-w-64 w-full">-</div>;
+      if (!playedThisMonth) return <div className="w-full max-w-64">-</div>;
 
-      return <div className="max-w-64 w-full">{playedThisMonth}</div>;
+      return <div className="w-full max-w-64">{playedThisMonth}</div>;
     },
   },
   {
@@ -99,12 +99,12 @@ export const columns: ColumnDef<MusicInfoDTO>[] = [
     },
     cell: ({ row }) => {
       const playedThisYear: number | undefined = row.getValue(
-        "times_played_this_month"
+        "times_played_this_month",
       );
 
-      if (!playedThisYear) return <div className="max-w-64 w-full">-</div>;
+      if (!playedThisYear) return <div className="w-full max-w-64">-</div>;
 
-      return <div className="max-w-64 w-full">{playedThisYear}</div>;
+      return <div className="w-full max-w-64">{playedThisYear}</div>;
     },
   },
   {
@@ -115,7 +115,7 @@ export const columns: ColumnDef<MusicInfoDTO>[] = [
 
       async function deleteItem(id: string) {
         try {
-          await supabase.from("music").delete().eq("id", id);
+          // await supabase.from("music").delete().eq("id", id);
         } catch (error) {
           console.error(error);
         }
@@ -134,7 +134,7 @@ export const columns: ColumnDef<MusicInfoDTO>[] = [
             <DropdownMenuLabel>Actions</DropdownMenuLabel>
             <DropdownMenuItem
               onClick={() => deleteItem(music.id)}
-              className="text-red-700 dark:text-red-600 focus:text-red-500"
+              className="text-red-700 focus:text-red-500 dark:text-red-600"
             >
               <Trash />
               Delete

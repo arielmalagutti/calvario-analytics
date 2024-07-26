@@ -23,6 +23,7 @@ export function Home() {
     try {
       setIsLoading(true);
       const { data } = await supabase.rpc("music_info").select();
+      console.log("dataaa", data);
       if (data) setMusics(data);
     } catch (error) {
       console.error(error);

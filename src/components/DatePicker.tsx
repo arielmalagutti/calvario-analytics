@@ -9,35 +9,51 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
+import { ControllerRenderProps } from "react-hook-form";
+import { FormControl } from "./ui/form";
 
-type DatePickerProps = {
-  id: string;
-  date?: Date;
-  setDate: (value: Date) => void;
-};
-
-export function DatePicker({ date, setDate, id }: DatePickerProps) {
+export function DatePicker({
+  field,
+}: {
+  field: ControllerRenderProps<
+    {
+      date: string;
+      org: string;
+      musics: string[];
+      singers: {
+        id: string;
+        name: string;
+        role: string;
+      }[];
+    },
+    string
+  >;
+}) {
   return (
     <Popover>
-      <PopoverTrigger id={id} asChild>
-        <Button
-          variant={"ghost"}
-          className={cn(
-            "w-fit justify-start text-left font-normal",
-            !date && "text-muted-foreground",
-          )}
-        >
-          <CalendarIcon className="mr-2 h-4 w-4" />
-          {date ? format(date, "PPP") : <span>Pick a date</span>}
-        </Button>
+      <PopoverTrigger asChild>
+        <FormControl>
+          <Button
+            variant={"outline"}
+            className={cn(
+              "w-[240px] pl-3 text-left font-normal",
+              !field.value && "text-muted-foreground",
+            )}
+          >
+            {field.value ? (
+              format(field.value, "PPP")
+            ) : (
+              <span>Pick a date</span>
+            )}
+            <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
+          </Button>
+        </FormControl>
       </PopoverTrigger>
-
-      <PopoverContent className="w-auto p-0">
+      <PopoverContent className="w-auto p-0" align="start">
         <Calendar
           mode="single"
-          selected={date}
-          onSelect={setDate}
-          initialFocus
+          selected={field.value}
+          onDayClick={field.onChange}
         />
       </PopoverContent>
     </Popover>
