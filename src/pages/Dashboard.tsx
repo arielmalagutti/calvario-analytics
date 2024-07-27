@@ -1,11 +1,11 @@
 import { useEffect, useState } from "react";
+import { ChevronRight, EllipsisVertical } from "lucide-react";
 
 import { OrganizationDTO } from "@/dtos";
 import { useAuth, useWorship } from "@/hooks";
 
-import { Header, OrgSelection, WorshipForm, WorshipTable } from "@/components";
-
-import { ChevronRight, EllipsisVertical } from "lucide-react";
+import { Header, OrgSelection, WorshipTable } from "@/components";
+import { WorshipForm } from "@/components/WorshipForm";
 
 export function Dashboard() {
   const { user } = useAuth();

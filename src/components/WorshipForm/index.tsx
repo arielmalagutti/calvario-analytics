@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 
 import { OrganizationDTO } from "@/dtos";
@@ -10,9 +10,7 @@ import {
 import { useAuth, useWorship } from "@/hooks";
 
 import { DatePicker } from "@/components";
-import { Input } from "@/components/ui/input";
 import { useToast } from "@/components/ui/use-toast";
-import { Combobox } from "@/components/ui/combobox";
 import Creatable from "@/components/ui/CustomSelect/Creatable";
 
 import { mock, mock2 } from "./mock";
@@ -24,10 +22,26 @@ import {
   FormLabel,
 } from "@/components/ui/form";
 
+import {
+  Card,
+  CardContent,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import { Button } from "../ui/button";
+import Selectable from "../ui/CustomSelect/Select";
+
 export function WorshipForm() {
   const { user } = useAuth();
   const form = useForm<CreateWorshipSchema>({
-    defaultValues: { date: new Date(), musics: [], org: "ibc", singers: [] },
+    defaultValues: {
+      date: new Date(),
+      lead: "",
+      musics: [],
+      org: "ibc",
+      singers: [],
+    },
   });
   const { handleWorship } = useWorship();
   const { toast } = useToast();
@@ -71,7 +85,7 @@ export function WorshipForm() {
   const handleForm = (data: CreateWorshipSchema) => {
     try {
       // handleWorship(data);
-      console.log(data);
+      console.log("form data:", data);
     } catch (error) {
       if (error instanceof Error) {
         toast({
@@ -85,10 +99,10 @@ export function WorshipForm() {
     }
   };
 
-  const fetchData = () => {
+  useEffect(() => {
     fetchMusics();
     fetchSingers();
-  };
+  }, []);
 
   if (user.role !== "authenticated") return <></>;
 
@@ -98,103 +112,111 @@ export function WorshipForm() {
         onSubmit={form.handleSubmit(handleForm)}
         className="grid gap-4 py-4"
       >
-        <div className="grid grid-cols-4 items-center gap-4">
-          <FormField
-            control={form.control}
-            name=""
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Date</FormLabel>
-                <DatePicker field={field}></DatePicker>
-              </FormItem>
-            )}
-          ></FormField>
-        </div>
+        <Card>
+          <CardHeader>
+            <CardTitle>Add worship session</CardTitle>
+          </CardHeader>
+          <CardContent className="flex flex-col gap-4">
+            <div className="grid grid-cols-4 gap-4">
+              <FormField
+                control={form.control}
+                name="date"
+                render={({ field }) => (
+                  <FormItem className="col-span-1 flex flex-col">
+                    <FormLabel>Date</FormLabel>
+                    <DatePicker field={field}></DatePicker>
+                  </FormItem>
+                )}
+              ></FormField>
 
-        <div className="grid grid-cols-4 items-center gap-4">
-          <FormField
-            control={form.control}
-            name=""
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Org</FormLabel>
-                <FormControl>
-                  <Combobox
-                    data={[
-                      { label: "IBC", value: "ibc" },
-                      { label: "JUBAC", value: "jubac" },
-                    ]}
-                  />
-                </FormControl>
-              </FormItem>
-            )}
-          ></FormField>
-        </div>
+              <FormField
+                control={form.control}
+                name="org"
+                render={({ field }) => (
+                  <FormItem className="col-span-1 flex flex-col">
+                    <FormLabel>Org</FormLabel>
+                    <FormControl>
+                      <Selectable
+                        {...field}
+                        options={[
+                          { label: "IBC", value: "ibc" },
+                          { label: "JUBAC", value: "jubac" },
+                        ]}
+                      />
+                    </FormControl>
+                  </FormItem>
+                )}
+              ></FormField>
 
-        <div className="grid grid-cols-4 items-center gap-4">
-          <FormField
-            control={form.control}
-            name=""
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Lead</FormLabel>
-                <FormControl>
-                  <Input
-                    {...field}
-                    id="lead"
-                    type="text"
-                    value={lead}
-                    className="col-span-3"
-                    onChange={(e) => setLead(e.target.value)}
-                  />
-                </FormControl>
-              </FormItem>
-            )}
-          ></FormField>
-        </div>
+              <FormField
+                control={form.control}
+                name="lead"
+                render={({ field }) => (
+                  <FormItem className="col-span-2 flex flex-col">
+                    <FormLabel>Lead</FormLabel>
+                    <FormControl>
+                      <Selectable
+                        {...field}
+                        options={singers.map((a) => {
+                          return {
+                            value: a.id,
+                            label: `${a.name}${a.last_name ? " " + a.last_name : ""}`,
+                          };
+                        })}
+                      />
+                    </FormControl>
+                  </FormItem>
+                )}
+              ></FormField>
+            </div>
 
-        <div className="grid grid-cols-4 items-center gap-4">
-          <FormField
-            control={form.control}
-            name=""
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Musics</FormLabel>
-                <FormControl>
-                  <Creatable
-                    isMulti
-                    options={musics.map((music) => {
-                      return { label: music.title, value: music.id };
-                    })}
-                  />
-                </FormControl>
-              </FormItem>
-            )}
-          ></FormField>
-        </div>
+            <div className="flex gap-4">
+              <FormField
+                control={form.control}
+                name="musics"
+                render={({ field }) => (
+                  <FormItem className="flex-1">
+                    <FormLabel>Musics</FormLabel>
+                    <FormControl>
+                      <Creatable
+                        {...field}
+                        isMulti
+                        options={musics.map((music) => {
+                          return { label: music.title, value: music.id };
+                        })}
+                      />
+                    </FormControl>
+                  </FormItem>
+                )}
+              ></FormField>
 
-        <div className="grid grid-cols-4 items-center gap-4">
-          <FormField
-            control={form.control}
-            name=""
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Singers</FormLabel>
-                <FormControl>
-                  <Creatable
-                    isMulti
-                    options={singers.map((a) => {
-                      return {
-                        value: a.id,
-                        label: `${a.name}${a.last_name ? " " + a.last_name : ""}`,
-                      };
-                    })}
-                  />
-                </FormControl>
-              </FormItem>
-            )}
-          ></FormField>
-        </div>
+              <FormField
+                control={form.control}
+                name="singers"
+                render={({ field }) => (
+                  <FormItem className="flex-1">
+                    <FormLabel>Singers</FormLabel>
+                    <FormControl>
+                      <Selectable
+                        {...field}
+                        isMulti
+                        options={singers.map((a) => {
+                          return {
+                            value: a.id,
+                            label: `${a.name}${a.last_name ? " " + a.last_name : ""}`,
+                          };
+                        })}
+                      />
+                    </FormControl>
+                  </FormItem>
+                )}
+              ></FormField>
+            </div>
+          </CardContent>
+          <CardFooter className="justify-end">
+            <Button type="submit">Add worship</Button>
+          </CardFooter>
+        </Card>
       </form>
     </Form>
   );

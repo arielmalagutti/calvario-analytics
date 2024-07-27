@@ -17,16 +17,12 @@ export function DatePicker({
 }: {
   field: ControllerRenderProps<
     {
-      date: string;
+      date: Date;
       org: string;
       musics: string[];
-      singers: {
-        id: string;
-        name: string;
-        role: string;
-      }[];
+      singers: { id: string; name: string; role: string }[];
     },
-    string
+    "date"
   >;
 }) {
   return (
@@ -36,7 +32,7 @@ export function DatePicker({
           <Button
             variant={"outline"}
             className={cn(
-              "w-[240px] pl-3 text-left font-normal",
+              "w-full pl-3 text-left font-normal",
               !field.value && "text-muted-foreground",
             )}
           >

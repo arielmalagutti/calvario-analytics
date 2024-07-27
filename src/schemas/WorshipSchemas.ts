@@ -2,6 +2,7 @@ import { z } from "zod";
 
 export const createWorshipSchema = z.object({
   date: z.date(),
+  lead:z.string(),
   org: z.string(),
   musics: z.array(z.string()),
   singers: z.array(

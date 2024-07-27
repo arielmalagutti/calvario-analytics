@@ -4,6 +4,5 @@ export * from "./Loading";
 export * from "./OrgSelection";
 
 export * from "./Sheets/Login";
-export * from "./Sheets/Worship";
 export * from "./Tables/MusicTable";
 export * from "./Tables/WorshipTable";

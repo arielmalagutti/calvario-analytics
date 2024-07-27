@@ -13,7 +13,7 @@ import {
   MenuList,
 } from "./ReactSelectCustomComponents";
 
-const Select = React.forwardRef<
+const Selectable = React.forwardRef<
   React.ElementRef<typeof SelectComponent>,
   React.ComponentPropsWithoutRef<typeof SelectComponent>
 >((props: Props, ref) => {
@@ -52,5 +52,5 @@ const Select = React.forwardRef<
     />
   );
 });
-Select.displayName = "Select";
-export default Select;
+Selectable.displayName = "Select";
+export default Selectable;

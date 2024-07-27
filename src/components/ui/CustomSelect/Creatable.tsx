@@ -48,7 +48,6 @@ const Creatable = React.forwardRef<
       }}
       styles={styles}
       classNames={classNames}
-      className="col-span-3 overflow-visible bg-transparent"
       {...rest}
     />
   );
