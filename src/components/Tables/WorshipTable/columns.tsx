@@ -22,7 +22,7 @@ export const getColumns = ({
     accessorKey: "worship_date",
     header: ({ column }) => {
       return (
-        <div className="flex cursor-default items-center gap-1 p-0">
+        <div className="flex cursor-default items-center gap-1">
           <span>Date</span>
           <Button
             variant="ghost"
@@ -39,10 +39,10 @@ export const getColumns = ({
 
       if (date) {
         const formattedDate = format(new Date(date), `MMMM dd yyyy`);
-        return <div className="w-full max-w-64">{formattedDate}</div>;
+        return <div className="w-[8.25rem]">{formattedDate}</div>;
       }
 
-      return <div className="w-full max-w-64">-</div>;
+      return <div className="w-[8.25rem]">-</div>;
     },
   },
 
@@ -50,7 +50,7 @@ export const getColumns = ({
     accessorKey: "lead.name",
     header: ({ column }) => {
       return (
-        <div className="flex cursor-default items-center gap-1 p-0">
+        <div className="flex cursor-default items-center gap-1">
           <span>Lead</span>
           <Button
             variant="ghost"
