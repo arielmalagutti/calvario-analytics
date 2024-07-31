@@ -2,9 +2,9 @@ import * as React from "react";
 
 import { WorshipDTO } from "@/dtos/index";
 
-import { useAuth, useWorship } from "@/hooks";
+import { useWorship } from "@/hooks";
 
-import { Loading, WorshipSheet } from "@/components";
+import { Loading } from "@/components";
 
 import {
   ColumnFiltersState,

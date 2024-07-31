@@ -2,10 +2,6 @@ import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 
 import { OrganizationDTO } from "@/dtos";
-import {
-  createWorshipSchema,
-  CreateWorshipSchema,
-} from "@/schemas/WorshipSchemas";
 
 import { useAuth, useWorship } from "@/hooks";
 
@@ -32,18 +28,28 @@ import {
 import { Button } from "../ui/button";
 import Selectable from "../ui/CustomSelect/Select";
 
+type dataType = Record<"value" | "label", string>;
+type WorshipFormType = {
+  date: Date;
+  org: dataType;
+  musics: dataType[];
+  lead: dataType;
+  singers: dataType[];
+};
+
 export function WorshipForm() {
   const { user } = useAuth();
-  const form = useForm<CreateWorshipSchema>({
+
+  const form = useForm<WorshipFormType>({
     defaultValues: {
       date: new Date(),
-      lead: "",
+      lead: { label: "", value: "" },
       musics: [],
-      org: "ibc",
+      org: { label: "", value: "" },
       singers: [],
     },
   });
-  const { handleWorship } = useWorship();
+  const { addWorship } = useWorship();
   const { toast } = useToast();
 
   const [date, setDate] = useState<Date>();
@@ -82,10 +88,26 @@ export function WorshipForm() {
     }
   }
 
-  const handleForm = (data: CreateWorshipSchema) => {
+  const handleForm = async (data: WorshipFormType) => {
     try {
-      // handleWorship(data);
-      console.log("form data:", data);
+      const date =
+        data.org.value === "ibc"
+          ? data.date.toISOString().split("T")[0] + "T19:00:00"
+          : data.date.toISOString().split("T")[0] + "T19:30:00";
+
+      await addWorship({
+        date,
+        lead_id: data.lead.value,
+        musics: data.musics.map((music) => music.label),
+        org: data.org.value,
+        singers_id: data.singers.map((singer) => singer.value),
+      });
+
+      form.reset();
+
+      toast({
+        title: "Worship session added",
+      });
     } catch (error) {
       if (error instanceof Error) {
         toast({

@@ -17,7 +17,7 @@ export function Dashboard() {
 
   useEffect(() => {
     fetchWorships(selectedOrg);
-  }, [fetchWorships, selectedOrg]);
+  }, [selectedOrg]);
 
   return (
     <>
