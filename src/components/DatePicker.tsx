@@ -1,7 +1,7 @@
 import { format } from "date-fns";
-import { Calendar as CalendarIcon } from "lucide-react";
-
+import { ControllerRenderProps } from "react-hook-form";
 import { cn } from "@/lib/utils";
+
 import { Button } from "@/components/ui/button";
 import { Calendar } from "@/components/ui/calendar";
 import {
@@ -9,21 +9,17 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
-import { ControllerRenderProps } from "react-hook-form";
+
 import { FormControl } from "./ui/form";
+
+import { WorshipFormType } from "./WorshipForm";
+
+import { Calendar as CalendarIcon } from "lucide-react";
 
 export function DatePicker({
   field,
 }: {
-  field: ControllerRenderProps<
-    {
-      date: Date;
-      org: string;
-      musics: string[];
-      singers: { id: string; name: string; role: string }[];
-    },
-    "date"
-  >;
+  field: ControllerRenderProps<WorshipFormType, "date">;
 }) {
   return (
     <Popover>

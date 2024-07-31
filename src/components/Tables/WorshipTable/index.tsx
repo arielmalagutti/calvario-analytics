@@ -1,10 +1,6 @@
 import * as React from "react";
 
-import { WorshipDTO } from "@/dtos/index";
-
 import { useWorship } from "@/hooks";
-
-import { Loading } from "@/components";
 
 import {
   ColumnFiltersState,
@@ -17,7 +13,6 @@ import {
   getSortedRowModel,
   useReactTable,
 } from "@tanstack/react-table";
-
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
@@ -25,7 +20,6 @@ import {
   DropdownMenuContent,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { Input } from "@/components/ui/input";
 import {
   Table,
   TableBody,
@@ -34,8 +28,12 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import { Input } from "@/components/ui/input";
+import { Loading } from "@/components";
 
 import { columns } from "./columns";
+
+import { WorshipDTO } from "@/dtos/index";
 
 import { ChevronDown, RotateCw } from "lucide-react";
 
@@ -69,6 +67,7 @@ export function WorshipTable({ data, onRefresh }: WorshipTableProps) {
       columnFilters,
       columnVisibility,
     },
+    sortDescFirst: true,
   });
 
   const tableRow = isLoading ? (

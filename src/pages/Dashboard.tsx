@@ -1,11 +1,17 @@
 import { useEffect, useState } from "react";
-import { ChevronRight, EllipsisVertical } from "lucide-react";
+import { ChevronRight, EllipsisVertical, Plus } from "lucide-react";
 
 import { OrganizationDTO } from "@/dtos";
 import { useAuth, useWorship } from "@/hooks";
 
 import { Header, OrgSelection, WorshipTable } from "@/components";
 import { WorshipForm } from "@/components/WorshipForm";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 
 export function Dashboard() {
   const { user } = useAuth();
@@ -40,12 +46,27 @@ export function Dashboard() {
                 />
               </div>
 
-              <button
-                className="rounded-lg p-2 text-gray-500 transition-colors hover:bg-zinc-800 dark:text-gray-500 dark:hover:text-gray-300"
-                onClick={() => setWorshipFormOpen((prev) => !prev)}
-              >
-                <EllipsisVertical size={24} />
-              </button>
+              <DropdownMenu>
+                <DropdownMenuTrigger className="rounded-lg p-2 text-gray-500 transition-colors hover:bg-zinc-800 dark:text-gray-500 dark:hover:text-gray-300">
+                  <EllipsisVertical size={24} />
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="end">
+                  <DropdownMenuItem
+                    onClick={() => setWorshipFormOpen((prev) => !prev)}
+                  >
+                    <Plus className="mr-2 h-4 w-4" />
+                    <span>Add Worship</span>
+                  </DropdownMenuItem>
+                  <DropdownMenuItem>
+                    <Plus className="mr-2 h-4 w-4" />
+                    <span>Add Singer</span>
+                  </DropdownMenuItem>
+                  <DropdownMenuItem>
+                    <Plus className="mr-2 h-4 w-4" />
+                    <span>Add Music</span>
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
             </div>
           </div>
 

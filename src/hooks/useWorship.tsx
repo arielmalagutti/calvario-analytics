@@ -1,10 +1,10 @@
-import { createContext, useContext, useEffect, useState } from "react";
+import { createContext, useContext, useState } from "react";
 
-import { OrganizationDTO, WorshipDTO } from "@/dtos";
+import { OrganizationDTO, SingerDTO, WorshipDTO } from "@/dtos";
 
 import { supabase } from "@/lib/supabase";
 import { CreateWorshipSchema } from "@/schemas/WorshipSchemas";
-import { worshipData } from "@/MOCK_DATA";
+import { worshipDataMock } from "@/MOCK_DATA";
 
 type WorshipContextType = {
   worships: WorshipDTO[];
@@ -22,23 +22,39 @@ export function WorshipProvider({ children }: { children: React.ReactNode }) {
 
   const [isWorshipLoading, setIsWorshipLoading] = useState(false);
 
-  async function fetchWorships(organization: OrganizationDTO) {
+  async function fetchWorships(org: OrganizationDTO) {
     try {
       setIsWorshipLoading(true);
 
       // const { data, error } = await supabase
-      //   .rpc("worship_info", { p_org: organization })
+      //   .rpc("get_worship_details", { p_org: org })
       //   .select("*");
 
-      const data = worshipData;
+      const data = worshipDataMock;
 
       // if (error) throw new Error(error.message);
-      data.forEach((d) => {
-        if (d.singers === null) d.singers = [];
-        if (d.music_titles === null) d.music_titles = [];
-      });
-      console.log("mock worship", data);
-      setWorships(data as unknown as WorshipDTO[]);
+
+      const worshipData: WorshipDTO[] = data.map(
+        ({ singers, worship_id, worship_date, music_titles }) => {
+          if (singers === null) singers = [];
+
+          if (music_titles === null) music_titles = [];
+
+          return {
+            worship_id,
+            worship_date,
+            org,
+            lead: singers.find((singer) => singer.role === "lead") as SingerDTO,
+            singers: singers
+              .filter((singer) => singer.role === "backing")
+              .sort((a, b) => a.name.localeCompare(b.name)) as SingerDTO[],
+            music_titles,
+          };
+        },
+      );
+      console.log("mock worship d", data);
+      console.log("mock worship", worshipData);
+      setWorships(worshipData);
     } finally {
       setIsWorshipLoading(false);
     }

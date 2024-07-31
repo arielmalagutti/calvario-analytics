@@ -1,15 +1,12 @@
 import { useEffect, useState } from "react";
+import { supabase } from "@/lib/supabase";
 import { useForm } from "react-hook-form";
-
-import { OrganizationDTO } from "@/dtos";
 
 import { useAuth, useWorship } from "@/hooks";
 
 import { DatePicker } from "@/components";
 import { useToast } from "@/components/ui/use-toast";
 import Creatable from "@/components/ui/CustomSelect/Creatable";
-
-import { mock, mock2 } from "./mock";
 import {
   Form,
   FormControl,
@@ -17,7 +14,6 @@ import {
   FormItem,
   FormLabel,
 } from "@/components/ui/form";
-
 import {
   Card,
   CardContent,
@@ -25,11 +21,14 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { Button } from "../ui/button";
-import Selectable from "../ui/CustomSelect/Select";
+import { Button } from "@/components/ui/button";
+import Selectable from "@/components/ui/CustomSelect/Select";
+
+import { OrganizationDTO } from "@/dtos";
+import { mock, mock2 } from "./mock";
 
 type dataType = Record<"value" | "label", string>;
-type WorshipFormType = {
+export type WorshipFormType = {
   date: Date;
   org: dataType;
   musics: dataType[];
@@ -40,33 +39,32 @@ type WorshipFormType = {
 export function WorshipForm() {
   const { user } = useAuth();
 
-  const form = useForm<WorshipFormType>({
-    defaultValues: {
-      date: new Date(),
-      lead: { label: "", value: "" },
-      musics: [],
-      org: { label: "", value: "" },
-      singers: [],
-    },
-  });
   const { addWorship } = useWorship();
   const { toast } = useToast();
 
-  const [date, setDate] = useState<Date>();
   const [org, setOrg] = useState<OrganizationDTO>("ibc");
-  const [lead, setLead] = useState("");
   const [musics, setMusics] = useState<{ id: string; title: string }[]>([]);
   const [singers, setSingers] = useState<
     { id: string; name: string; last_name: string | null }[]
   >([]);
 
+  const form = useForm<WorshipFormType>({
+    defaultValues: {
+      date: new Date(),
+      org: { label: org.toUpperCase(), value: org },
+      musics: [],
+      lead: { label: "", value: "" },
+      singers: [],
+    },
+  });
+
   async function fetchMusics() {
     try {
-      // const { data, error } = await supabase.from("singer").select("*");
+      // const { data, error } = await supabase.from("music").select("*");
       const data = mock;
-      const error = null as unknown as { message: string };
+
       console.error(data);
-      if (error) throw new Error(error.message);
+      // if (error) throw new Error(error.message);
 
       setMusics(data);
     } catch (err) {

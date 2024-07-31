@@ -14,8 +14,47 @@ export const data = [
   {title: 'Hino 239', last_played_date: null, times_played_this_month: 0, times_played_this_year: 0},
 ]
 
-export const worshipData = [
+export const worshipDataMock = [
     {
+        "worship_id": "0b2b8578-7118-4856-af64-f5ff93522646",
+        "worship_date": "2024-07-28T19:00:00",
+        "singers": [
+            {
+                "id": "dca79a51-5c72-4a69-9afc-d04ef48cad70",
+                "name": "Isa",
+                "role": "lead"
+            },
+            {
+                "id": "b0b2df60-0395-42fd-91d1-743c9790c72b",
+                "name": "Gilton",
+                "role": "backing"
+            },
+            {
+                "id": "00748e37-f291-4955-a42d-6c824fba6722",
+                "name": "Fada",
+                "role": "backing"
+            },
+            {
+                "id": "f957eb57-5f87-4fa3-889f-d4a488afc1d3",
+                "name": "Emanuel",
+                "role": "backing"
+            },
+            {
+                "id": "83431f13-b365-473e-952c-f25907ea7c56",
+                "name": "Mahiaara",
+                "role": "backing"
+            }
+        ],
+        "music_titles": [
+            "Ao único que é digno",
+            "Hoje é tempo de louvar a Deus",
+            "Jesus em tua presença",
+            "Tu não és um Deus de barro",
+            "Vem o temporal"
+        ]
+    },
+    {
+        "worship_id": "547ff069-8d13-48b9-8df0-702a4a102206",
         "worship_date": "2024-07-21T19:00:00",
         "singers": [],
         "music_titles": [
@@ -27,6 +66,7 @@ export const worshipData = [
         ]
     },
     {
+        "worship_id": "4cda7a7b-5a7f-4ae0-89ad-a727eaeb3203",
         "worship_date": "2024-07-14T19:00:00",
         "singers": [
             {
@@ -65,6 +105,7 @@ export const worshipData = [
         ]
     },
     {
+        "worship_id": "63b41fef-3aca-4b08-a570-197f4c8a4356",
         "worship_date": "2024-07-07T19:00:00",
         "singers": [
             {
@@ -102,6 +143,7 @@ export const worshipData = [
         ]
     },
     {
+        "worship_id": "71828bbf-0100-48ea-ae08-027ac168e563",
         "worship_date": "2024-06-23T19:00:00",
         "singers": [],
         "music_titles": [
@@ -114,6 +156,7 @@ export const worshipData = [
         ]
     },
     {
+        "worship_id": "d5ab24bb-d33e-42be-b15f-ebe0cc524d61",
         "worship_date": "2024-06-16T19:00:00",
         "singers": [
             {
@@ -146,6 +189,7 @@ export const worshipData = [
         ]
     },
     {
+        "worship_id": "2332f07e-1245-4173-aba1-946e3e2ff034",
         "worship_date": "2024-06-09T19:00:00",
         "singers": [
             {
@@ -183,6 +227,7 @@ export const worshipData = [
         ]
     },
     {
+        "worship_id": "74ec6ae9-75d6-4e73-b350-95c98d17aa92",
         "worship_date": "2024-06-02T19:00:00",
         "singers": [
             {
@@ -220,6 +265,7 @@ export const worshipData = [
         ]
     },
     {
+        "worship_id": "8e106e70-ce00-4af1-a8df-17e94d4a28ab",
         "worship_date": "2024-05-26T19:00:00",
         "singers": [
             {
@@ -262,6 +308,7 @@ export const worshipData = [
         ]
     },
     {
+        "worship_id": "72fa182b-1b82-4a9e-bdba-7e54debb652b",
         "worship_date": "2024-05-19T19:00:00",
         "singers": [
             {
@@ -295,6 +342,7 @@ export const worshipData = [
         ]
     },
     {
+        "worship_id": "54f0fb5a-9e16-4abe-916c-6503104dcf9a",
         "worship_date": "2024-05-12T19:00:00",
         "singers": [
             {
@@ -332,6 +380,7 @@ export const worshipData = [
         ]
     },
     {
+        "worship_id": "d6d8d526-8c7b-4b05-8dd3-4fbc2b93734a",
         "worship_date": "2024-05-05T19:00:00",
         "singers": [
             {
@@ -349,6 +398,7 @@ export const worshipData = [
         ]
     },
     {
+        "worship_id": "a59933af-a24c-4118-87a9-1e6596f6902e",
         "worship_date": "2024-04-28T19:00:00",
         "singers": [
             {
@@ -371,6 +421,7 @@ export const worshipData = [
         ]
     },
     {
+        "worship_id": "ca8569f5-794c-4a42-994d-bf99d69d6838",
         "worship_date": "2024-04-21T19:00:00",
         "singers": [
             {
@@ -389,6 +440,7 @@ export const worshipData = [
         ]
     },
     {
+        "worship_id": "ca400e73-7f79-4397-aa79-d635c4cb67c4",
         "worship_date": "2024-04-14T19:00:00",
         "singers": [
             {
@@ -407,6 +459,7 @@ export const worshipData = [
         ]
     },
     {
+        "worship_id": "ba6f5194-d0c1-4210-b1b1-04f9c241ef64",
         "worship_date": "2024-04-07T19:00:00",
         "singers": [
             {
@@ -424,6 +477,7 @@ export const worshipData = [
         ]
     },
     {
+        "worship_id": "3e66d61a-be32-43c3-9822-332322572c40",
         "worship_date": "2024-03-31T19:00:00",
         "singers": [
             {
@@ -441,6 +495,7 @@ export const worshipData = [
         ]
     },
     {
+        "worship_id": "b2d7e5a0-bec1-4e7f-9c6b-c74efe1fb6a2",
         "worship_date": "2024-03-24T19:00:00",
         "singers": [
             {
@@ -458,6 +513,7 @@ export const worshipData = [
         ]
     },
     {
+        "worship_id": "6681bf22-b480-4369-ab2b-c6b2191d5f24",
         "worship_date": "2024-03-17T19:00:00",
         "singers": [
             {
@@ -480,6 +536,7 @@ export const worshipData = [
         ]
     },
     {
+        "worship_id": "db9a7a01-4503-46a3-9839-25f1a53741e8",
         "worship_date": "2024-03-10T19:00:00",
         "singers": [
             {
@@ -497,6 +554,7 @@ export const worshipData = [
         ]
     },
     {
+        "worship_id": "3ddf5538-4949-4d03-a774-2adc11717b4c",
         "worship_date": "2024-03-03T19:00:00",
         "singers": [
             {
@@ -514,6 +572,7 @@ export const worshipData = [
         ]
     },
     {
+        "worship_id": "399d6019-1811-4af4-8381-0940be80aa8e",
         "worship_date": "2024-02-25T19:00:00",
         "singers": [
             {
@@ -531,6 +590,7 @@ export const worshipData = [
         ]
     },
     {
+        "worship_id": "620a57fb-8c53-485a-a2e3-f6248640dbc7",
         "worship_date": "2024-02-18T19:00:00",
         "singers": [
             {
@@ -548,6 +608,7 @@ export const worshipData = [
         ]
     },
     {
+        "worship_id": "bf701661-3ab3-481c-aebf-59d2fd9d7331",
         "worship_date": "2024-02-04T19:00:00",
         "singers": [
             {
@@ -565,6 +626,7 @@ export const worshipData = [
         ]
     },
     {
+        "worship_id": "25112b4f-74d7-49de-8168-46f010d3547e",
         "worship_date": "2024-01-28T19:00:00",
         "singers": [
             {
@@ -583,6 +645,7 @@ export const worshipData = [
         ]
     },
     {
+        "worship_id": "b2d91437-9d20-4166-ac8f-44168ed49661",
         "worship_date": "2024-01-21T19:00:00",
         "singers": [
             {
@@ -601,6 +664,7 @@ export const worshipData = [
         ]
     },
     {
+        "worship_id": "8ba2fa3a-d1be-4d05-ba86-16f156d0cf88",
         "worship_date": "2024-01-14T19:00:00",
         "singers": [
             {
@@ -618,6 +682,7 @@ export const worshipData = [
         ]
     },
     {
+        "worship_id": "592b40c1-f5e7-4387-a012-220b5da28688",
         "worship_date": "2024-01-07T19:00:00",
         "singers": [
             {
