@@ -76,9 +76,9 @@ export function WorshipForm() {
     try {
       // const { data, error } = await supabase.from("singer").select("*");
       const data = mock2;
-      const error = null as unknown as { message: string };
+
       console.error(data);
-      if (error) throw new Error(error.message);
+      // if (error) throw new Error(error.message);
 
       setSingers(data);
     } catch (err) {
@@ -101,7 +101,7 @@ export function WorshipForm() {
         singers_id: data.singers.map((singer) => singer.value),
       });
 
-      form.reset();
+      // form.reset();
 
       toast({
         title: "Worship session added",

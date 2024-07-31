@@ -16,7 +16,7 @@ export const data = [
 
 export const worshipDataMock = [
     {
-        "worship_id": "0b2b8578-7118-4856-af64-f5ff93522646",
+        "worship_id": "d730505c-daa6-4fdc-872c-c1b87336a2a9",
         "worship_date": "2024-07-28T19:00:00",
         "singers": [
             {
@@ -25,8 +25,8 @@ export const worshipDataMock = [
                 "role": "lead"
             },
             {
-                "id": "b0b2df60-0395-42fd-91d1-743c9790c72b",
-                "name": "Gilton",
+                "id": "f957eb57-5f87-4fa3-889f-d4a488afc1d3",
+                "name": "Emanuel",
                 "role": "backing"
             },
             {
@@ -35,8 +35,8 @@ export const worshipDataMock = [
                 "role": "backing"
             },
             {
-                "id": "f957eb57-5f87-4fa3-889f-d4a488afc1d3",
-                "name": "Emanuel",
+                "id": "b0b2df60-0395-42fd-91d1-743c9790c72b",
+                "name": "Gilton",
                 "role": "backing"
             },
             {
@@ -54,9 +54,35 @@ export const worshipDataMock = [
         ]
     },
     {
-        "worship_id": "547ff069-8d13-48b9-8df0-702a4a102206",
+        "worship_id": "d39051da-a04d-4c02-92a2-c21de2207bc2",
         "worship_date": "2024-07-21T19:00:00",
-        "singers": [],
+        "singers": [
+            {
+                "id": "9dce66d8-775b-47b1-bd31-1d3c58d311bf",
+                "name": "Valdo",
+                "role": "lead"
+            },
+            {
+                "id": "aaad0703-a369-4c9d-83d7-93308155f173",
+                "name": "Ariel",
+                "role": "backing"
+            },
+            {
+                "id": "eb87e077-354f-4e9f-8e89-4165ac1d1eb4",
+                "name": "Guilherme",
+                "role": "backing"
+            },
+            {
+                "id": "5b4a2361-d668-4688-b048-e1ed63ffc161",
+                "name": "Karine",
+                "role": "backing"
+            },
+            {
+                "id": "00748e37-f291-4955-a42d-6c824fba6722",
+                "name": "Fada",
+                "role": "backing"
+            }
+        ],
         "music_titles": [
             "As muitas gerações",
             "Minha vida entrego a ti",
@@ -143,9 +169,35 @@ export const worshipDataMock = [
         ]
     },
     {
-        "worship_id": "71828bbf-0100-48ea-ae08-027ac168e563",
+        "worship_id": "18150a6f-3574-4994-84de-d2815733f859",
         "worship_date": "2024-06-23T19:00:00",
-        "singers": [],
+        "singers": [
+            {
+                "id": "5499accb-57a7-4933-b7a7-3b1ae6995909",
+                "name": "Telma",
+                "role": "lead"
+            },
+            {
+                "id": "fb2b9089-23cc-489b-aa61-fa1be0acbaf7",
+                "name": "Elvis",
+                "role": "backing"
+            },
+            {
+                "id": "aaad0703-a369-4c9d-83d7-93308155f173",
+                "name": "Ariel",
+                "role": "backing"
+            },
+            {
+                "id": "eb52cc0a-3ee2-4d06-b470-62a3a8cf28b6",
+                "name": "Amanda",
+                "role": "backing"
+            },
+            {
+                "id": "841d18d2-0fb2-4a95-8405-65fafab181ed",
+                "name": "Nedina",
+                "role": "backing"
+            }
+        ],
         "music_titles": [
             "Ao que está assentado",
             "Ao que é digno de receber a glória",
@@ -178,6 +230,11 @@ export const worshipDataMock = [
                 "id": "83431f13-b365-473e-952c-f25907ea7c56",
                 "name": "Mahiaara",
                 "role": "backing"
+            },
+            {
+                "id": "9dce66d8-775b-47b1-bd31-1d3c58d311bf",
+                "name": "Valdo",
+                "role": "lead"
             }
         ],
         "music_titles": [
@@ -308,7 +365,7 @@ export const worshipDataMock = [
         ]
     },
     {
-        "worship_id": "72fa182b-1b82-4a9e-bdba-7e54debb652b",
+        "worship_id": "a895bc86-7012-4a12-9c75-82709e522aeb",
         "worship_date": "2024-05-19T19:00:00",
         "singers": [
             {
@@ -338,7 +395,10 @@ export const worshipDataMock = [
             }
         ],
         "music_titles": [
-            "Que o Senhor te abençoe"
+            "Ele é exaltado",
+            "Existe um rio Senhor",
+            "Que o Senhor te abençoe",
+            "Tu és bem vindo aqui"
         ]
     },
     {
@@ -380,13 +440,38 @@ export const worshipDataMock = [
         ]
     },
     {
-        "worship_id": "d6d8d526-8c7b-4b05-8dd3-4fbc2b93734a",
+        "worship_id": "dc74caaa-fd45-4389-b30f-65a6b0237e81",
         "worship_date": "2024-05-05T19:00:00",
         "singers": [
             {
                 "id": "9dce66d8-775b-47b1-bd31-1d3c58d311bf",
                 "name": "Valdo",
                 "role": "lead"
+            },
+            {
+                "id": "fcd46f58-123e-43d1-b1de-d20ab0f4ac77",
+                "name": "Luciene",
+                "role": "backing"
+            },
+            {
+                "id": "aaad0703-a369-4c9d-83d7-93308155f173",
+                "name": "Ariel",
+                "role": "backing"
+            },
+            {
+                "id": "841d18d2-0fb2-4a95-8405-65fafab181ed",
+                "name": "Nedina",
+                "role": "backing"
+            },
+            {
+                "id": "eb87e077-354f-4e9f-8e89-4165ac1d1eb4",
+                "name": "Guilherme",
+                "role": "backing"
+            },
+            {
+                "id": "c01f60d1-1a49-4d1c-bd0e-f121b3d05322",
+                "name": "Andreina",
+                "role": "backing"
             }
         ],
         "music_titles": [
@@ -407,8 +492,23 @@ export const worshipDataMock = [
                 "role": "lead"
             },
             {
-                "id": "aaad0703-a369-4c9d-83d7-93308155f173",
-                "name": "Ariel",
+                "id": "d6c339cc-fd27-403e-bfd3-b43e5d036ef7",
+                "name": "Vitor",
+                "role": "lead"
+            },
+            {
+                "id": "da739ff8-7cec-49cf-b1b0-3e0236275b04",
+                "name": "Júlia",
+                "role": "backing"
+            },
+            {
+                "id": "b0b2df60-0395-42fd-91d1-743c9790c72b",
+                "name": "Gilton",
+                "role": "backing"
+            },
+            {
+                "id": "00748e37-f291-4955-a42d-6c824fba6722",
+                "name": "Fada",
                 "role": "backing"
             }
         ],
@@ -428,6 +528,26 @@ export const worshipDataMock = [
                 "id": "dca79a51-5c72-4a69-9afc-d04ef48cad70",
                 "name": "Isa",
                 "role": "lead"
+            },
+            {
+                "id": "9dce66d8-775b-47b1-bd31-1d3c58d311bf",
+                "name": "Valdo",
+                "role": "backing"
+            },
+            {
+                "id": "5b4a2361-d668-4688-b048-e1ed63ffc161",
+                "name": "Karine",
+                "role": "backing"
+            },
+            {
+                "id": "eb87e077-354f-4e9f-8e89-4165ac1d1eb4",
+                "name": "Guilherme",
+                "role": "backing"
+            },
+            {
+                "id": "eb52cc0a-3ee2-4d06-b470-62a3a8cf28b6",
+                "name": "Amanda",
+                "role": "backing"
             }
         ],
         "music_titles": [
@@ -447,6 +567,26 @@ export const worshipDataMock = [
                 "id": "3191bcf8-04c3-42fd-a49f-51ab7f46fbe6",
                 "name": "Elian",
                 "role": "lead"
+            },
+            {
+                "id": "b0b2df60-0395-42fd-91d1-743c9790c72b",
+                "name": "Gilton",
+                "role": "backing"
+            },
+            {
+                "id": "83431f13-b365-473e-952c-f25907ea7c56",
+                "name": "Mahiaara",
+                "role": "backing"
+            },
+            {
+                "id": "f957eb57-5f87-4fa3-889f-d4a488afc1d3",
+                "name": "Emanuel",
+                "role": "backing"
+            },
+            {
+                "id": "da739ff8-7cec-49cf-b1b0-3e0236275b04",
+                "name": "Júlia",
+                "role": "backing"
             }
         ],
         "music_titles": [
@@ -466,6 +606,26 @@ export const worshipDataMock = [
                 "id": "9dce66d8-775b-47b1-bd31-1d3c58d311bf",
                 "name": "Valdo",
                 "role": "lead"
+            },
+            {
+                "id": "5b4a2361-d668-4688-b048-e1ed63ffc161",
+                "name": "Karine",
+                "role": "backing"
+            },
+            {
+                "id": "dca79a51-5c72-4a69-9afc-d04ef48cad70",
+                "name": "Isa",
+                "role": "backing"
+            },
+            {
+                "id": "f957eb57-5f87-4fa3-889f-d4a488afc1d3",
+                "name": "Emanuel",
+                "role": "backing"
+            },
+            {
+                "id": "eb87e077-354f-4e9f-8e89-4165ac1d1eb4",
+                "name": "Guilherme",
+                "role": "backing"
             }
         ],
         "music_titles": [
@@ -484,6 +644,26 @@ export const worshipDataMock = [
                 "id": "5499accb-57a7-4933-b7a7-3b1ae6995909",
                 "name": "Telma",
                 "role": "lead"
+            },
+            {
+                "id": "fb2b9089-23cc-489b-aa61-fa1be0acbaf7",
+                "name": "Elvis",
+                "role": "backing"
+            },
+            {
+                "id": "46e7690b-e907-4ce7-997b-413fc1ef5cd2",
+                "name": "Rozane",
+                "role": "backing"
+            },
+            {
+                "id": "d6c339cc-fd27-403e-bfd3-b43e5d036ef7",
+                "name": "Vitor",
+                "role": "backing"
+            },
+            {
+                "id": "da739ff8-7cec-49cf-b1b0-3e0236275b04",
+                "name": "Júlia",
+                "role": "backing"
             }
         ],
         "music_titles": [
@@ -502,6 +682,26 @@ export const worshipDataMock = [
                 "id": "dca79a51-5c72-4a69-9afc-d04ef48cad70",
                 "name": "Isa",
                 "role": "lead"
+            },
+            {
+                "id": "24727896-a632-491e-8861-8073f45513af",
+                "name": "Robson",
+                "role": "backing"
+            },
+            {
+                "id": "eb52cc0a-3ee2-4d06-b470-62a3a8cf28b6",
+                "name": "Amanda",
+                "role": "backing"
+            },
+            {
+                "id": "b0b2df60-0395-42fd-91d1-743c9790c72b",
+                "name": "Gilton",
+                "role": "backing"
+            },
+            {
+                "id": "83431f13-b365-473e-952c-f25907ea7c56",
+                "name": "Mahiaara",
+                "role": "backing"
             }
         ],
         "music_titles": [
@@ -525,6 +725,21 @@ export const worshipDataMock = [
                 "id": "aaad0703-a369-4c9d-83d7-93308155f173",
                 "name": "Ariel",
                 "role": "backing"
+            },
+            {
+                "id": "fcd46f58-123e-43d1-b1de-d20ab0f4ac77",
+                "name": "Luciene",
+                "role": "backing"
+            },
+            {
+                "id": "f957eb57-5f87-4fa3-889f-d4a488afc1d3",
+                "name": "Emanuel",
+                "role": "backing"
+            },
+            {
+                "id": "00748e37-f291-4955-a42d-6c824fba6722",
+                "name": "Fada",
+                "role": "backing"
             }
         ],
         "music_titles": [
@@ -543,6 +758,26 @@ export const worshipDataMock = [
                 "id": "3191bcf8-04c3-42fd-a49f-51ab7f46fbe6",
                 "name": "Elian",
                 "role": "lead"
+            },
+            {
+                "id": "c01f60d1-1a49-4d1c-bd0e-f121b3d05322",
+                "name": "Andreina",
+                "role": "backing"
+            },
+            {
+                "id": "eb87e077-354f-4e9f-8e89-4165ac1d1eb4",
+                "name": "Guilherme",
+                "role": "backing"
+            },
+            {
+                "id": "b0b2df60-0395-42fd-91d1-743c9790c72b",
+                "name": "Gilton",
+                "role": "backing"
+            },
+            {
+                "id": "841d18d2-0fb2-4a95-8405-65fafab181ed",
+                "name": "Nedina",
+                "role": "backing"
             }
         ],
         "music_titles": [
@@ -561,6 +796,31 @@ export const worshipDataMock = [
                 "id": "9dce66d8-775b-47b1-bd31-1d3c58d311bf",
                 "name": "Valdo",
                 "role": "lead"
+            },
+            {
+                "id": "46e7690b-e907-4ce7-997b-413fc1ef5cd2",
+                "name": "Rozane",
+                "role": "backing"
+            },
+            {
+                "id": "aaad0703-a369-4c9d-83d7-93308155f173",
+                "name": "Ariel",
+                "role": "backing"
+            },
+            {
+                "id": "5b4a2361-d668-4688-b048-e1ed63ffc161",
+                "name": "Karine",
+                "role": "backing"
+            },
+            {
+                "id": "eb87e077-354f-4e9f-8e89-4165ac1d1eb4",
+                "name": "Guilherme",
+                "role": "backing"
+            },
+            {
+                "id": "da739ff8-7cec-49cf-b1b0-3e0236275b04",
+                "name": "Júlia",
+                "role": "backing"
             }
         ],
         "music_titles": [
@@ -579,6 +839,31 @@ export const worshipDataMock = [
                 "id": "3191bcf8-04c3-42fd-a49f-51ab7f46fbe6",
                 "name": "Elian",
                 "role": "lead"
+            },
+            {
+                "id": "f957eb57-5f87-4fa3-889f-d4a488afc1d3",
+                "name": "Emanuel",
+                "role": "backing"
+            },
+            {
+                "id": "eb52cc0a-3ee2-4d06-b470-62a3a8cf28b6",
+                "name": "Amanda",
+                "role": "backing"
+            },
+            {
+                "id": "b0b2df60-0395-42fd-91d1-743c9790c72b",
+                "name": "Gilton",
+                "role": "backing"
+            },
+            {
+                "id": "dca79a51-5c72-4a69-9afc-d04ef48cad70",
+                "name": "Isa",
+                "role": "backing"
+            },
+            {
+                "id": "fcd46f58-123e-43d1-b1de-d20ab0f4ac77",
+                "name": "Luciene",
+                "role": "backing"
             }
         ],
         "music_titles": [
@@ -597,6 +882,31 @@ export const worshipDataMock = [
                 "id": "5499accb-57a7-4933-b7a7-3b1ae6995909",
                 "name": "Telma",
                 "role": "lead"
+            },
+            {
+                "id": "fb2b9089-23cc-489b-aa61-fa1be0acbaf7",
+                "name": "Elvis",
+                "role": "backing"
+            },
+            {
+                "id": "00748e37-f291-4955-a42d-6c824fba6722",
+                "name": "Fada",
+                "role": "backing"
+            },
+            {
+                "id": "24727896-a632-491e-8861-8073f45513af",
+                "name": "Robson",
+                "role": "backing"
+            },
+            {
+                "id": "83431f13-b365-473e-952c-f25907ea7c56",
+                "name": "Mahiaara",
+                "role": "backing"
+            },
+            {
+                "id": "c01f60d1-1a49-4d1c-bd0e-f121b3d05322",
+                "name": "Andreina",
+                "role": "backing"
             }
         ],
         "music_titles": [
@@ -615,6 +925,26 @@ export const worshipDataMock = [
                 "id": "9dce66d8-775b-47b1-bd31-1d3c58d311bf",
                 "name": "Valdo",
                 "role": "lead"
+            },
+            {
+                "id": "fcd46f58-123e-43d1-b1de-d20ab0f4ac77",
+                "name": "Luciene",
+                "role": "backing"
+            },
+            {
+                "id": "aaad0703-a369-4c9d-83d7-93308155f173",
+                "name": "Ariel",
+                "role": "backing"
+            },
+            {
+                "id": "eb87e077-354f-4e9f-8e89-4165ac1d1eb4",
+                "name": "Guilherme",
+                "role": "backing"
+            },
+            {
+                "id": "c01f60d1-1a49-4d1c-bd0e-f121b3d05322",
+                "name": "Andreina",
+                "role": "backing"
             }
         ],
         "music_titles": [
@@ -633,6 +963,26 @@ export const worshipDataMock = [
                 "id": "dca79a51-5c72-4a69-9afc-d04ef48cad70",
                 "name": "Isa",
                 "role": "lead"
+            },
+            {
+                "id": "f957eb57-5f87-4fa3-889f-d4a488afc1d3",
+                "name": "Emanuel",
+                "role": "backing"
+            },
+            {
+                "id": "eb52cc0a-3ee2-4d06-b470-62a3a8cf28b6",
+                "name": "Amanda",
+                "role": "backing"
+            },
+            {
+                "id": "b0b2df60-0395-42fd-91d1-743c9790c72b",
+                "name": "Gilton",
+                "role": "backing"
+            },
+            {
+                "id": "00748e37-f291-4955-a42d-6c824fba6722",
+                "name": "Fada",
+                "role": "backing"
             }
         ],
         "music_titles": [
@@ -652,6 +1002,26 @@ export const worshipDataMock = [
                 "id": "3191bcf8-04c3-42fd-a49f-51ab7f46fbe6",
                 "name": "Elian",
                 "role": "lead"
+            },
+            {
+                "id": "eb87e077-354f-4e9f-8e89-4165ac1d1eb4",
+                "name": "Guilherme",
+                "role": "backing"
+            },
+            {
+                "id": "5b4a2361-d668-4688-b048-e1ed63ffc161",
+                "name": "Karine",
+                "role": "backing"
+            },
+            {
+                "id": "24727896-a632-491e-8861-8073f45513af",
+                "name": "Robson",
+                "role": "backing"
+            },
+            {
+                "id": "83431f13-b365-473e-952c-f25907ea7c56",
+                "name": "Mahiaara",
+                "role": "backing"
             }
         ],
         "music_titles": [
@@ -671,6 +1041,26 @@ export const worshipDataMock = [
                 "id": "5499accb-57a7-4933-b7a7-3b1ae6995909",
                 "name": "Telma",
                 "role": "lead"
+            },
+            {
+                "id": "b0b2df60-0395-42fd-91d1-743c9790c72b",
+                "name": "Gilton",
+                "role": "backing"
+            },
+            {
+                "id": "fb2b9089-23cc-489b-aa61-fa1be0acbaf7",
+                "name": "Elvis",
+                "role": "backing"
+            },
+            {
+                "id": "46e7690b-e907-4ce7-997b-413fc1ef5cd2",
+                "name": "Rozane",
+                "role": "backing"
+            },
+            {
+                "id": "da739ff8-7cec-49cf-b1b0-3e0236275b04",
+                "name": "Júlia",
+                "role": "backing"
             }
         ],
         "music_titles": [

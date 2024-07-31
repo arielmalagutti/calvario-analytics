@@ -27,8 +27,8 @@ export function WorshipProvider({ children }: { children: React.ReactNode }) {
       setIsWorshipLoading(true);
 
       // const { data, error } = await supabase
-      //   .rpc("get_worship_details", { p_org: org })
-      //   .select("*");
+      // .rpc("get_worship_details", { p_org: org })
+      // .select("*");
 
       const data = worshipDataMock;
 
@@ -54,7 +54,11 @@ export function WorshipProvider({ children }: { children: React.ReactNode }) {
       );
       console.log("mock worship d", data);
       console.log("mock worship", worshipData);
-      setWorships(worshipData);
+      setWorships(
+        worshipData.sort((a, b) =>
+          a.worship_date.localeCompare(b.worship_date),
+        ),
+      );
     } finally {
       setIsWorshipLoading(false);
     }

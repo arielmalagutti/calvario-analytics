@@ -1,5 +1,7 @@
 import * as React from "react";
+import { supabase } from "@/lib/supabase";
 
+import { useToast } from "@/components/ui/use-toast";
 import { useWorship } from "@/hooks";
 
 import {
@@ -31,26 +33,54 @@ import {
 import { Input } from "@/components/ui/input";
 import { Loading } from "@/components";
 
-import { columns } from "./columns";
+import { getColumns } from "./columns";
 
 import { WorshipDTO } from "@/dtos/index";
 
 import { ChevronDown, RotateCw } from "lucide-react";
 
-type WorshipTableProps = {
-  data: WorshipDTO[];
+type WorshipTableProps<TData> = {
+  data: TData[];
   onRefresh: () => void;
 };
 
-export function WorshipTable({ data, onRefresh }: WorshipTableProps) {
+export function WorshipTable<TData>({
+  data,
+  onRefresh,
+}: WorshipTableProps<TData>) {
+  const { toast } = useToast();
   const { isWorshipLoading: isLoading } = useWorship();
 
-  const [sorting, setSorting] = React.useState<SortingState>([]);
+  const [sorting, setSorting] = React.useState<SortingState>([
+    {
+      id: "worship_date",
+      desc: true,
+    },
+  ]);
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
     [],
   );
   const [columnVisibility, setColumnVisibility] =
     React.useState<VisibilityState>({});
+
+  const onDelete = async ({ worship_id, worship_date }: WorshipDTO) => {
+    try {
+      await supabase.from("worship").delete().eq("id", worship_id);
+      toast({
+        title: `Worship session of ${worship_date} deleted`,
+      });
+    } catch (error) {
+      if (error instanceof Error) {
+        toast({
+          title: error.name,
+          description: error.message,
+          variant: "destructive",
+        });
+      }
+    }
+  };
+
+  const columns = getColumns({ onDelete });
 
   const table = useReactTable({
     data,
@@ -67,7 +97,6 @@ export function WorshipTable({ data, onRefresh }: WorshipTableProps) {
       columnFilters,
       columnVisibility,
     },
-    sortDescFirst: true,
   });
 
   const tableRow = isLoading ? (

@@ -1,5 +1,3 @@
-import { supabase } from "@/lib/supabase";
-
 import { format } from "date-fns";
 import { SingerDTO, WorshipDTO } from "@/dtos";
 
@@ -15,18 +13,25 @@ import {
 
 import { ArrowUpDown, MoreHorizontal, Trash } from "lucide-react";
 
-export const columns: ColumnDef<WorshipDTO>[] = [
+export const getColumns = ({
+  onDelete,
+}: {
+  onDelete: (worship: WorshipDTO) => void;
+}): ColumnDef<WorshipDTO>[] => [
   {
     accessorKey: "worship_date",
     header: ({ column }) => {
       return (
-        <Button
-          variant="ghost"
-          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-        >
-          Date
-          <ArrowUpDown className="ml-2 h-4 w-4" />
-        </Button>
+        <div className="flex cursor-default items-center gap-1 p-0">
+          <span>Date</span>
+          <Button
+            variant="ghost"
+            onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+            className="p-1"
+          >
+            <ArrowUpDown className="h-4 w-4" />
+          </Button>
+        </div>
       );
     },
     cell: ({ row }) => {
@@ -42,16 +47,19 @@ export const columns: ColumnDef<WorshipDTO>[] = [
   },
 
   {
-    accessorKey: "lead",
+    accessorKey: "lead.name",
     header: ({ column }) => {
       return (
-        <Button
-          variant="ghost"
-          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-        >
-          Lead
-          <ArrowUpDown className="ml-2 h-4 w-4" />
-        </Button>
+        <div className="flex cursor-default items-center gap-1 p-0">
+          <span>Lead</span>
+          <Button
+            variant="ghost"
+            onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+            className="p-1"
+          >
+            <ArrowUpDown className="h-4 w-4" />
+          </Button>
+        </div>
       );
     },
     cell: ({ row }) => {
@@ -63,9 +71,7 @@ export const columns: ColumnDef<WorshipDTO>[] = [
 
   {
     accessorKey: "singers",
-    header: () => {
-      return <div className="w-fit cursor-default p-0">Singers</div>;
-    },
+    header: "Singers",
     cell: ({ row }) => {
       const singers: SingerDTO[] = row.getValue("singers");
 
@@ -86,10 +92,7 @@ export const columns: ColumnDef<WorshipDTO>[] = [
   },
   {
     accessorKey: "music_titles",
-    header: () => {
-      return <div className="cursor-default p-0">Musics</div>;
-    },
-
+    header: "Musics",
     cell: ({ row }) => {
       const musics: string[] = row.getValue("music_titles");
 
@@ -112,16 +115,6 @@ export const columns: ColumnDef<WorshipDTO>[] = [
     enableHiding: false,
     cell: ({ row }) => {
       const worship = row.original;
-
-      const onDelete = async ({ worship_id, worship_date }: WorshipDTO) => {
-        console.log("onDelete", worship_id, worship_date);
-        try {
-          await supabase.from("worship").delete().eq("id", worship_id);
-          console.log(`Worship of ${worship_date} deleted`);
-        } catch (error) {
-          console.error(error);
-        }
-      };
 
       return (
         <DropdownMenu>
