@@ -25,7 +25,7 @@ import { Button } from "@/components/ui/button";
 import Selectable from "@/components/ui/CustomSelect/Select";
 
 import { OrganizationDTO } from "@/dtos";
-import { mock, mock2 } from "./mock";
+import { MUSICS_MOCK, mock2 } from "./mock";
 
 type dataType = Record<"value" | "label", string>;
 export type WorshipFormType = {
@@ -61,7 +61,7 @@ export function WorshipForm() {
   async function fetchMusics() {
     try {
       // const { data, error } = await supabase.from("music").select("*");
-      const data = mock;
+      const data = MUSICS_MOCK;
 
       console.error(data);
       // if (error) throw new Error(error.message);

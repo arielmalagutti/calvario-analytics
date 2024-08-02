@@ -1,9 +1,8 @@
 import { AuthProvider, ThemeProvider, WorshipProvider } from "@/hooks/index";
 
-// import { Home } from "./pages/Home";
-import { Dashboard } from "./pages/Dashboard";
-
 import { Toaster } from "@/components/ui/toaster";
+import { RouterProvider } from "react-router-dom";
+import { router } from "./routes";
 
 function App() {
   return (
@@ -11,8 +10,7 @@ function App() {
       <div className="flex h-screen w-full flex-col">
         <AuthProvider>
           <WorshipProvider>
-            {/* <Home /> */}
-            <Dashboard />
+            <RouterProvider router={router} />
 
             <Toaster />
           </WorshipProvider>

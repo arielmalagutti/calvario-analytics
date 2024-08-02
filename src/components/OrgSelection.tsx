@@ -26,9 +26,9 @@ export function OrgSelection({ selectedOrg, setOrg }: SelectProps) {
     <ShadSelect
       defaultValue={selectedOrg}
       value={selectedOrg}
-      onValueChange={(value) => setOrg(value)}
+      onValueChange={(value: OrganizationDTO) => setOrg(value)}
     >
-      <SelectTrigger className="gap-2 border-none p-0 text-xl font-medium">
+      <SelectTrigger className="w-fit gap-2 border-none p-0 text-xl font-medium">
         <SelectValue />
       </SelectTrigger>
 
@@ -39,9 +39,9 @@ export function OrgSelection({ selectedOrg, setOrg }: SelectProps) {
             value={org.name}
             className="font-medium text-gray-500"
           >
-            {org.Icon && (
+            {/* {org.Icon && (
               <img src={org.Icon} alt={`${org.name.toUpperCase()} icon`} />
-            )}
+            )} */}
             {org.name.toUpperCase()}
           </SelectItem>
         ))}
