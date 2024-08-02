@@ -10,8 +10,12 @@ export const router = createBrowserRouter([
     element: <Root />,
     children: [
       {
+        path: "dashboard",
+        element: <Dashboard />,
+      },
+      {
         index: true,
-        loader: async () => redirect("/worships"),
+        loader: async () => redirect("/dashboard"),
       },
       {
         path: "worships",
@@ -20,10 +24,6 @@ export const router = createBrowserRouter([
       {
         path: "musics",
         element: <Musics />,
-      },
-      {
-        path: "dashboard",
-        element: <Dashboard />,
       },
     ],
   },

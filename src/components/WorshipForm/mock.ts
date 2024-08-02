@@ -471,7 +471,7 @@ export const MUSICS_MOCK: MusicDTO[] = [
     }
 ]
 
-export const mock2 = [
+export const SINGERS_MOCK = [
   {
       "name": "Vitor",
       "last_name": "Avelar",
