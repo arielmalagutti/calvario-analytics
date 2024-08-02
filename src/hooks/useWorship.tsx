@@ -54,11 +54,7 @@ export function WorshipProvider({ children }: { children: React.ReactNode }) {
       );
       console.log("mock worship d", data);
       console.log("mock worship", worshipData);
-      setWorships(
-        worshipData.sort((a, b) =>
-          a.worship_date.localeCompare(b.worship_date),
-        ),
-      );
+      setWorships(worshipData);
     } finally {
       setIsWorshipLoading(false);
     }

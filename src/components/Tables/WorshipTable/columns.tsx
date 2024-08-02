@@ -47,6 +47,7 @@ export const getColumns = ({
   },
 
   {
+    id: "lead",
     accessorKey: "lead.name",
     header: ({ column }) => {
       return (
@@ -63,9 +64,9 @@ export const getColumns = ({
       );
     },
     cell: ({ row }) => {
-      const lead: SingerDTO = row.getValue("lead");
+      const lead: string = row.getValue("lead");
 
-      return <div className="w-full max-w-64">{lead ? lead.name : ""}</div>;
+      return <div className="w-full max-w-64">{lead ?? ""}</div>;
     },
   },
 
