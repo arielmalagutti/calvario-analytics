@@ -3,7 +3,7 @@ import { ChevronRight, EllipsisVertical, Plus } from "lucide-react";
 
 import { MusicDTO, OrganizationDTO } from "@/dtos";
 
-import { MusicsTable, OrgSelection } from "@/components";
+import { OrgSelection } from "@/components";
 import { WorshipForm } from "@/components/WorshipForm";
 import {
   DropdownMenu,
@@ -11,7 +11,8 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { MUSICS_MOCK } from "@/components/WorshipForm/mock";
+import { MUSICS_TAGS_MOCK } from "@/components/WorshipForm/mock";
+import { MusicTable } from "@/components/Tables/MusicTable";
 
 export default function Musics() {
   const [musics, setMusics] = useState<MusicDTO[]>([]);
@@ -25,7 +26,7 @@ export default function Musics() {
       // const { data } = await supabase.rpc("music_info").select();
       // console.log("dataaa", data);
       // if (data) setMusics(data);
-      setMusics(MUSICS_MOCK);
+      setMusics(MUSICS_TAGS_MOCK);
     } catch (error) {
       console.error(error);
     }
@@ -76,7 +77,7 @@ export default function Musics() {
       <div className="flex flex-1 flex-col gap-6">
         {worshipFormOpen && <WorshipForm />}
 
-        <MusicsTable data={musics} onRefresh={() => fetchMusics(selectedOrg)} />
+        <MusicTable data={musics} onRefresh={() => fetchMusics(selectedOrg)} />
       </div>
     </>
   );
