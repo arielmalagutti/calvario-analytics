@@ -27,8 +27,8 @@ export function Header({ user }: HeaderProps) {
   return (
     <div className="flex max-h-16 min-w-full items-center justify-between border-b-[1px] border-[hsl(var(--border))] px-12 py-4">
       <div className="flex items-center gap-11">
-        <h1 className="inline-block bg-gradient-to-br from-pink-200 from-5% via-pink-400 to-pink-600 to-95% bg-clip-text text-2xl font-bold text-transparent">
-          Louvores IBC/JUBAC
+        <h1 className="inline-block bg-gradient-to-br from-pink-200 from-5% via-pink-400 to-pink-600 to-95% bg-clip-text text-xl font-bold text-transparent">
+          Calvário Analytics
         </h1>
 
         <div className="flex gap-4 self-center">
