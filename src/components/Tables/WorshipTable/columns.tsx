@@ -1,7 +1,5 @@
-import { supabase } from "@/lib/supabase";
-
 import { format } from "date-fns";
-import { WorshipDTO } from "@/dtos";
+import { SingerDTO, WorshipDTO } from "@/dtos";
 
 import { ColumnDef } from "@tanstack/react-table";
 import { Button } from "@/components/ui/button";
@@ -11,103 +9,105 @@ import {
   DropdownMenuItem,
   DropdownMenuLabel,
   DropdownMenuTrigger,
-} from "@radix-ui/react-dropdown-menu";
+} from "@/components/ui/dropdown-menu";
 
 import { ArrowUpDown, MoreHorizontal, Trash } from "lucide-react";
 
-export const columns: ColumnDef<WorshipDTO>[] = [
+export const getColumns = ({
+  onDelete,
+}: {
+  onDelete: (worship: WorshipDTO) => void;
+}): ColumnDef<WorshipDTO>[] => [
   {
-    accessorKey: "date",
+    accessorKey: "worship_date",
     header: ({ column }) => {
       return (
-        <Button
-          variant="ghost"
-          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-          className="p-0"
-        >
-          Date
-          <ArrowUpDown className="ml-2 h-4 w-4" />
-        </Button>
+        <div className="flex cursor-default items-center gap-1">
+          <span>Date</span>
+          <Button
+            variant="ghost"
+            onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+            className="p-1"
+          >
+            <ArrowUpDown className="h-4 w-4" />
+          </Button>
+        </div>
       );
     },
     cell: ({ row }) => {
-      const date: string | undefined = row.getValue("date");
+      const date: string | undefined = row.getValue("worship_date");
 
       if (date) {
         const formattedDate = format(new Date(date), `MMMM dd yyyy`);
-        return <div className="max-w-64 w-full">{formattedDate}</div>;
+        return <div className="w-[8.25rem]">{formattedDate}</div>;
       }
 
-      return <div className="max-w-64 w-full">-</div>;
+      return <div className="w-[8.25rem]">-</div>;
     },
   },
 
   {
-    accessorKey: "lead",
+    id: "lead",
+    accessorKey: "lead.name",
     header: ({ column }) => {
       return (
-        <Button
-          variant="ghost"
-          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-          className="p-0"
-        >
-          Lead
-          <ArrowUpDown className="ml-2 h-4 w-4" />
-        </Button>
-      );
-    },
-
-    cell: ({ row }) => {
-      const name = row.getValue("singers");
-
-      console.log(name);
-
-      const leadName = `${name} $lastName`;
-      return <div className="max-w-64 w-full">{leadName}</div>;
-    },
-  },
-
-  {
-    accessorKey: "musics",
-    header: ({ column }) => {
-      return (
-        <Button
-          variant="ghost"
-          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-          className="p-0"
-        >
-          Musics
-        </Button>
+        <div className="flex cursor-default items-center gap-1">
+          <span>Lead</span>
+          <Button
+            variant="ghost"
+            onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+            className="p-1"
+          >
+            <ArrowUpDown className="h-4 w-4" />
+          </Button>
+        </div>
       );
     },
     cell: ({ row }) => {
-      const musics: string[] = row.getValue("musics");
+      const lead: string = row.getValue("lead");
 
-      if (!musics) return <div className="max-w-64 w-full">-</div>;
-
-      return <div className="max-w-64 w-full">{musics.join(", ")}</div>;
+      return <div className="w-full max-w-64">{lead ?? ""}</div>;
     },
   },
 
   {
     accessorKey: "singers",
-    header: ({ column }) => {
+    header: "Singers",
+    cell: ({ row }) => {
+      const singers: SingerDTO[] = row.getValue("singers");
+
+      if (!singers.length) return <div className="w-full max-w-44">-</div>;
+
       return (
-        <Button
-          variant="ghost"
-          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-          className="p-0"
-        >
-          Singers
-        </Button>
+        <ul className="w-full max-w-64">
+          {singers.map((singer, id) => {
+            return (
+              <li key={id} className="dark:text-gray-300">
+                - {singer.name}
+              </li>
+            );
+          })}
+        </ul>
       );
     },
+  },
+  {
+    accessorKey: "music_titles",
+    header: "Musics",
     cell: ({ row }) => {
-      const musics: string[] = row.getValue("singers");
+      const musics: string[] = row.getValue("music_titles");
 
-      if (!musics) return <div className="max-w-64 w-full">-</div>;
+      if (!musics.length) return <div className="w-full max-w-64">-</div>;
 
-      return <div className="max-w-64 w-full">{musics.join(", ")}</div>;
+      return (
+        <ul className="w-full max-w-64">
+          {musics.map((title, id) => (
+            <li key={id} className="dark:text-gray-300">
+              - {title}
+            </li>
+          ))}
+        </ul>
+      );
     },
   },
 
@@ -116,14 +116,6 @@ export const columns: ColumnDef<WorshipDTO>[] = [
     enableHiding: false,
     cell: ({ row }) => {
       const worship = row.original;
-
-      async function deleteItem(id: string) {
-        try {
-          await supabase.from("music").delete().eq("id", id);
-        } catch (error) {
-          console.error(error);
-        }
-      }
 
       return (
         <DropdownMenu>
@@ -137,8 +129,8 @@ export const columns: ColumnDef<WorshipDTO>[] = [
           <DropdownMenuContent align="start">
             <DropdownMenuLabel>Actions</DropdownMenuLabel>
             <DropdownMenuItem
-              onClick={() => deleteItem(worship.id)}
-              className="text-red-700 dark:text-red-600 focus:text-red-500"
+              onClick={() => onDelete(worship)}
+              className="text-red-700 focus:text-red-500 dark:text-red-600"
             >
               <Trash />
               Delete

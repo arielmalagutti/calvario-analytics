@@ -1,10 +1,14 @@
-import { UserDTO } from "@/dtos";
 import { createContext, useContext, useEffect, useState } from "react";
 import * as z from "zod";
 
+import { UserDTO } from "@/dtos";
+
+import { supabase } from "@/lib/supabase";
+import { User as UserType } from "@supabase/supabase-js";
+
 type AuthProviderType = {
-  user: UserDTO;
-  validateUser: (user: UserDTO) => void;
+  user: UserType;
+  signIn: (user: UserDTO) => Promise<void>;
 };
 
 const loginSchema = z.object({
@@ -12,30 +16,39 @@ const loginSchema = z.object({
     .string({ message: "Invalid username" })
     .includes(import.meta.env.VITE_USERNAME),
   password: z
-    .string({ message: "Invalid username" })
+    .string({ message: "Invalid password" })
     .includes(import.meta.env.VITE_PASSWORD),
 });
 
 const AuthContext = createContext<AuthProviderType>({} as AuthProviderType);
 
 export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
-  const [user, setUser] = useState({} as UserDTO);
+  const [user, setUser] = useState({} as UserType);
 
-  function validateUser(user: UserDTO) {
-    try {
-      const validatedLogin = loginSchema.parse(user);
-      if (validatedLogin) setUser(validatedLogin);
-    } catch (error) {
-      console.error(error);
-    }
+  async function getUser() {
+    const { data: userData, error } = await supabase.auth.getUser();
+    if (error) throw new Error(error.message);
+
+    setUser(userData.user);
+  }
+
+  async function signIn(user: UserDTO) {
+    const login = loginSchema.safeParse(user);
+    if (login.error) throw new Error("Wrong credentials.");
+
+    const { error } = await supabase.auth.signInWithOAuth({
+      provider: "github",
+    });
+
+    if (error) throw new Error(error.message);
   }
 
   useEffect(() => {
-    console.log(user);
-  }, [user]);
+    getUser();
+  }, []);
 
   return (
-    <AuthContext.Provider value={{ user, validateUser }}>
+    <AuthContext.Provider value={{ user, signIn }}>
       {children}
     </AuthContext.Provider>
   );

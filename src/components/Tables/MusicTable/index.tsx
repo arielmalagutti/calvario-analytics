@@ -1,7 +1,5 @@
 import * as React from "react";
 
-import { MusicInfoDTO } from "@/dtos/index";
-
 import {
   ColumnFiltersState,
   SortingState,
@@ -13,7 +11,6 @@ import {
   getSortedRowModel,
   useReactTable,
 } from "@tanstack/react-table";
-
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
@@ -21,7 +18,6 @@ import {
   DropdownMenuContent,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { Input } from "@/components/ui/input";
 import {
   Table,
   TableBody,
@@ -30,23 +26,34 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import { Input } from "@/components/ui/input";
+import { Loading } from "@/components";
 
-import { columns } from "./columns";
+import { getColumns } from "./columns";
 
 import { ChevronDown, RotateCw } from "lucide-react";
 
-type MusicsTableProps = {
-  data: MusicInfoDTO[];
+type MusicTableProps<TData> = {
+  data: TData[];
   onRefresh: () => void;
 };
 
-export function MusicsTable({ data, onRefresh }: MusicsTableProps) {
-  const [sorting, setSorting] = React.useState<SortingState>([]);
+export function MusicTable<TData>({ data, onRefresh }: MusicTableProps<TData>) {
+  const isLoading = false;
+
+  const [sorting, setSorting] = React.useState<SortingState>([
+    {
+      id: "title",
+      desc: false,
+    },
+  ]);
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
-    []
+    [],
   );
   const [columnVisibility, setColumnVisibility] =
     React.useState<VisibilityState>({});
+
+  const columns = getColumns<TData>();
 
   const table = useReactTable({
     data,
@@ -65,19 +72,28 @@ export function MusicsTable({ data, onRefresh }: MusicsTableProps) {
     },
   });
 
+  const tableRow = isLoading ? (
+    <TableRow>
+      <TableCell colSpan={columns.length} className="h-24 text-center">
+        <Loading iconClasses="h-6 w-6" />
+      </TableCell>
+    </TableRow>
+  ) : (
+    <TableRow>
+      <TableCell colSpan={columns.length} className="h-24 text-center">
+        No results.
+      </TableCell>
+    </TableRow>
+  );
+
   return (
     <div className="w-full">
-      <div className="flex items-center justify-between py-4">
+      <div className="flex items-center justify-between gap-8 py-4">
         <Input
-          placeholder={"Filter dates..."}
-          value={
-            (table.getColumn("last_played_date")?.getFilterValue() as string) ??
-            ""
-          }
+          placeholder={"Filter titles..."}
+          value={(table.getColumn("title")?.getFilterValue() as string) ?? ""}
           onChange={(event) =>
-            table
-              .getColumn("last_played_date")
-              ?.setFilterValue(event.target.value)
+            table.getColumn("title")?.setFilterValue(event.target.value)
           }
           className="max-w-72"
         />
@@ -111,8 +127,8 @@ export function MusicsTable({ data, onRefresh }: MusicsTableProps) {
             </DropdownMenuContent>
           </DropdownMenu>
 
-          <Button variant="outline" className="ml-auto" onClick={onRefresh}>
-            <RotateCw className="h-4 w-4 font-medium hover:animate-spin-once" />
+          <Button variant="outline" className="group" onClick={onRefresh}>
+            <RotateCw className="h-4 w-4 font-medium group-hover:animate-spin-once" />
           </Button>
         </div>
       </div>
@@ -129,7 +145,7 @@ export function MusicsTable({ data, onRefresh }: MusicsTableProps) {
                         ? null
                         : flexRender(
                             header.column.columnDef.header,
-                            header.getContext()
+                            header.getContext(),
                           )}
                     </TableHead>
                   );
@@ -139,40 +155,30 @@ export function MusicsTable({ data, onRefresh }: MusicsTableProps) {
           </TableHeader>
 
           <TableBody>
-            {table.getRowModel().rows?.length ? (
-              table.getRowModel().rows.map((row) => (
-                <TableRow
-                  key={row.id}
-                  data-state={row.getIsSelected() && "selected"}
-                >
-                  {row.getVisibleCells().map((cell) => (
-                    <TableCell key={cell.id}>
-                      {flexRender(
-                        cell.column.columnDef.cell,
-                        cell.getContext()
-                      )}
-                    </TableCell>
-                  ))}
-                </TableRow>
-              ))
-            ) : (
-              <TableRow>
-                <TableCell
-                  colSpan={columns.length}
-                  className="h-24 text-center"
-                >
-                  No results.
-                </TableCell>
-              </TableRow>
-            )}
+            {table.getRowModel().rows?.length
+              ? table.getRowModel().rows.map((row) => (
+                  <TableRow
+                    key={row.id}
+                    data-state={row.getIsSelected() && "selected"}
+                  >
+                    {row.getVisibleCells().map((cell) => (
+                      <TableCell key={cell.id}>
+                        {flexRender(
+                          cell.column.columnDef.cell,
+                          cell.getContext(),
+                        )}
+                      </TableCell>
+                    ))}
+                  </TableRow>
+                ))
+              : tableRow}
           </TableBody>
         </Table>
       </div>
 
       <div className="flex items-center justify-end space-x-2 py-4">
         <div className="flex-1 text-sm text-muted-foreground">
-          {table.getFilteredSelectedRowModel().rows.length} of{" "}
-          {table.getFilteredRowModel().rows.length} row(s) selected.
+          {table.getFilteredRowModel().rows.length} item(s) found
         </div>
         <div className="space-x-2">
           <Button
@@ -183,6 +189,7 @@ export function MusicsTable({ data, onRefresh }: MusicsTableProps) {
           >
             Previous
           </Button>
+
           <Button
             variant="outline"
             size="sm"

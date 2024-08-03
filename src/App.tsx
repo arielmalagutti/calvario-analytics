@@ -1,15 +1,19 @@
-import { AuthProvider, ThemeProvider } from "@/hooks/index";
+import { AuthProvider, ThemeProvider, WorshipProvider } from "@/hooks/index";
 
-import { Home } from "./pages/Home";
-import { Dashboard } from "./pages/Dashboard";
+import { Toaster } from "@/components/ui/toaster";
+import { RouterProvider } from "react-router-dom";
+import { router } from "./routes";
 
 function App() {
   return (
     <ThemeProvider defaultTheme="light">
-      <div className="h-screen w-full flex flex-col">
+      <div className="flex h-screen w-full flex-col">
         <AuthProvider>
-          {/* <Home /> */}
-          <Dashboard />
+          <WorshipProvider>
+            <RouterProvider router={router} />
+
+            <Toaster />
+          </WorshipProvider>
         </AuthProvider>
       </div>
     </ThemeProvider>

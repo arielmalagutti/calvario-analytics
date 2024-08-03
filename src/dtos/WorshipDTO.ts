@@ -1,14 +1,12 @@
 import { OrganizationDTO } from "./OrganizationDTO";
-import { MusicDTO } from "./MusicDTO";
 import { SingerDTO } from "./SingerDTO";
 
 export type WorshipDTO = {
-  id: string;
-  date: Date;
-  
+  worship_id: string;
+  worship_date: string;
   org: OrganizationDTO;
-  lead: string;
 
+  lead?: SingerDTO;
   singers: SingerDTO[];
-  musics: MusicDTO[]
-}
+  music_titles: string[];
+};

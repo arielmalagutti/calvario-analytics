@@ -14,15 +14,31 @@ import {
   SheetTitle,
   SheetTrigger,
 } from "@/components/ui/sheet";
+import { useToast } from "@/components/ui/use-toast";
+import { UserDTO } from "@/dtos";
 
 export function LoginSheet() {
-  const { validateUser } = useAuth();
+  const { signIn } = useAuth();
+  const { toast } = useToast();
 
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
 
-  function handleLogin(user: { name: string; password: string }) {
-    validateUser(user);
+  async function handleLogin(user: UserDTO) {
+    try {
+      await signIn(user);
+    } catch (error) {
+      const errorMessage =
+        error instanceof Error ? error.message : "Invalid username or password";
+
+      console.error(error);
+
+      toast({
+        title: "Something went wrong",
+        description: errorMessage,
+        variant: "destructive",
+      });
+    }
   }
 
   return (
@@ -30,11 +46,16 @@ export function LoginSheet() {
       <SheetTrigger asChild>
         <Button variant="outline">Login</Button>
       </SheetTrigger>
+
       <SheetContent>
         <SheetHeader>
           <SheetTitle>Login</SheetTitle>
         </SheetHeader>
-        <div className="grid gap-4 py-4">
+
+        <form
+          onSubmit={() => handleLogin({ name: username, password })}
+          className="grid gap-4 py-4"
+        >
           <div className="grid grid-cols-4 items-center gap-4">
             <Label htmlFor="name" className="text-right">
               Username
@@ -61,7 +82,7 @@ export function LoginSheet() {
               className="col-span-3"
             />
           </div>
-        </div>
+        </form>
 
         <SheetFooter>
           <SheetClose asChild>

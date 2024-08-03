@@ -1,8 +1,4 @@
 import * as React from "react";
-import { supabase } from "@/lib/supabase";
-
-import { useToast } from "@/components/ui/use-toast";
-import { useWorship } from "@/hooks";
 
 import {
   ColumnFiltersState,
@@ -35,25 +31,22 @@ import { Loading } from "@/components";
 
 import { getColumns } from "./columns";
 
-import { WorshipDTO } from "@/dtos/index";
-
 import { ChevronDown, RotateCw } from "lucide-react";
 
-type WorshipTableProps<TData> = {
+type DashboardTableProps<TData> = {
   data: TData[];
   onRefresh: () => void;
 };
 
-export function WorshipTable<TData>({
+export function DashboardTable<TData>({
   data,
   onRefresh,
-}: WorshipTableProps<TData>) {
-  const { toast } = useToast();
-  const { isWorshipLoading: isLoading } = useWorship();
+}: DashboardTableProps<TData>) {
+  const isLoading = false;
 
   const [sorting, setSorting] = React.useState<SortingState>([
     {
-      id: "worship_date",
+      id: "last_played_date",
       desc: true,
     },
   ]);
@@ -63,24 +56,7 @@ export function WorshipTable<TData>({
   const [columnVisibility, setColumnVisibility] =
     React.useState<VisibilityState>({});
 
-  const onDelete = async ({ worship_id, worship_date }: WorshipDTO) => {
-    try {
-      await supabase.from("worship").delete().eq("id", worship_id);
-      toast({
-        title: `Worship session of ${worship_date} deleted`,
-      });
-    } catch (error) {
-      if (error instanceof Error) {
-        toast({
-          title: error.name,
-          description: error.message,
-          variant: "destructive",
-        });
-      }
-    }
-  };
-
-  const columns = getColumns({ onDelete });
+  const columns = getColumns();
 
   const table = useReactTable({
     data,
@@ -117,12 +93,10 @@ export function WorshipTable<TData>({
     <div className="w-full">
       <div className="flex items-center justify-between gap-8 py-4">
         <Input
-          placeholder={"Filter dates..."}
-          value={
-            (table.getColumn("worship_date")?.getFilterValue() as string) ?? ""
-          }
+          placeholder={"Filter titles..."}
+          value={(table.getColumn("title")?.getFilterValue() as string) ?? ""}
           onChange={(event) =>
-            table.getColumn("worship_date")?.setFilterValue(event.target.value)
+            table.getColumn("title")?.setFilterValue(event.target.value)
           }
           className="max-w-72"
         />
@@ -207,8 +181,7 @@ export function WorshipTable<TData>({
 
       <div className="flex items-center justify-end space-x-2 py-4">
         <div className="flex-1 text-sm text-muted-foreground">
-          {table.getFilteredSelectedRowModel().rows.length} of{" "}
-          {table.getFilteredRowModel().rows.length} row(s) selected.
+          {table.getFilteredRowModel().rows.length} item(s) found
         </div>
         <div className="space-x-2">
           <Button
