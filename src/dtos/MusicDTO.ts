@@ -1,4 +1,4 @@
-export type TagsDTO =  {
+export type Tags =  {
   tags: Array<string | null>;
 }
 
@@ -7,7 +7,7 @@ export type MusicBodyDTO =  {
   title: string;
 }
 
-export type MusicTagsDTO = MusicBodyDTO & TagsDTO
+export type MusicTagsDTO = MusicBodyDTO & Tags
 
 export type MusicDTO =  MusicBodyDTO | MusicTagsDTO
 

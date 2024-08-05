@@ -11,8 +11,8 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { MUSICS_TAGS_MOCK } from "@/components/WorshipForm/mock";
 import { MusicTable } from "@/components/Tables/MusicTable";
+import { MUSICS_TAGS_MOCK } from "@/MOCK_DATA";
 
 export default function Musics() {
   const [musics, setMusics] = useState<MusicDTO[]>([]);

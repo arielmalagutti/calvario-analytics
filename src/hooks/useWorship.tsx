@@ -4,7 +4,7 @@ import { OrganizationDTO, SingerDTO, WorshipDTO } from "@/dtos";
 
 import { supabase } from "@/lib/supabase";
 import { CreateWorshipSchema } from "@/schemas/WorshipSchemas";
-import { worshipDataMock } from "@/MOCK_DATA";
+import { WORSHIP_DATA_MOCK } from "@/MOCK_DATA";
 
 type WorshipContextType = {
   worships: WorshipDTO[];
@@ -30,7 +30,7 @@ export function WorshipProvider({ children }: { children: React.ReactNode }) {
       // .rpc("get_worship_details", { p_org: org })
       // .select("*");
 
-      const data = worshipDataMock;
+      const data = WORSHIP_DATA_MOCK;
 
       // if (error) throw new Error(error.message);
 
