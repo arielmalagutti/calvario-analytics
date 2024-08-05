@@ -8,7 +8,7 @@ import {
  * styles that aligns with shadcn/ui
  */
 const controlStyles = {
-  base: "flex !min-h-9 w-full rounded-md border border-input bg-transparent pl-3 py-1 pr-1 gap-1 text-sm shadow-sm transition-colors hover:cursor-pointer",
+  base: "flex !min-h-9 h-full w-full rounded-md border border-input bg-transparent pl-3 py-1 pr-1 gap-1 text-sm shadow-sm transition-colors hover:cursor-pointer",
   focus: "outline-none ring-1 ring-ring",
   disabled: "cursor-not-allowed opacity-50",
 };
