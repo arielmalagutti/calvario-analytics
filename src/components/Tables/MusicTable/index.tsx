@@ -32,6 +32,8 @@ import { Loading } from "@/components";
 import { getColumns } from "./columns";
 
 import { ChevronDown, RotateCw } from "lucide-react";
+import Selectable from "@/components/ui/CustomSelect/Select";
+import { TAGS_MOCK } from "@/MOCK_DATA";
 
 type MusicTableProps<TData> = {
   data: TData[];
@@ -54,6 +56,8 @@ export function MusicTable<TData>({ data, onRefresh }: MusicTableProps<TData>) {
     React.useState<VisibilityState>({});
 
   const columns = getColumns<TData>();
+
+  const tags = TAGS_MOCK;
 
   const table = useReactTable({
     data,
@@ -89,14 +93,34 @@ export function MusicTable<TData>({ data, onRefresh }: MusicTableProps<TData>) {
   return (
     <div className="w-full">
       <div className="flex items-center justify-between gap-8 py-4">
-        <Input
-          placeholder={"Filter titles..."}
-          value={(table.getColumn("title")?.getFilterValue() as string) ?? ""}
-          onChange={(event) =>
-            table.getColumn("title")?.setFilterValue(event.target.value)
-          }
-          className="max-w-72"
-        />
+        <div className="flex flex-1 gap-4">
+          <Input
+            placeholder={"Filter titles..."}
+            value={(table.getColumn("title")?.getFilterValue() as string) ?? ""}
+            onChange={(event) =>
+              table.getColumn("title")?.setFilterValue(event.target.value)
+            }
+            className="max-w-72"
+          />
+
+          <Selectable
+            isMulti
+            placeholder={"Filter tags..."}
+            options={tags.map((t) => {
+              return { label: t.name, value: t.name };
+            })}
+            onChange={(event) => {
+              table
+                .getColumn("tags")
+                ?.setFilterValue(
+                  (event as { label: string; value: string }[]).map(
+                    (e) => e.value,
+                  ),
+                );
+            }}
+            className="flex-1"
+          />
+        </div>
 
         <div className="flex items-center justify-center gap-4">
           <DropdownMenu>

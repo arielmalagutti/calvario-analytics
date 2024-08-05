@@ -45,33 +45,35 @@ export function getColumns<TData>(): ColumnDef<TData>[] {
       cell: ({ row }) => {
         const tags: string[] = row.getValue("tags");
 
-        if (!tags.length) return <div className="w-full max-w-44">-</div>;
+        if (tags[0] === null) return <div className="w-full max-w-44">-</div>;
 
         return (
-          <div className="flex w-full max-w-64 flex-wrap gap-2">
-            {tags.map((tag, id) => {
-              if (!tag) return "–";
+          <>
+            <div className="flex w-full max-w-64 flex-wrap gap-2">
+              {tags.map((tag, id) => {
+                if (!tag) return "–";
 
-              return (
-                <Badge
-                  key={id}
-                  variant="outline"
-                  className="dark:text-gray-300"
-                >
-                  {tag}
-                </Badge>
-              );
-            })}
-          </div>
+                return (
+                  <Badge
+                    key={id}
+                    variant="outline"
+                    className="dark:text-gray-300"
+                  >
+                    {tag}
+                  </Badge>
+                );
+              })}
+            </div>
+          </>
         );
       },
+      filterFn: "arrIncludesAll",
     },
     {
       id: "actions",
       enableHiding: false,
       cell: ({ row }) => {
-        const music = row.original;
-        console.log("MUSICS-TABLE/columns", { music });
+        // const music = row.original;
 
         return (
           <DropdownMenu>
