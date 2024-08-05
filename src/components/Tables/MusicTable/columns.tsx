@@ -33,8 +33,8 @@ export function getColumns<TData>(): ColumnDef<TData>[] {
       },
       cell: ({ row }) => <div>{row.getValue("title")}</div>,
       sortingFn: (rowA, rowB, columnId) => {
-        return (rowA.original[columnId] as string).localeCompare(
-          rowB.original[columnId] as string,
+        return (rowA.getValue(columnId) as string).localeCompare(
+          rowB.getValue(columnId) as string,
           "br",
         );
       },
