@@ -1,5 +1,9 @@
 import * as React from "react";
 
+import { supabase } from "@/lib/supabase";
+
+import { useToast } from "@/components/ui/use-toast";
+
 import {
   ColumnFiltersState,
   SortingState,
@@ -11,6 +15,7 @@ import {
   getSortedRowModel,
   useReactTable,
 } from "@tanstack/react-table";
+
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
@@ -27,21 +32,28 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { Input } from "@/components/ui/input";
+import Selectable from "@/components/ui/CustomSelect/Select";
 import { Loading } from "@/components";
 
 import { getColumns } from "./columns";
 
-import { ChevronDown, RotateCw } from "lucide-react";
-import Selectable from "@/components/ui/CustomSelect/Select";
+import { MusicDTO, MusicTagsDTO } from "@/dtos";
+
 import { TAGS_MOCK } from "@/MOCK_DATA";
 
-type MusicTableProps<TData> = {
-  data: TData[];
+import Select from "node_modules/react-select/dist/declarations/src/Select";
+import { GroupBase } from "react-select";
+import { ChevronDown, RotateCw } from "lucide-react";
+
+type MusicTableProps = {
+  data: MusicTagsDTO[];
   onRefresh: () => void;
 };
 
-export function MusicTable<TData>({ data, onRefresh }: MusicTableProps<TData>) {
+export function MusicTable({ data, onRefresh }: MusicTableProps) {
   const isLoading = false;
+
+  const { toast } = useToast();
 
   const [sorting, setSorting] = React.useState<SortingState>([
     {
@@ -55,7 +67,60 @@ export function MusicTable<TData>({ data, onRefresh }: MusicTableProps<TData>) {
   const [columnVisibility, setColumnVisibility] =
     React.useState<VisibilityState>({});
 
-  const columns = getColumns<TData>();
+  const [editingCell, setEditingCell] = React.useState<{
+    rowId: string;
+    column: string;
+    isEditing: boolean;
+  }>({} as { rowId: string; column: string; isEditing: boolean });
+
+  const selectedTags =
+    React.createRef<Select<unknown, boolean, GroupBase<unknown>>>();
+
+  const updateTitle = React.useCallback(({ id, title }: MusicDTO) => {
+    console.log(id, title);
+  }, []);
+
+  const updateTags = React.useCallback(
+    async ({ id, title, tags }: MusicTagsDTO) => {
+      try {
+        const { error } = await supabase.rpc("update_music_tags", {
+          p_music_id: id,
+          p_new_tags: tags,
+        });
+        if (error) throw new Error(error.message);
+
+        toast({
+          title: `'${title}' tags have been updated`,
+        });
+      } catch (error) {
+        if (error instanceof Error) {
+          toast({
+            title: error.name,
+            description: error.message,
+            variant: "destructive",
+          });
+        }
+      }
+    },
+    [],
+  );
+
+  const onDelete = React.useCallback((id: string) => {
+    console.log(id);
+  }, []);
+
+  const columns = React.useMemo(
+    () =>
+      getColumns({
+        selectedTags,
+        editingCell,
+        setEditingCell,
+        updateTitle,
+        updateTags,
+        onDelete,
+      }),
+    [editingCell, onDelete, selectedTags, updateTags, updateTitle],
+  );
 
   const tags = TAGS_MOCK;
 
