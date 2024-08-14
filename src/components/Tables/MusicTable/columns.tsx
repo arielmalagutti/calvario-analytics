@@ -35,7 +35,7 @@ type MusicTableRowProps = {
   setEditingCell: React.Dispatch<React.SetStateAction<EditingCellType>>;
   updateTitle: (value: MusicDTO) => void;
   updateTags: (value: MusicTagsDTO) => Promise<void>;
-  onDelete: (id: string) => void;
+  onDelete: (id: string, title: string) => void;
 };
 
 export const getColumns = ({
@@ -78,11 +78,17 @@ export const getColumns = ({
               <Input
                 defaultValue={title}
                 onKeyUp={(e) => {
-                  if (e.code === "Enter")
+                  if (e.code === "Enter") {
                     updateTitle({
                       id: row.original.id,
                       title: (e.target as HTMLInputElement).value,
                     });
+                    setEditingCell({
+                      rowId: row.id,
+                      column: "title",
+                      isEditing: false,
+                    });
+                  }
                 }}
               />
             ) : (
@@ -238,7 +244,7 @@ export const getColumns = ({
                 <span className="mt-[1px]">Edit tags</span>
               </DropdownMenuItem>
               <DropdownMenuItem
-                onClick={() => onDelete(music.id)}
+                onClick={() => onDelete(music.id, music.title)}
                 className="text-md flex items-center gap-1 text-red-700 hover:text-red-500 focus:text-red-500 dark:text-red-600"
               >
                 <Trash size={16} />

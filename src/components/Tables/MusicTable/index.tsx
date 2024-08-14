@@ -76,8 +76,26 @@ export function MusicTable({ data, onRefresh }: MusicTableProps) {
   const selectedTags =
     React.createRef<Select<unknown, boolean, GroupBase<unknown>>>();
 
-  const updateTitle = React.useCallback(({ id, title }: MusicDTO) => {
-    console.log(id, title);
+  const updateTitle = React.useCallback(async ({ id, title }: MusicDTO) => {
+    try {
+      const { error } = await supabase
+        .from("music")
+        .update({ title })
+        .eq("id", id);
+      if (error) throw new Error(error.message);
+
+      toast({
+        title: `Changed music title to '${title}'`,
+      });
+    } catch (error) {
+      if (error instanceof Error) {
+        toast({
+          title: error.name,
+          description: error.message,
+          variant: "destructive",
+        });
+      }
+    }
   }, []);
 
   const updateTags = React.useCallback(
@@ -105,8 +123,28 @@ export function MusicTable({ data, onRefresh }: MusicTableProps) {
     [],
   );
 
-  const onDelete = React.useCallback((id: string) => {
-    console.log(id);
+  const onDelete = React.useCallback(async (id: string, title: string) => {
+    try {
+      const { data, error } = await supabase
+        .from("music")
+        .delete()
+        .eq("id", id);
+      if (error) throw new Error(error.message);
+
+      console.log(data);
+
+      toast({
+        title: `Music '${title}' has been successfully deleted`,
+      });
+    } catch (error) {
+      if (error instanceof Error) {
+        toast({
+          title: error.name,
+          description: error.message,
+          variant: "destructive",
+        });
+      }
+    }
   }, []);
 
   const columns = React.useMemo(

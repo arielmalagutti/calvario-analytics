@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { ChevronRight, EllipsisVertical, Plus } from "lucide-react";
 
-import { MusicDTO, OrganizationDTO } from "@/dtos";
+import { MusicTagsDTO, OrganizationDTO } from "@/dtos";
 
 import { OrgSelection } from "@/components";
 import { WorshipForm } from "@/components/WorshipForm";
@@ -15,7 +15,7 @@ import { MusicTable } from "@/components/Tables/MusicTable";
 import { MUSICS_TAGS_MOCK } from "@/MOCK_DATA";
 
 export default function Musics() {
-  const [musics, setMusics] = useState<MusicDTO[]>([]);
+  const [musics, setMusics] = useState<MusicTagsDTO[]>([]);
 
   const [selectedOrg, setSelectedOrg] = useState<OrganizationDTO>("ibc");
   const [worshipFormOpen, setWorshipFormOpen] = useState(false);
