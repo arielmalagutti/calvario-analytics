@@ -160,7 +160,7 @@ export function MusicTable({ data, onRefresh }: MusicTableProps) {
     [editingCell, onDelete, selectedTags, updateTags, updateTitle],
   );
 
-  const tags = TAGS_MOCK;
+  const tags = TAGS_MOCK.sort((a, b) => a.name.localeCompare(b.name));
 
   const table = useReactTable({
     data,
