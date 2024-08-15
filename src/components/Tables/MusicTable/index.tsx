@@ -1,5 +1,9 @@
 import * as React from "react";
 
+import { supabase } from "@/lib/supabase";
+
+import { useToast } from "@/components/ui/use-toast";
+
 import {
   ColumnFiltersState,
   SortingState,
@@ -11,6 +15,7 @@ import {
   getSortedRowModel,
   useReactTable,
 } from "@tanstack/react-table";
+
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
@@ -27,19 +32,28 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { Input } from "@/components/ui/input";
+import Selectable from "@/components/ui/CustomSelect/Select";
 import { Loading } from "@/components";
 
 import { getColumns } from "./columns";
 
+import { MusicDTO, MusicTagsDTO } from "@/dtos";
+
+import { TAGS_MOCK } from "@/MOCK_DATA";
+
+import Select from "node_modules/react-select/dist/declarations/src/Select";
+import { GroupBase } from "react-select";
 import { ChevronDown, RotateCw } from "lucide-react";
 
-type MusicTableProps<TData> = {
-  data: TData[];
+type MusicTableProps = {
+  data: MusicTagsDTO[];
   onRefresh: () => void;
 };
 
-export function MusicTable<TData>({ data, onRefresh }: MusicTableProps<TData>) {
+export function MusicTable({ data, onRefresh }: MusicTableProps) {
   const isLoading = false;
+
+  const { toast } = useToast();
 
   const [sorting, setSorting] = React.useState<SortingState>([
     {
@@ -53,7 +67,100 @@ export function MusicTable<TData>({ data, onRefresh }: MusicTableProps<TData>) {
   const [columnVisibility, setColumnVisibility] =
     React.useState<VisibilityState>({});
 
-  const columns = getColumns<TData>();
+  const [editingCell, setEditingCell] = React.useState<{
+    rowId: string;
+    column: string;
+    isEditing: boolean;
+  }>({} as { rowId: string; column: string; isEditing: boolean });
+
+  const selectedTags =
+    React.createRef<Select<unknown, boolean, GroupBase<unknown>>>();
+
+  const updateTitle = React.useCallback(async ({ id, title }: MusicDTO) => {
+    try {
+      const { error } = await supabase
+        .from("music")
+        .update({ title })
+        .eq("id", id);
+      if (error) throw new Error(error.message);
+
+      toast({
+        title: `Changed music title to '${title}'`,
+      });
+    } catch (error) {
+      if (error instanceof Error) {
+        toast({
+          title: error.name,
+          description: error.message,
+          variant: "destructive",
+        });
+      }
+    }
+  }, []);
+
+  const updateTags = React.useCallback(
+    async ({ id, title, tags }: MusicTagsDTO) => {
+      try {
+        const { error } = await supabase.rpc("update_music_tags", {
+          p_music_id: id,
+          p_new_tags: tags,
+        });
+        if (error) throw new Error(error.message);
+
+        toast({
+          title: `'${title}' tags have been updated`,
+        });
+      } catch (error) {
+        if (error instanceof Error) {
+          toast({
+            title: error.name,
+            description: error.message,
+            variant: "destructive",
+          });
+        }
+      }
+    },
+    [],
+  );
+
+  const onDelete = React.useCallback(async (id: string, title: string) => {
+    try {
+      const { data, error } = await supabase
+        .from("music")
+        .delete()
+        .eq("id", id);
+      if (error) throw new Error(error.message);
+
+      console.log(data);
+
+      toast({
+        title: `Music '${title}' has been successfully deleted`,
+      });
+    } catch (error) {
+      if (error instanceof Error) {
+        toast({
+          title: error.name,
+          description: error.message,
+          variant: "destructive",
+        });
+      }
+    }
+  }, []);
+
+  const columns = React.useMemo(
+    () =>
+      getColumns({
+        selectedTags,
+        editingCell,
+        setEditingCell,
+        updateTitle,
+        updateTags,
+        onDelete,
+      }),
+    [editingCell, onDelete, selectedTags, updateTags, updateTitle],
+  );
+
+  const tags = TAGS_MOCK.sort((a, b) => a.name.localeCompare(b.name));
 
   const table = useReactTable({
     data,
@@ -89,14 +196,34 @@ export function MusicTable<TData>({ data, onRefresh }: MusicTableProps<TData>) {
   return (
     <div className="w-full">
       <div className="flex items-center justify-between gap-8 py-4">
-        <Input
-          placeholder={"Filter titles..."}
-          value={(table.getColumn("title")?.getFilterValue() as string) ?? ""}
-          onChange={(event) =>
-            table.getColumn("title")?.setFilterValue(event.target.value)
-          }
-          className="max-w-72"
-        />
+        <div className="flex flex-1 gap-4">
+          <Input
+            placeholder={"Filter titles..."}
+            value={(table.getColumn("title")?.getFilterValue() as string) ?? ""}
+            onChange={(event) =>
+              table.getColumn("title")?.setFilterValue(event.target.value)
+            }
+            className="max-w-72"
+          />
+
+          <Selectable
+            isMulti
+            placeholder={"Filter tags..."}
+            options={tags.map((t) => {
+              return { label: t.name, value: t.name };
+            })}
+            onChange={(event) => {
+              table
+                .getColumn("tags")
+                ?.setFilterValue(
+                  (event as { label: string; value: string }[]).map(
+                    (e) => e.value,
+                  ),
+                );
+            }}
+            className="flex-1"
+          />
+        </div>
 
         <div className="flex items-center justify-center gap-4">
           <DropdownMenu>

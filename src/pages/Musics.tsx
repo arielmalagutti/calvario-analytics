@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { ChevronRight, EllipsisVertical, Plus } from "lucide-react";
 
-import { MusicDTO, OrganizationDTO } from "@/dtos";
+import { MusicTagsDTO, OrganizationDTO } from "@/dtos";
 
 import { OrgSelection } from "@/components";
 import { WorshipForm } from "@/components/WorshipForm";
@@ -11,11 +11,11 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { MUSICS_TAGS_MOCK } from "@/components/WorshipForm/mock";
 import { MusicTable } from "@/components/Tables/MusicTable";
+import { MUSICS_TAGS_MOCK } from "@/MOCK_DATA";
 
 export default function Musics() {
-  const [musics, setMusics] = useState<MusicDTO[]>([]);
+  const [musics, setMusics] = useState<MusicTagsDTO[]>([]);
 
   const [selectedOrg, setSelectedOrg] = useState<OrganizationDTO>("ibc");
   const [worshipFormOpen, setWorshipFormOpen] = useState(false);
@@ -45,9 +45,9 @@ export default function Musics() {
               MUSICS
             </h1>
 
-            <ChevronRight className="h-8 w-8 font-medium text-gray-500" />
+            {/**<ChevronRight className="h-8 w-8 font-medium text-gray-500" />
 
-            <OrgSelection selectedOrg={selectedOrg} setOrg={setSelectedOrg} />
+            <OrgSelection selectedOrg={selectedOrg} setOrg={setSelectedOrg} /> */}
           </div>
 
           <DropdownMenu>
