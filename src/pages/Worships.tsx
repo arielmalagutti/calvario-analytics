@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { ChevronRight, EllipsisVertical, Plus } from "lucide-react";
 
-import { OrganizationDTO } from "@/dtos";
+import { OrganizationDTO, WorshipDTO } from "@/dtos";
 import { useWorship } from "@/hooks";
 
 import { OrgSelection, WorshipTable } from "@/components";
@@ -18,6 +18,19 @@ export default function Worships() {
 
   const [selectedOrg, setSelectedOrg] = useState<OrganizationDTO>("ibc");
   const [worshipFormOpen, setWorshipFormOpen] = useState(false);
+  const [worshipFormData, setWorshipFormData] = useState<
+    (WorshipDTO & { formAction: string }) | null
+  >(null);
+
+  const onFormClose = () => {
+    setWorshipFormData(null);
+    setWorshipFormOpen(false);
+  };
+
+  const onWorshipEdit = (worship: WorshipDTO) => {
+    setWorshipFormData({ ...worship, formAction: "Update" });
+    setWorshipFormOpen(true);
+  };
 
   useEffect(() => {
     fetchWorships(selectedOrg);
@@ -62,11 +75,14 @@ export default function Worships() {
       </div>
 
       <div className="flex flex-1 flex-col gap-6">
-        {worshipFormOpen && <WorshipForm />}
+        {worshipFormOpen && (
+          <WorshipForm worship={worshipFormData} onClose={onFormClose} />
+        )}
 
         <WorshipTable
           data={worships}
           onRefresh={() => fetchWorships(selectedOrg)}
+          onEdit={onWorshipEdit}
         />
       </div>
     </>

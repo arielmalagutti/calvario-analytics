@@ -24,9 +24,11 @@ import {
 import { Button } from "@/components/ui/button";
 import Selectable from "@/components/ui/CustomSelect/Select";
 
-import { OrganizationDTO } from "@/dtos";
+import { WorshipDTO } from "@/dtos";
 import { MUSICS_MOCK, SINGERS_MOCK } from "./mock";
+import { X } from "lucide-react";
 
+type NullablePartial<T> = { [P in keyof T]?: T[P] | null };
 type dataType = Record<"value" | "label", string>;
 export type WorshipFormType = {
   date: Date;
@@ -36,27 +38,45 @@ export type WorshipFormType = {
   singers: dataType[];
 };
 
-export function WorshipForm() {
+type a = {
+  worship: (WorshipDTO & { formAction: string }) | null;
+  onClose: () => void;
+};
+
+export function WorshipForm({ worship, onClose }: a) {
   const { user } = useAuth();
 
-  const { addWorship } = useWorship();
+  const { handleWorship } = useWorship();
   const { toast } = useToast();
 
-  const [org, setOrg] = useState<OrganizationDTO>("ibc");
   const [musics, setMusics] = useState<{ id: string; title: string }[]>([]);
   const [singers, setSingers] = useState<
     { id: string; name: string; last_name: string | null }[]
   >([]);
 
-  const form = useForm<WorshipFormType>({
-    defaultValues: {
-      date: new Date(),
-      org: { label: org.toUpperCase(), value: org },
-      musics: [],
-      lead: { label: "", value: "" },
-      singers: [],
+  const defaultValues: WorshipFormType = {
+    date: worship ? new Date(worship.worship_date) : new Date(),
+    org: {
+      label: worship?.org.toUpperCase() ?? "",
+      value: worship?.org ?? "",
     },
-  });
+    musics: worship
+      ? worship.music_titles.map((music) => {
+          return { value: music, label: music };
+        })
+      : [],
+    lead: {
+      value: worship?.lead?.id ?? "",
+      label: worship?.lead?.name ?? "",
+    },
+    singers: worship
+      ? worship.singers.map((singer) => {
+          return { value: singer.id, label: singer.name };
+        })
+      : [],
+  };
+
+  const form = useForm<WorshipFormType>({ values: defaultValues });
 
   async function fetchMusics() {
     try {
@@ -87,19 +107,55 @@ export function WorshipForm() {
   }
 
   const handleForm = async (data: WorshipFormType) => {
-    try {
-      const date =
-        data.org.value === "ibc"
-          ? data.date.toISOString().split("T")[0] + "T19:00:00"
-          : data.date.toISOString().split("T")[0] + "T19:30:00";
+    function parseData(
+      baseData: WorshipFormType,
+      newData: WorshipFormType,
+    ): NullablePartial<WorshipFormType> {
+      const changedData: NullablePartial<WorshipFormType> = {};
 
-      await addWorship({
-        date,
-        lead_id: data.lead.value,
-        musics: data.musics.map((music) => music.label),
-        org: data.org.value,
-        singers_id: data.singers.map((singer) => singer.value),
-      });
+      for (const key of Object.keys(baseData)) {
+        const baseValue = baseData[key as keyof WorshipFormType];
+        const newValue = newData[key as keyof WorshipFormType];
+
+        if (Array.isArray(baseValue) && Array.isArray(newValue)) {
+          const [sortedBaseValue, sortedNewValue] = [baseValue, newValue].map(
+            (arr) => [...arr].sort((a, b) => a.value.localeCompare(b.value)),
+          );
+          //@ts-expect-error vai dar erro ts
+          changedData[key as typeof WorshipFormType] =
+            JSON.stringify(sortedBaseValue) === JSON.stringify(sortedNewValue)
+              ? null
+              : newValue;
+        } else {
+          //@ts-expect-error vai dar erro ts
+          changedData[key as keyof WorshipFormType] =
+            JSON.stringify(baseValue) === JSON.stringify(newValue)
+              ? null
+              : newValue;
+        }
+      }
+
+      return changedData;
+    }
+
+    const parsedData = parseData(defaultValues, data);
+
+    try {
+      const time = worship?.org === "ibc" ? "T19:00:00" : "T19:30:00";
+      const date = parsedData.date
+        ? `${data.date.toISOString().split("T")[0]}${time}`
+        : undefined;
+
+      await handleWorship(
+        {
+          date,
+          lead_id: parsedData.lead?.value ?? null,
+          musics: parsedData.musics?.map((music) => music.label) ?? null,
+          org: parsedData.org?.value ?? null,
+          singers_id: parsedData.singers?.map((singer) => singer.value) ?? null,
+        },
+        worship?.worship_id,
+      );
 
       // form.reset();
 
@@ -134,7 +190,17 @@ export function WorshipForm() {
       >
         <Card>
           <CardHeader>
-            <CardTitle>Add worship session</CardTitle>
+            <div className="flex justify-between">
+              <CardTitle>
+                {(worship?.formAction ?? "Add") + " worship session"}
+              </CardTitle>
+              <Button
+                onClick={() => onClose()}
+                className="bg-transparent hover:bg-zinc-800"
+              >
+                <X className="text-white" />
+              </Button>
+            </div>
           </CardHeader>
           <CardContent className="flex flex-col gap-4">
             <div className="grid grid-cols-4 gap-4">
@@ -177,10 +243,10 @@ export function WorshipForm() {
                     <FormControl>
                       <Selectable
                         {...field}
-                        options={singers.map((a) => {
+                        options={singers.map((singer) => {
                           return {
-                            value: a.id,
-                            label: `${a.name}${a.last_name ? " " + a.last_name : ""}`,
+                            value: singer.id,
+                            label: `${singer.name}${singer.last_name ? " " + singer.last_name : ""}`,
                           };
                         })}
                       />
@@ -234,7 +300,9 @@ export function WorshipForm() {
             </div>
           </CardContent>
           <CardFooter className="justify-end">
-            <Button type="submit">Add worship</Button>
+            <Button type="submit">
+              {(worship?.formAction ?? "Add") + " worship"}
+            </Button>
           </CardFooter>
         </Card>
       </form>

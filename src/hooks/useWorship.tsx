@@ -6,11 +6,15 @@ import { supabase } from "@/lib/supabase";
 import { CreateWorshipSchema } from "@/schemas/WorshipSchemas";
 import { WORSHIP_DATA_MOCK } from "@/MOCK_DATA";
 
+type NullablePartial<T> = { [P in keyof T]?: T[P] | null };
 type WorshipContextType = {
   worships: WorshipDTO[];
 
   fetchWorships: (organization: OrganizationDTO) => void;
-  addWorship: (data: CreateWorshipSchema) => void;
+  handleWorship: (
+    data: NullablePartial<CreateWorshipSchema>,
+    worship_id?: string,
+  ) => void;
 
   isWorshipLoading: boolean;
 };
@@ -60,24 +64,47 @@ export function WorshipProvider({ children }: { children: React.ReactNode }) {
     }
   }
 
-  async function addWorship({
-    date,
-    org,
-    musics,
-    lead_id,
-    singers_id,
-  }: CreateWorshipSchema): Promise<void> {
-    return await supabase
-      .rpc("add_worship", {
-        p_timestamp: date,
-        p_org_name: org,
-        p_music_titles: musics,
-        p_lead_id: lead_id,
-        p_singers_id: singers_id,
-      })
-      .then(({ error }) => {
-        if (error) throw new Error(error.message);
-      });
+  async function handleWorship(
+    worship: NullablePartial<CreateWorshipSchema>,
+    worship_id?: string,
+  ): Promise<void> {
+    console.log(
+      "handleWorship",
+      {
+        date: worship.date,
+        org: worship.org,
+        musics: worship.musics,
+        lead_id: worship.lead_id,
+        singers_id: worship.singers_id,
+      },
+      worship_id,
+    );
+
+    if (worship_id) return;
+    //   return await supabase
+    //     .rpc("update_worship", {
+    //       p_worship_id: worship.worship_id,
+    //       p_timestamp: worship.date,
+    //       p_org_name: worship.org,
+    //       p_music_titles: worship.musics,
+    //       p_lead_id: worship.lead_id,
+    //       p_singers_id: worship.singers_id,
+    //     })
+    //     .then(({ error }) => {
+    //       if (error) throw new Error(error.message);
+    //     });
+
+    // return await supabase
+    //   .rpc("add_worship", {
+    //     p_timestamp: worship.date,
+    //     p_org_name: worship.org,
+    //     p_music_titles: worship.musics,
+    //     p_lead_id: worship.lead_id,
+    //     p_singers_id: worship.singers_id,
+    //   })
+    //   .then(({ error }) => {
+    //     if (error) throw new Error(error.message);
+    //   });
   }
 
   return (
@@ -86,7 +113,7 @@ export function WorshipProvider({ children }: { children: React.ReactNode }) {
         worships,
 
         fetchWorships,
-        addWorship,
+        handleWorship,
 
         isWorshipLoading,
       }}

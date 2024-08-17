@@ -11,12 +11,14 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 
-import { ArrowUpDown, MoreHorizontal, Trash } from "lucide-react";
+import { ArrowUpDown, MoreHorizontal, Pen, Trash } from "lucide-react";
 
 export const getColumns = ({
   onDelete,
+  onEdit,
 }: {
   onDelete: (worship: WorshipDTO) => void;
+  onEdit: (worship: WorshipDTO) => void;
 }): ColumnDef<WorshipDTO>[] => [
   {
     accessorKey: "worship_date",
@@ -129,11 +131,20 @@ export const getColumns = ({
           <DropdownMenuContent align="start">
             <DropdownMenuLabel>Actions</DropdownMenuLabel>
             <DropdownMenuItem
-              onClick={() => onDelete(worship)}
-              className="text-red-700 focus:text-red-500 dark:text-red-600"
+              onClick={() => {
+                onEdit(worship);
+              }}
+              className="text-md flex items-center gap-1"
             >
-              <Trash />
-              Delete
+              <Pen size={16} />
+              <span className="mt-[1px]">Edit title</span>
+            </DropdownMenuItem>
+            <DropdownMenuItem
+              onClick={() => onDelete(worship)}
+              className="text-md flex items-center gap-1 text-red-700 hover:text-red-500 focus:text-red-500 dark:text-red-600"
+            >
+              <Trash size={16} />
+              <span className="mt-[1px]">Delete</span>
             </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
