@@ -1,24 +1,16 @@
 import { useEffect, useState } from "react";
-import { ChevronRight, EllipsisVertical, Plus } from "lucide-react";
+import { Plus } from "lucide-react";
 
 import { MusicTagsDTO, OrganizationDTO } from "@/dtos";
-
-import { OrgSelection } from "@/components";
-import { WorshipForm } from "@/components/WorshipForm";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
 import { MusicTable } from "@/components/Tables/MusicTable";
 import { MUSICS_TAGS_MOCK } from "@/MOCK_DATA";
+import { Button } from "@/components/ui/button";
 
 export default function Musics() {
   const [musics, setMusics] = useState<MusicTagsDTO[]>([]);
 
   const [selectedOrg, setSelectedOrg] = useState<OrganizationDTO>("ibc");
-  const [worshipFormOpen, setWorshipFormOpen] = useState(false);
+  const [musicFormOpen, setMusicFormOpen] = useState(false);
 
   async function fetchMusics(organization: OrganizationDTO) {
     console.log(organization);
@@ -49,33 +41,18 @@ export default function Musics() {
 
             <OrgSelection selectedOrg={selectedOrg} setOrg={setSelectedOrg} /> */}
           </div>
-
-          <DropdownMenu>
-            <DropdownMenuTrigger className="rounded-lg p-2 text-gray-500 transition-colors hover:bg-zinc-800 dark:text-gray-500 dark:hover:text-gray-300">
-              <EllipsisVertical size={24} />
-            </DropdownMenuTrigger>
-            <DropdownMenuContent align="end">
-              <DropdownMenuItem
-                onClick={() => setWorshipFormOpen((prev) => !prev)}
-              >
-                <Plus className="mr-2 h-4 w-4" />
-                <span>Add Worship</span>
-              </DropdownMenuItem>
-              <DropdownMenuItem>
-                <Plus className="mr-2 h-4 w-4" />
-                <span>Add Singer</span>
-              </DropdownMenuItem>
-              <DropdownMenuItem>
-                <Plus className="mr-2 h-4 w-4" />
-                <span>Add Music</span>
-              </DropdownMenuItem>
-            </DropdownMenuContent>
-          </DropdownMenu>
+          <Button
+            className="rounded-lg bg-transparent p-2 transition-colors hover:bg-zinc-800 dark:text-foreground"
+            onClick={() => setMusicFormOpen(true)}
+          >
+            <Plus className="mr-2 h-4 w-4" />
+            <span>Add Music</span>
+          </Button>
         </div>
       </div>
 
       <div className="flex flex-1 flex-col gap-6">
-        {worshipFormOpen && <WorshipForm />}
+        {/* {musicFormOpen && <MusicForm />} */}
 
         <MusicTable data={musics} onRefresh={() => fetchMusics(selectedOrg)} />
       </div>

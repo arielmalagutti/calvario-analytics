@@ -1,17 +1,12 @@
 import { useEffect, useState } from "react";
-import { ChevronRight, EllipsisVertical, Plus } from "lucide-react";
+import { ChevronRight, Plus } from "lucide-react";
 
 import { OrganizationDTO, WorshipDTO } from "@/dtos";
 import { useWorship } from "@/hooks";
 
 import { OrgSelection, WorshipTable } from "@/components";
 import { WorshipForm } from "@/components/WorshipForm";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
+import { Button } from "@/components/ui/button";
 
 export default function Worships() {
   const { fetchWorships, worships } = useWorship();
@@ -49,28 +44,13 @@ export default function Worships() {
 
             <OrgSelection selectedOrg={selectedOrg} setOrg={setSelectedOrg} />
           </div>
-
-          <DropdownMenu>
-            <DropdownMenuTrigger className="rounded-lg p-2 text-gray-500 transition-colors hover:bg-zinc-800 dark:text-gray-500 dark:hover:text-gray-300">
-              <EllipsisVertical size={24} />
-            </DropdownMenuTrigger>
-            <DropdownMenuContent align="end">
-              <DropdownMenuItem
-                onClick={() => setWorshipFormOpen((prev) => !prev)}
-              >
-                <Plus className="mr-2 h-4 w-4" />
-                <span>Add Worship</span>
-              </DropdownMenuItem>
-              <DropdownMenuItem>
-                <Plus className="mr-2 h-4 w-4" />
-                <span>Add Singer</span>
-              </DropdownMenuItem>
-              <DropdownMenuItem>
-                <Plus className="mr-2 h-4 w-4" />
-                <span>Add Music</span>
-              </DropdownMenuItem>
-            </DropdownMenuContent>
-          </DropdownMenu>
+          <Button
+            className="rounded-lg bg-transparent p-2 transition-colors hover:bg-zinc-800 dark:text-foreground"
+            onClick={() => setWorshipFormOpen(true)}
+          >
+            <Plus className="mr-2 h-4 w-4" />
+            <span>Add Worship</span>
+          </Button>
         </div>
       </div>
 
