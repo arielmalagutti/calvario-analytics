@@ -2,14 +2,12 @@ export type Tags =  {
   tags: Array<string | null>;
 }
 
-export type MusicBodyDTO =  {
+export type MusicDTO =  {
   id: string;
   title: string;
 }
 
-export type MusicTagsDTO = MusicBodyDTO & Tags
-
-export type MusicDTO =  MusicBodyDTO | MusicTagsDTO
+export type MusicTagsDTO = MusicDTO & Tags
 
 export type MusicInfoDTO = Omit<MusicDTO, "tags"> & {
   last_played_date: string | null;

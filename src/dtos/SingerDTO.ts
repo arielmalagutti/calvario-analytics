@@ -1,7 +1,7 @@
 export type SingerDTO = {
   id: string;
   name: string;
-  lastName?: string;
+  last_name?: string;
   role: SingerRole;
 };
 

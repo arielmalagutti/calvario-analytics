@@ -6,11 +6,14 @@ import { supabase } from "@/lib/supabase";
 import { CreateWorshipSchema } from "@/schemas/WorshipSchemas";
 import { WORSHIP_DATA_MOCK } from "@/MOCK_DATA";
 
+type NullablePartial<T> = { [P in keyof T]?: T[P] | null };
 type WorshipContextType = {
   worships: WorshipDTO[];
-
   fetchWorships: (organization: OrganizationDTO) => void;
-  addWorship: (data: CreateWorshipSchema) => void;
+  handleWorship: (
+    data: NullablePartial<CreateWorshipSchema>,
+    worship_id?: string,
+  ) => Promise<void>;
 
   isWorshipLoading: boolean;
 };
@@ -26,13 +29,13 @@ export function WorshipProvider({ children }: { children: React.ReactNode }) {
     try {
       setIsWorshipLoading(true);
 
-      // const { data, error } = await supabase
-      // .rpc("get_worship_details", { p_org: org })
-      // .select("*");
-
-      const data = WORSHIP_DATA_MOCK;
-
-      // if (error) throw new Error(error.message);
+      const { data, error } = await supabase
+        .rpc("get_worship_details", { p_org: org })
+        .select("*");
+      //
+      // const data = WORSHIP_DATA_MOCK;
+      //
+      if (error) throw new Error(error.message);
 
       const worshipData: WorshipDTO[] = data.map(
         ({ singers, worship_id, worship_date, music_titles }) => {
@@ -44,30 +47,53 @@ export function WorshipProvider({ children }: { children: React.ReactNode }) {
             worship_id,
             worship_date,
             org,
-            lead: singers.find((singer) => singer.role === "lead") as SingerDTO,
+            lead: singers.find(
+              (singer: SingerDTO) => singer.role === "lead",
+            ) as SingerDTO,
             singers: singers
-              .filter((singer) => singer.role === "backing")
-              .sort((a, b) => a.name.localeCompare(b.name)) as SingerDTO[],
+              .filter((singer: SingerDTO) => singer.role === "backing")
+              .sort((a: SingerDTO, b: SingerDTO) =>
+                a.name.localeCompare(b.name),
+              ) as SingerDTO[],
             music_titles,
           };
         },
       );
-      console.log("mock worship d", data);
-      console.log("mock worship", worshipData);
+
       setWorships(worshipData);
     } finally {
       setIsWorshipLoading(false);
     }
   }
 
-  async function addWorship({
+  async function handleWorship({
     date,
     org,
-    musics,
     lead_id,
+    musics,
     singers_id,
-  }: CreateWorshipSchema): Promise<void> {
-    return await supabase
+    worship_id,
+  }: NullablePartial<CreateWorshipSchema & { worship_id?: string }>) {
+    if (!date && !org && !lead_id && !musics && !singers_id)
+      throw new Error("Can't update because nothing changed");
+
+    if (worship_id) {
+      await supabase
+        .rpc("update_worship_session", {
+          p_worship_id: worship_id,
+          p_timestamp: date,
+          p_org: org,
+          p_musics_title: musics,
+          p_lead_id: lead_id,
+          p_singers_id: singers_id,
+        })
+        .then(({ error }) => {
+          if (error) throw new Error(error.message);
+        });
+      return;
+    }
+
+    await supabase
       .rpc("add_worship", {
         p_timestamp: date,
         p_org_name: org,
@@ -84,9 +110,8 @@ export function WorshipProvider({ children }: { children: React.ReactNode }) {
     <WorshipContext.Provider
       value={{
         worships,
-
         fetchWorships,
-        addWorship,
+        handleWorship,
 
         isWorshipLoading,
       }}

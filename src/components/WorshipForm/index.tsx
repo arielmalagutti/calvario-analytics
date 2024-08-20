@@ -24,9 +24,10 @@ import {
 import { Button } from "@/components/ui/button";
 import Selectable from "@/components/ui/CustomSelect/Select";
 
-import { OrganizationDTO } from "@/dtos";
-import { MUSICS_MOCK, SINGERS_MOCK } from "./mock";
+import { OrganizationDTO, WorshipDTO } from "@/dtos";
+import { X } from "lucide-react";
 
+type NullablePartial<T> = { [P in keyof T]?: T[P] | null };
 type dataType = Record<"value" | "label", string>;
 export type WorshipFormType = {
   date: Date;
@@ -36,35 +37,69 @@ export type WorshipFormType = {
   singers: dataType[];
 };
 
-export function WorshipForm() {
+type WorshipFormProps = {
+  worship: (WorshipDTO & { formAction: string }) | null;
+  onClose: () => void;
+  selectedOrg: OrganizationDTO;
+};
+
+export function WorshipForm({
+  worship,
+  onClose,
+  selectedOrg,
+}: WorshipFormProps) {
   const { user } = useAuth();
 
-  const { addWorship } = useWorship();
+  const { handleWorship, fetchWorships } = useWorship();
   const { toast } = useToast();
 
-  const [org, setOrg] = useState<OrganizationDTO>("ibc");
   const [musics, setMusics] = useState<{ id: string; title: string }[]>([]);
   const [singers, setSingers] = useState<
     { id: string; name: string; last_name: string | null }[]
   >([]);
 
-  const form = useForm<WorshipFormType>({
+  const formOptions = {
     defaultValues: {
       date: new Date(),
-      org: { label: org.toUpperCase(), value: org },
+      org: { value: selectedOrg, label: selectedOrg.toUpperCase() },
       musics: [],
-      lead: { label: "", value: "" },
+      lead: { value: "", label: "" },
       singers: [],
-    },
-  });
+    } as WorshipFormType,
+    values: worship
+      ? ({
+          date: new Date(worship.worship_date),
+          org: {
+            label: worship.org.toUpperCase(),
+            value: worship.org,
+          },
+          musics: worship.music_titles.map((music) => {
+            return { value: music, label: music };
+          }),
+          lead: {
+            value: worship.lead.id,
+            label: worship.lead.name,
+          },
+          singers:
+            worship.singers.map((singer) => {
+              return {
+                value: singer.id,
+                label: `${singer.name}${singer.last_name ? " " + singer.last_name : ""}`,
+              };
+            }) ?? [],
+        } as WorshipFormType)
+      : undefined,
+  };
+
+  const form = useForm<WorshipFormType>(formOptions);
 
   async function fetchMusics() {
     try {
-      // const { data, error } = await supabase.from("music").select("*");
-      const data = MUSICS_MOCK;
-
-      console.error(data);
-      // if (error) throw new Error(error.message);
+      const { data, error } = await supabase.from("music").select("*");
+      // const data = MUSICS_MOCK;
+      //
+      // console.error(data);
+      if (error) throw new Error(error.message);
 
       setMusics(data);
     } catch (err) {
@@ -74,11 +109,11 @@ export function WorshipForm() {
 
   async function fetchSingers() {
     try {
-      // const { data, error } = await supabase.from("singer").select("*");
-      const data = SINGERS_MOCK;
-
-      console.error(data);
-      // if (error) throw new Error(error.message);
+      const { data, error } = await supabase.from("singer").select("*");
+      // const data = SINGERS_MOCK;
+      //
+      // console.error(data);
+      if (error) throw new Error(error.message);
 
       setSingers(data);
     } catch (err) {
@@ -86,25 +121,90 @@ export function WorshipForm() {
     }
   }
 
-  const handleForm = async (data: WorshipFormType) => {
+  const handleForm = async (formData: WorshipFormType) => {
+    function parseData(
+      baseData: WorshipFormType,
+      newData: WorshipFormType,
+    ): NullablePartial<WorshipFormType> {
+      const changedData: NullablePartial<WorshipFormType> = {};
+
+      for (const key of Object.keys(baseData)) {
+        const baseValue = baseData[key as keyof WorshipFormType];
+        const newValue = newData[key as keyof WorshipFormType];
+
+        if (Array.isArray(baseValue) && Array.isArray(newValue)) {
+          const [sortedBaseValue, sortedNewValue] = [
+            [...baseValue],
+            [...newValue],
+          ].map((arr) => arr.sort((a, b) => a.value.localeCompare(b.value)));
+
+          //@ts-expect-error vai dar erro ts
+          changedData[key as typeof WorshipFormType] =
+            JSON.stringify(sortedBaseValue) === JSON.stringify(sortedNewValue)
+              ? null
+              : newValue;
+        }
+        if (baseValue instanceof Date && newValue instanceof Date) {
+          const baseTime =
+            baseData.org?.value === "ibc" ? "T19:00:00" : "T19:30:00";
+          const newTime =
+            newData.org?.value === "ibc" ? "T19:00:00" : "T19:30:00";
+          const baseDate = `${baseValue.toISOString().split("T")[0]}${baseTime}`;
+          const newDate = `${newValue.toISOString().split("T")[0]}${newTime}`;
+
+          //@ts-expect-error vai dar erro ts
+          changedData[key as keyof WorshipFormType] =
+            baseDate === newDate ? null : newDate;
+        } else {
+          //@ts-expect-error vai dar erro ts
+          changedData[key as keyof WorshipFormType] =
+            JSON.stringify(baseValue) === JSON.stringify(newValue)
+              ? null
+              : newValue;
+        }
+      }
+
+      return changedData;
+    }
+
+    const parsedData =
+      worship && formOptions.values
+        ? parseData(formOptions.values, formData)
+        : formData;
+
     try {
-      const date =
-        data.org.value === "ibc"
-          ? data.date.toISOString().split("T")[0] + "T19:00:00"
-          : data.date.toISOString().split("T")[0] + "T19:30:00";
+      const time = parsedData.date
+        ? formData.org.value === "ibc"
+          ? "T19:00:00"
+          : "T19:30:00"
+        : null;
+      const date = parsedData.date
+        ? `${formData.date.toISOString().split("T")[0]}${time}`
+        : null;
 
-      await addWorship({
+      const handleWorshipProps = {
         date,
-        lead_id: data.lead.value,
-        musics: data.musics.map((music) => music.label),
-        org: data.org.value,
-        singers_id: data.singers.map((singer) => singer.value),
-      });
+        lead_id: parsedData.lead?.value ?? null,
+        musics: parsedData.musics?.map((music) => music.value) ?? null,
+        org: parsedData.org?.value ?? null,
+        singers_id: parsedData.singers?.map((singer) => singer.value) ?? null,
+        worship_id: worship?.worship_id,
+      };
+      console.log(handleWorshipProps);
 
-      // form.reset();
+      await handleWorship(handleWorshipProps);
+
+      fetchWorships(selectedOrg);
+
+      form.reset(formOptions.defaultValues);
+      if (worship) onClose();
+
+      const title = worship?.worship_id
+        ? "Worship session updated"
+        : "Worship session added";
 
       toast({
-        title: "Worship session added",
+        title,
       });
     } catch (error) {
       if (error instanceof Error) {
@@ -114,8 +214,6 @@ export function WorshipForm() {
           variant: "destructive",
         });
       }
-
-      console.error("handleForm", { error });
     }
   };
 
@@ -134,7 +232,17 @@ export function WorshipForm() {
       >
         <Card>
           <CardHeader>
-            <CardTitle>Add worship session</CardTitle>
+            <div className="flex justify-between">
+              <CardTitle>
+                {(worship?.formAction ?? "Add") + " worship session"}
+              </CardTitle>
+              <Button
+                onClick={() => onClose()}
+                className="bg-transparent hover:bg-zinc-800"
+              >
+                <X className="text-white" />
+              </Button>
+            </div>
           </CardHeader>
           <CardContent className="flex flex-col gap-4">
             <div className="grid grid-cols-4 gap-4">
@@ -177,10 +285,10 @@ export function WorshipForm() {
                     <FormControl>
                       <Selectable
                         {...field}
-                        options={singers.map((a) => {
+                        options={singers.map((singer) => {
                           return {
-                            value: a.id,
-                            label: `${a.name}${a.last_name ? " " + a.last_name : ""}`,
+                            value: singer.id,
+                            label: `${singer.name}${singer.last_name ? " " + singer.last_name : ""}`,
                           };
                         })}
                       />
@@ -202,7 +310,7 @@ export function WorshipForm() {
                         {...field}
                         isMulti
                         options={musics.map((music) => {
-                          return { label: music.title, value: music.id };
+                          return { value: music.title, label: music.title };
                         })}
                       />
                     </FormControl>
@@ -234,7 +342,9 @@ export function WorshipForm() {
             </div>
           </CardContent>
           <CardFooter className="justify-end">
-            <Button type="submit">Add worship</Button>
+            <Button type="submit">
+              {(worship?.formAction ?? "Add") + " worship"}
+            </Button>
           </CardFooter>
         </Card>
       </form>

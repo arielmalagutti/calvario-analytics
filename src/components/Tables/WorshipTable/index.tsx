@@ -39,15 +39,13 @@ import { WorshipDTO } from "@/dtos/index";
 
 import { ChevronDown, RotateCw } from "lucide-react";
 
-type WorshipTableProps<TData> = {
-  data: TData[];
+type WorshipTableProps = {
+  data: WorshipDTO[];
   onRefresh: () => void;
+  onEdit: (worship: WorshipDTO) => void;
 };
 
-export function WorshipTable<TData>({
-  data,
-  onRefresh,
-}: WorshipTableProps<TData>) {
+export function WorshipTable({ data, onRefresh, onEdit }: WorshipTableProps) {
   const { toast } = useToast();
   const { isWorshipLoading: isLoading } = useWorship();
 
@@ -80,7 +78,7 @@ export function WorshipTable<TData>({
     }
   };
 
-  const columns = getColumns({ onDelete });
+  const columns = getColumns({ onDelete, onEdit });
 
   const table = useReactTable({
     data,
