@@ -5,7 +5,7 @@ import { OrganizationDTO, WorshipDTO } from "@/dtos";
 import { useWorship } from "@/hooks";
 
 import { OrgSelection, WorshipTable } from "@/components";
-import { WorshipForm } from "@/components/WorshipForm";
+import { WorshipForm } from "@/components/Forms/WorshipForm";
 import { Button } from "@/components/ui/button";
 
 export default function Worships() {

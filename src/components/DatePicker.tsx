@@ -12,7 +12,7 @@ import {
 
 import { FormControl } from "./ui/form";
 
-import { WorshipFormType } from "./WorshipForm";
+import { WorshipFormType } from "./Forms/WorshipForm";
 
 import { Calendar as CalendarIcon } from "lucide-react";
 
