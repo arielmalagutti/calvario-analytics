@@ -6,7 +6,7 @@ export type WorshipDTO = {
   worship_date: string;
   org: OrganizationDTO;
 
-  lead?: SingerDTO;
+  lead: SingerDTO;
   singers: SingerDTO[];
   music_titles: string[];
 };

@@ -24,8 +24,7 @@ import {
 import { Button } from "@/components/ui/button";
 import Selectable from "@/components/ui/CustomSelect/Select";
 
-import { WorshipDTO } from "@/dtos";
-import { MUSICS_MOCK, SINGERS_MOCK } from "./mock";
+import { OrganizationDTO, WorshipDTO } from "@/dtos";
 import { X } from "lucide-react";
 
 type NullablePartial<T> = { [P in keyof T]?: T[P] | null };
@@ -38,15 +37,20 @@ export type WorshipFormType = {
   singers: dataType[];
 };
 
-type a = {
+type WorshipFormProps = {
   worship: (WorshipDTO & { formAction: string }) | null;
   onClose: () => void;
+  selectedOrg: OrganizationDTO;
 };
 
-export function WorshipForm({ worship, onClose }: a) {
+export function WorshipForm({
+  worship,
+  onClose,
+  selectedOrg,
+}: WorshipFormProps) {
   const { user } = useAuth();
 
-  const { handleWorship } = useWorship();
+  const { handleWorship, fetchWorships } = useWorship();
   const { toast } = useToast();
 
   const [musics, setMusics] = useState<{ id: string; title: string }[]>([]);
@@ -54,37 +58,48 @@ export function WorshipForm({ worship, onClose }: a) {
     { id: string; name: string; last_name: string | null }[]
   >([]);
 
-  const defaultValues: WorshipFormType = {
-    date: worship ? new Date(worship.worship_date) : new Date(),
-    org: {
-      label: worship?.org.toUpperCase() ?? "",
-      value: worship?.org ?? "",
-    },
-    musics: worship
-      ? worship.music_titles.map((music) => {
-          return { value: music, label: music };
-        })
-      : [],
-    lead: {
-      value: worship?.lead?.id ?? "",
-      label: worship?.lead?.name ?? "",
-    },
-    singers: worship
-      ? worship.singers.map((singer) => {
-          return { value: singer.id, label: singer.name };
-        })
-      : [],
+  const formOptions = {
+    defaultValues: {
+      date: new Date(),
+      org: { value: selectedOrg, label: selectedOrg.toUpperCase() },
+      musics: [],
+      lead: { value: "", label: "" },
+      singers: [],
+    } as WorshipFormType,
+    values: worship
+      ? ({
+          date: new Date(worship.worship_date),
+          org: {
+            label: worship.org.toUpperCase(),
+            value: worship.org,
+          },
+          musics: worship.music_titles.map((music) => {
+            return { value: music, label: music };
+          }),
+          lead: {
+            value: worship.lead.id,
+            label: worship.lead.name,
+          },
+          singers:
+            worship.singers.map((singer) => {
+              return {
+                value: singer.id,
+                label: `${singer.name}${singer.last_name ? " " + singer.last_name : ""}`,
+              };
+            }) ?? [],
+        } as WorshipFormType)
+      : undefined,
   };
 
-  const form = useForm<WorshipFormType>({ values: defaultValues });
+  const form = useForm<WorshipFormType>(formOptions);
 
   async function fetchMusics() {
     try {
-      // const { data, error } = await supabase.from("music").select("*");
-      const data = MUSICS_MOCK;
-
-      console.error(data);
-      // if (error) throw new Error(error.message);
+      const { data, error } = await supabase.from("music").select("*");
+      // const data = MUSICS_MOCK;
+      //
+      // console.error(data);
+      if (error) throw new Error(error.message);
 
       setMusics(data);
     } catch (err) {
@@ -94,11 +109,11 @@ export function WorshipForm({ worship, onClose }: a) {
 
   async function fetchSingers() {
     try {
-      // const { data, error } = await supabase.from("singer").select("*");
-      const data = SINGERS_MOCK;
-
-      console.error(data);
-      // if (error) throw new Error(error.message);
+      const { data, error } = await supabase.from("singer").select("*");
+      // const data = SINGERS_MOCK;
+      //
+      // console.error(data);
+      if (error) throw new Error(error.message);
 
       setSingers(data);
     } catch (err) {
@@ -106,7 +121,7 @@ export function WorshipForm({ worship, onClose }: a) {
     }
   }
 
-  const handleForm = async (data: WorshipFormType) => {
+  const handleForm = async (formData: WorshipFormType) => {
     function parseData(
       baseData: WorshipFormType,
       newData: WorshipFormType,
@@ -118,14 +133,28 @@ export function WorshipForm({ worship, onClose }: a) {
         const newValue = newData[key as keyof WorshipFormType];
 
         if (Array.isArray(baseValue) && Array.isArray(newValue)) {
-          const [sortedBaseValue, sortedNewValue] = [baseValue, newValue].map(
-            (arr) => [...arr].sort((a, b) => a.value.localeCompare(b.value)),
-          );
+          const [sortedBaseValue, sortedNewValue] = [
+            [...baseValue],
+            [...newValue],
+          ].map((arr) => arr.sort((a, b) => a.value.localeCompare(b.value)));
+
           //@ts-expect-error vai dar erro ts
           changedData[key as typeof WorshipFormType] =
             JSON.stringify(sortedBaseValue) === JSON.stringify(sortedNewValue)
               ? null
               : newValue;
+        }
+        if (baseValue instanceof Date && newValue instanceof Date) {
+          const baseTime =
+            baseData.org?.value === "ibc" ? "T19:00:00" : "T19:30:00";
+          const newTime =
+            newData.org?.value === "ibc" ? "T19:00:00" : "T19:30:00";
+          const baseDate = `${baseValue.toISOString().split("T")[0]}${baseTime}`;
+          const newDate = `${newValue.toISOString().split("T")[0]}${newTime}`;
+
+          //@ts-expect-error vai dar erro ts
+          changedData[key as keyof WorshipFormType] =
+            baseDate === newDate ? null : newDate;
         } else {
           //@ts-expect-error vai dar erro ts
           changedData[key as keyof WorshipFormType] =
@@ -138,29 +167,44 @@ export function WorshipForm({ worship, onClose }: a) {
       return changedData;
     }
 
-    const parsedData = parseData(defaultValues, data);
+    const parsedData =
+      worship && formOptions.values
+        ? parseData(formOptions.values, formData)
+        : formData;
 
     try {
-      const time = worship?.org === "ibc" ? "T19:00:00" : "T19:30:00";
+      const time = parsedData.date
+        ? formData.org.value === "ibc"
+          ? "T19:00:00"
+          : "T19:30:00"
+        : null;
       const date = parsedData.date
-        ? `${data.date.toISOString().split("T")[0]}${time}`
-        : undefined;
+        ? `${formData.date.toISOString().split("T")[0]}${time}`
+        : null;
 
-      await handleWorship(
-        {
-          date,
-          lead_id: parsedData.lead?.value ?? null,
-          musics: parsedData.musics?.map((music) => music.label) ?? null,
-          org: parsedData.org?.value ?? null,
-          singers_id: parsedData.singers?.map((singer) => singer.value) ?? null,
-        },
-        worship?.worship_id,
-      );
+      const handleWorshipProps = {
+        date,
+        lead_id: parsedData.lead?.value ?? null,
+        musics: parsedData.musics?.map((music) => music.value) ?? null,
+        org: parsedData.org?.value ?? null,
+        singers_id: parsedData.singers?.map((singer) => singer.value) ?? null,
+        worship_id: worship?.worship_id,
+      };
+      console.log(handleWorshipProps);
 
-      // form.reset();
+      await handleWorship(handleWorshipProps);
+
+      fetchWorships(selectedOrg);
+
+      form.reset(formOptions.defaultValues);
+      if (worship) onClose();
+
+      const title = worship?.worship_id
+        ? "Worship session updated"
+        : "Worship session added";
 
       toast({
-        title: "Worship session added",
+        title,
       });
     } catch (error) {
       if (error instanceof Error) {
@@ -170,8 +214,6 @@ export function WorshipForm({ worship, onClose }: a) {
           variant: "destructive",
         });
       }
-
-      console.error("handleForm", { error });
     }
   };
 
@@ -268,7 +310,7 @@ export function WorshipForm({ worship, onClose }: a) {
                         {...field}
                         isMulti
                         options={musics.map((music) => {
-                          return { label: music.title, value: music.id };
+                          return { value: music.title, label: music.title };
                         })}
                       />
                     </FormControl>

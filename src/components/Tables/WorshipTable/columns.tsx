@@ -12,6 +12,12 @@ import {
 } from "@/components/ui/dropdown-menu";
 
 import { ArrowUpDown, MoreHorizontal, Pen, Trash } from "lucide-react";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 
 export const getColumns = ({
   onDelete,
@@ -66,9 +72,16 @@ export const getColumns = ({
       );
     },
     cell: ({ row }) => {
-      const lead: string = row.getValue("lead");
+      const lead: SingerDTO = row.original.lead;
 
-      return <div className="w-full max-w-64">{lead ?? ""}</div>;
+      return (
+        <TooltipProvider>
+          <Tooltip>
+            <TooltipTrigger>{lead.name}</TooltipTrigger>
+            <TooltipContent>{`${lead.name}${lead.last_name ? " " + lead.last_name : ""}`}</TooltipContent>
+          </Tooltip>
+        </TooltipProvider>
+      );
     },
   },
 
@@ -85,7 +98,12 @@ export const getColumns = ({
           {singers.map((singer, id) => {
             return (
               <li key={id} className="dark:text-gray-300">
-                - {singer.name}
+                <TooltipProvider>
+                  <Tooltip>
+                    <TooltipTrigger>- {singer.name}</TooltipTrigger>
+                    <TooltipContent>{`${singer.name}${singer.last_name ? " " + singer.last_name : ""}`}</TooltipContent>
+                  </Tooltip>
+                </TooltipProvider>
               </li>
             );
           })}

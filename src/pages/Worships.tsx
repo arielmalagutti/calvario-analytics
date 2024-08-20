@@ -76,13 +76,17 @@ export default function Worships() {
 
       <div className="flex flex-1 flex-col gap-6">
         {worshipFormOpen && (
-          <WorshipForm worship={worshipFormData} onClose={onFormClose} />
+          <WorshipForm
+            worship={worshipFormData}
+            onClose={onFormClose}
+            selectedOrg={selectedOrg}
+          />
         )}
 
         <WorshipTable
           data={worships}
-          onRefresh={() => fetchWorships(selectedOrg)}
           onEdit={onWorshipEdit}
+          onRefresh={() => fetchWorships(selectedOrg)}
         />
       </div>
     </>
