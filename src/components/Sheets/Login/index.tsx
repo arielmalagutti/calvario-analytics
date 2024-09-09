@@ -31,8 +31,6 @@ export function LoginSheet() {
       const errorMessage =
         error instanceof Error ? error.message : "Invalid username or password";
 
-      console.error(error);
-
       toast({
         title: "Something went wrong",
         description: errorMessage,

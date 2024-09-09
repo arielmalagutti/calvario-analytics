@@ -7,11 +7,14 @@ import { useWorship } from "@/hooks";
 import { OrgSelection, WorshipTable } from "@/components";
 import { WorshipForm } from "@/components/Forms/WorshipForm";
 import { Button } from "@/components/ui/button";
+import { supabase } from "@/lib/supabase";
+import { useToast } from "@/components/ui/use-toast";
 
 export default function Worships() {
+  const { toast } = useToast();
   const { fetchWorships, worships } = useWorship();
 
-  const [selectedOrg, setSelectedOrg] = useState<OrganizationDTO>("ibc");
+  const [selectedOrg, setSelectedOrg] = useState<OrganizationDTO>("jubac");
   const [worshipFormOpen, setWorshipFormOpen] = useState(false);
   const [worshipFormData, setWorshipFormData] = useState<
     (WorshipDTO & { formAction: string }) | null
@@ -25,6 +28,31 @@ export default function Worships() {
   const onWorshipEdit = (worship: WorshipDTO) => {
     setWorshipFormData({ ...worship, formAction: "Update" });
     setWorshipFormOpen(true);
+  };
+
+  const onWorshipDelete = async ({ worship_id, worship_date }: WorshipDTO) => {
+    try {
+      const { error } = await supabase
+        .from("worship")
+        .delete()
+        .eq("id", worship_id);
+
+      if (error) throw new Error(error.message);
+
+      fetchWorships(selectedOrg);
+
+      toast({
+        title: `Worship session of ${worship_date} deleted`,
+      });
+    } catch (error) {
+      if (error instanceof Error) {
+        toast({
+          title: error.name,
+          description: error.message,
+          variant: "destructive",
+        });
+      }
+    }
   };
 
   useEffect(() => {
@@ -66,6 +94,7 @@ export default function Worships() {
         <WorshipTable
           data={worships}
           onEdit={onWorshipEdit}
+          onDelete={onWorshipDelete}
           onRefresh={() => fetchWorships(selectedOrg)}
         />
       </div>

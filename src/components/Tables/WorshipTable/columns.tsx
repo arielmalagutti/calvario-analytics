@@ -155,7 +155,7 @@ export const getColumns = ({
               className="text-md flex items-center gap-1"
             >
               <Pen size={16} />
-              <span className="mt-[1px]">Edit title</span>
+              <span className="mt-[1px]">Edit worship</span>
             </DropdownMenuItem>
             <DropdownMenuItem
               onClick={() => onDelete(worship)}

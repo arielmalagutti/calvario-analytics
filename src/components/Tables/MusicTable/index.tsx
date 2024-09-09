@@ -37,9 +37,7 @@ import { Loading } from "@/components";
 
 import { getColumns } from "./columns";
 
-import { MusicDTO, MusicTagsDTO } from "@/dtos";
-
-import { TAGS_MOCK } from "@/MOCK_DATA";
+import { MusicDTO, MusicTagsDTO, TagDTO } from "@/dtos";
 
 import Select from "node_modules/react-select/dist/declarations/src/Select";
 import { GroupBase } from "react-select";
@@ -47,10 +45,11 @@ import { ChevronDown, RotateCw } from "lucide-react";
 
 type MusicTableProps = {
   data: MusicTagsDTO[];
+  tags: TagDTO[];
   onRefresh: () => void;
 };
 
-export function MusicTable({ data, onRefresh }: MusicTableProps) {
+export function MusicTable({ data, tags, onRefresh }: MusicTableProps) {
   const isLoading = false;
 
   const { toast } = useToast();
@@ -125,13 +124,8 @@ export function MusicTable({ data, onRefresh }: MusicTableProps) {
 
   const onDelete = React.useCallback(async (id: string, title: string) => {
     try {
-      const { data, error } = await supabase
-        .from("music")
-        .delete()
-        .eq("id", id);
+      const { error } = await supabase.from("music").delete().eq("id", id);
       if (error) throw new Error(error.message);
-
-      console.log(data);
 
       toast({
         title: `Music '${title}' has been successfully deleted`,
@@ -159,8 +153,6 @@ export function MusicTable({ data, onRefresh }: MusicTableProps) {
       }),
     [editingCell, onDelete, selectedTags, updateTags, updateTitle],
   );
-
-  const tags = TAGS_MOCK.sort((a, b) => a.name.localeCompare(b.name));
 
   const table = useReactTable({
     data,

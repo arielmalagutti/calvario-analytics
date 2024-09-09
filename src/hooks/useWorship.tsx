@@ -4,7 +4,6 @@ import { OrganizationDTO, SingerDTO, WorshipDTO } from "@/dtos";
 
 import { supabase } from "@/lib/supabase";
 import { CreateWorshipSchema } from "@/schemas/WorshipSchemas";
-import { WORSHIP_DATA_MOCK } from "@/MOCK_DATA";
 
 type NullablePartial<T> = { [P in keyof T]?: T[P] | null };
 type WorshipContextType = {
@@ -32,9 +31,7 @@ export function WorshipProvider({ children }: { children: React.ReactNode }) {
       const { data, error } = await supabase
         .rpc("get_worship_details", { p_org: org })
         .select("*");
-      //
-      // const data = WORSHIP_DATA_MOCK;
-      //
+
       if (error) throw new Error(error.message);
 
       const worshipData: WorshipDTO[] = data.map(

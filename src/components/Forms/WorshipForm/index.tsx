@@ -96,28 +96,36 @@ export function WorshipForm({
   async function fetchMusics() {
     try {
       const { data, error } = await supabase.from("music").select("*");
-      // const data = MUSICS_MOCK;
-      //
-      // console.error(data);
+
       if (error) throw new Error(error.message);
 
       setMusics(data);
-    } catch (err) {
-      console.error("fetchMusics", err);
+    } catch (error) {
+      if (error instanceof Error) {
+        toast({
+          title: error.name,
+          description: error.message,
+          variant: "destructive",
+        });
+      }
     }
   }
 
   async function fetchSingers() {
     try {
       const { data, error } = await supabase.from("singer").select("*");
-      // const data = SINGERS_MOCK;
-      //
-      // console.error(data);
+
       if (error) throw new Error(error.message);
 
       setSingers(data);
-    } catch (err) {
-      console.error("fetchSingers", err);
+    } catch (error) {
+      if (error instanceof Error) {
+        toast({
+          title: error.name,
+          description: error.message,
+          variant: "destructive",
+        });
+      }
     }
   }
 
@@ -190,7 +198,6 @@ export function WorshipForm({
         singers_id: parsedData.singers?.map((singer) => singer.value) ?? null,
         worship_id: worship?.worship_id,
       };
-      console.log(handleWorshipProps);
 
       await handleWorship(handleWorshipProps);
 

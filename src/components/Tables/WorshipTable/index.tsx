@@ -1,7 +1,4 @@
 import * as React from "react";
-import { supabase } from "@/lib/supabase";
-
-import { useToast } from "@/components/ui/use-toast";
 import { useWorship } from "@/hooks";
 
 import {
@@ -42,11 +39,16 @@ import { ChevronDown, RotateCw } from "lucide-react";
 type WorshipTableProps = {
   data: WorshipDTO[];
   onRefresh: () => void;
+  onDelete: ({ worship_id, worship_date }: WorshipDTO) => void;
   onEdit: (worship: WorshipDTO) => void;
 };
 
-export function WorshipTable({ data, onRefresh, onEdit }: WorshipTableProps) {
-  const { toast } = useToast();
+export function WorshipTable({
+  data,
+  onRefresh,
+  onEdit,
+  onDelete,
+}: WorshipTableProps) {
   const { isWorshipLoading: isLoading } = useWorship();
 
   const [sorting, setSorting] = React.useState<SortingState>([
@@ -60,23 +62,6 @@ export function WorshipTable({ data, onRefresh, onEdit }: WorshipTableProps) {
   );
   const [columnVisibility, setColumnVisibility] =
     React.useState<VisibilityState>({});
-
-  const onDelete = async ({ worship_id, worship_date }: WorshipDTO) => {
-    try {
-      await supabase.from("worship").delete().eq("id", worship_id);
-      toast({
-        title: `Worship session of ${worship_date} deleted`,
-      });
-    } catch (error) {
-      if (error instanceof Error) {
-        toast({
-          title: error.name,
-          description: error.message,
-          variant: "destructive",
-        });
-      }
-    }
-  };
 
   const columns = getColumns({ onDelete, onEdit });
 

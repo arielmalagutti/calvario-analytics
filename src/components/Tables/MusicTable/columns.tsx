@@ -22,7 +22,6 @@ import {
   Trash,
   X,
 } from "lucide-react";
-import { TAGS_MOCK } from "@/MOCK_DATA";
 import Select from "node_modules/react-select/dist/declarations/src/Select";
 import { RefObject } from "react";
 import { GroupBase, Options } from "react-select";
@@ -75,22 +74,41 @@ export const getColumns = ({
         return (
           <>
             {isEditingTitle ? (
-              <Input
-                defaultValue={title}
-                onKeyUp={(e) => {
-                  if (e.code === "Enter") {
-                    updateTitle({
-                      id: row.original.id,
-                      title: (e.target as HTMLInputElement).value,
-                    });
+              <div className="flex items-center gap-2">
+                <Input
+                  defaultValue={title}
+                  onKeyUp={(e) => {
+                    if (e.code === "Enter") {
+                      if (
+                        row.original.title !==
+                        (e.target as HTMLInputElement).value
+                      )
+                        updateTitle({
+                          id: row.original.id,
+                          title: (e.target as HTMLInputElement).value,
+                        });
+                      setEditingCell({
+                        rowId: row.id,
+                        column: "title",
+                        isEditing: false,
+                      });
+                    }
+                  }}
+                  autoFocus
+                />
+                <Button
+                  onClick={() =>
                     setEditingCell({
                       rowId: row.id,
                       column: "title",
                       isEditing: false,
-                    });
+                    })
                   }
-                }}
-              />
+                  className="h-fit w-fit bg-transparent p-1 hover:bg-zinc-800"
+                >
+                  <X size={24} className="text-red-600" />
+                </Button>
+              </div>
             ) : (
               <div>{title}</div>
             )}
@@ -142,8 +160,8 @@ export const getColumns = ({
                   ref={selectedTags}
                   isMulti
                   placeholder="Add tags to the music"
-                  options={TAGS_MOCK.map((tag) => {
-                    return { label: tag.name, value: tag.name };
+                  options={tags.map((tag) => {
+                    return { label: tag, value: tag };
                   })}
                   defaultValue={
                     musicHasTags
