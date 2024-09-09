@@ -42,6 +42,7 @@ import { MusicDTO, MusicTagsDTO, TagDTO } from "@/dtos";
 import Select from "node_modules/react-select/dist/declarations/src/Select";
 import { GroupBase } from "react-select";
 import { ChevronDown, RotateCw } from "lucide-react";
+import { translateColumns } from "@/utils/utils";
 
 type MusicTableProps = {
   data: MusicTagsDTO[];
@@ -83,8 +84,10 @@ export function MusicTable({ data, tags, onRefresh }: MusicTableProps) {
         .eq("id", id);
       if (error) throw new Error(error.message);
 
+      onRefresh();
+
       toast({
-        title: `Changed music title to '${title}'`,
+        title: `O título da música foi alterado para '${title}'`,
       });
     } catch (error) {
       if (error instanceof Error) {
@@ -106,8 +109,10 @@ export function MusicTable({ data, tags, onRefresh }: MusicTableProps) {
         });
         if (error) throw new Error(error.message);
 
+        onRefresh();
+
         toast({
-          title: `'${title}' tags have been updated`,
+          title: `'${title}' tags foram atualizadas`,
         });
       } catch (error) {
         if (error instanceof Error) {
@@ -127,8 +132,10 @@ export function MusicTable({ data, tags, onRefresh }: MusicTableProps) {
       const { error } = await supabase.from("music").delete().eq("id", id);
       if (error) throw new Error(error.message);
 
+      onRefresh();
+
       toast({
-        title: `Music '${title}' has been successfully deleted`,
+        title: `Música '${title}' foi deletada com sucesso`,
       });
     } catch (error) {
       if (error instanceof Error) {
@@ -150,6 +157,7 @@ export function MusicTable({ data, tags, onRefresh }: MusicTableProps) {
         updateTitle,
         updateTags,
         onDelete,
+        tags,
       }),
     [editingCell, onDelete, selectedTags, updateTags, updateTitle],
   );
@@ -190,7 +198,7 @@ export function MusicTable({ data, tags, onRefresh }: MusicTableProps) {
       <div className="flex items-center justify-between gap-8 py-4">
         <div className="flex flex-1 gap-4">
           <Input
-            placeholder={"Filter titles..."}
+            placeholder={"Filtrar títulos..."}
             value={(table.getColumn("title")?.getFilterValue() as string) ?? ""}
             onChange={(event) =>
               table.getColumn("title")?.setFilterValue(event.target.value)
@@ -200,7 +208,7 @@ export function MusicTable({ data, tags, onRefresh }: MusicTableProps) {
 
           <Selectable
             isMulti
-            placeholder={"Filter tags..."}
+            placeholder={"Filtrar tags..."}
             options={tags.map((t) => {
               return { label: t.name, value: t.name };
             })}
@@ -221,7 +229,7 @@ export function MusicTable({ data, tags, onRefresh }: MusicTableProps) {
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <Button variant="outline" className="ml-auto">
-                Columns <ChevronDown className="ml-2 h-4 w-4" />
+                Colunas <ChevronDown className="ml-2 h-4 w-4" />
               </Button>
             </DropdownMenuTrigger>
 
@@ -239,7 +247,7 @@ export function MusicTable({ data, tags, onRefresh }: MusicTableProps) {
                         column.toggleVisibility(!!value)
                       }
                     >
-                      {column.id}
+                      {translateColumns(column.id)}
                     </DropdownMenuCheckboxItem>
                   );
                 })}
@@ -297,7 +305,7 @@ export function MusicTable({ data, tags, onRefresh }: MusicTableProps) {
 
       <div className="flex items-center justify-end space-x-2 py-4">
         <div className="flex-1 text-sm text-muted-foreground">
-          {table.getFilteredRowModel().rows.length} item(s) found
+          {table.getFilteredRowModel().rows.length} item(s) encontrados
         </div>
         <div className="space-x-2">
           <Button
@@ -306,7 +314,7 @@ export function MusicTable({ data, tags, onRefresh }: MusicTableProps) {
             onClick={() => table.previousPage()}
             disabled={!table.getCanPreviousPage()}
           >
-            Previous
+            Anterior
           </Button>
 
           <Button
@@ -315,7 +323,7 @@ export function MusicTable({ data, tags, onRefresh }: MusicTableProps) {
             onClick={() => table.nextPage()}
             disabled={!table.getCanNextPage()}
           >
-            Next
+            Próximo
           </Button>
         </div>
       </div>

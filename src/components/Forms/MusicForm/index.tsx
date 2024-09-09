@@ -120,7 +120,7 @@ export function MusicForm({ onClose, handleMusicInsertion }: MusicFormProps) {
         <Card>
           <CardHeader>
             <div className="flex justify-between">
-              <CardTitle>Add music session</CardTitle>
+              <CardTitle>Registrar música</CardTitle>
               <Button
                 onClick={() => onClose()}
                 className="bg-transparent hover:bg-zinc-800"
@@ -135,11 +135,11 @@ export function MusicForm({ onClose, handleMusicInsertion }: MusicFormProps) {
               name="title"
               render={({ field }) => (
                 <FormItem className="flex-1">
-                  <FormLabel>Title</FormLabel>
+                  <FormLabel>Título</FormLabel>
                   <Input
                     {...field}
                     className="max-h-9"
-                    placeholder="Use the first verse as the title of the song. Example: Ao que está assentado"
+                    placeholder="Utilize o primeiro verso da música como título. Exemplo: Ao que está assentado"
                   />
                 </FormItem>
               )}
@@ -155,6 +155,7 @@ export function MusicForm({ onClose, handleMusicInsertion }: MusicFormProps) {
                     <Creatable
                       {...field}
                       isMulti
+                      placeholder="Selecione..."
                       options={tags.map((tag) => {
                         return {
                           value: tag.name,
@@ -168,7 +169,7 @@ export function MusicForm({ onClose, handleMusicInsertion }: MusicFormProps) {
             ></FormField>
           </CardContent>
           <CardFooter className="justify-end">
-            <Button type="submit">Add music</Button>
+            <Button type="submit">Registrar música</Button>
           </CardFooter>
         </Card>
       </form>

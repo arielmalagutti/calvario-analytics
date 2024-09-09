@@ -35,6 +35,7 @@ import { getColumns } from "./columns";
 import { WorshipDTO } from "@/dtos/index";
 
 import { ChevronDown, RotateCw } from "lucide-react";
+import { translateColumns } from "@/utils/utils";
 
 type WorshipTableProps = {
   data: WorshipDTO[];
@@ -100,21 +101,21 @@ export function WorshipTable({
     <div className="w-full">
       <div className="flex items-center justify-between gap-8 py-4">
         <Input
-          placeholder={"Filter dates..."}
+          placeholder={"Filtrar datas: YYYY-MM-DD ou MM-DD..."}
           value={
             (table.getColumn("worship_date")?.getFilterValue() as string) ?? ""
           }
           onChange={(event) =>
             table.getColumn("worship_date")?.setFilterValue(event.target.value)
           }
-          className="max-w-72"
+          className="max-w-80"
         />
 
         <div className="flex items-center justify-center gap-4">
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <Button variant="outline" className="ml-auto">
-                Columns <ChevronDown className="ml-2 h-4 w-4" />
+                Colunas <ChevronDown className="ml-2 h-4 w-4" />
               </Button>
             </DropdownMenuTrigger>
 
@@ -132,7 +133,7 @@ export function WorshipTable({
                         column.toggleVisibility(!!value)
                       }
                     >
-                      {column.id}
+                      {translateColumns(column.id)}
                     </DropdownMenuCheckboxItem>
                   );
                 })}
@@ -190,8 +191,7 @@ export function WorshipTable({
 
       <div className="flex items-center justify-end space-x-2 py-4">
         <div className="flex-1 text-sm text-muted-foreground">
-          {table.getFilteredSelectedRowModel().rows.length} of{" "}
-          {table.getFilteredRowModel().rows.length} row(s) selected.
+          {table.getFilteredRowModel().rows.length} item(s) encontrados
         </div>
         <div className="space-x-2">
           <Button
@@ -200,7 +200,7 @@ export function WorshipTable({
             onClick={() => table.previousPage()}
             disabled={!table.getCanPreviousPage()}
           >
-            Previous
+            Anterior
           </Button>
 
           <Button
@@ -209,7 +209,7 @@ export function WorshipTable({
             onClick={() => table.nextPage()}
             disabled={!table.getCanNextPage()}
           >
-            Next
+            Próximo
           </Button>
         </div>
       </div>

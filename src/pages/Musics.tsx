@@ -71,7 +71,7 @@ export default function Musics() {
         <div className="flex flex-1 items-center justify-between">
           <div className="flex items-center gap-2">
             <h1 className="text-lg font-medium text-gray-500 dark:text-gray-400">
-              MUSICS
+              MÚSICAS
             </h1>
           </div>
           <Button
@@ -79,7 +79,7 @@ export default function Musics() {
             onClick={() => setMusicFormOpen(true)}
           >
             <Plus className="mr-2 h-4 w-4" />
-            <span>Add Music</span>
+            <span>Registrar Música</span>
           </Button>
         </div>
       </div>

@@ -15,11 +15,11 @@ const PAGES: { href: string; label: string }[] = [
   },
   {
     href: "/worships",
-    label: "Worships",
+    label: "Louvores",
   },
   {
     href: "/musics",
-    label: "Musics",
+    label: "Músicas",
   },
 ];
 
@@ -45,7 +45,7 @@ export function Header({ user }: HeaderProps) {
       </div>
 
       <div className="flex items-center gap-4">
-        {user.id ? <p className="font-medium">LOGGED IN</p> : <LoginSheet />}
+        {user.id ? <p className="font-medium">LOGADO</p> : <LoginSheet />}
         <ThemeToggle />
       </div>
     </div>

@@ -207,8 +207,8 @@ export function WorshipForm({
       if (worship) onClose();
 
       const title = worship?.worship_id
-        ? "Worship session updated"
-        : "Worship session added";
+        ? "Sessão de louvor atualizada"
+        : "Sessão de louvor registrada";
 
       toast({
         title,
@@ -241,7 +241,7 @@ export function WorshipForm({
           <CardHeader>
             <div className="flex justify-between">
               <CardTitle>
-                {(worship?.formAction ?? "Add") + " worship session"}
+                {(worship?.formAction ?? "Registrar") + " sessão de louvor"}
               </CardTitle>
               <Button
                 onClick={() => onClose()}
@@ -258,7 +258,7 @@ export function WorshipForm({
                 name="date"
                 render={({ field }) => (
                   <FormItem className="col-span-1 flex flex-col">
-                    <FormLabel>Date</FormLabel>
+                    <FormLabel>Data</FormLabel>
                     <DatePicker field={field}></DatePicker>
                   </FormItem>
                 )}
@@ -273,6 +273,7 @@ export function WorshipForm({
                     <FormControl>
                       <Selectable
                         {...field}
+                        placeholder="Selecione..."
                         options={[
                           { label: "IBC", value: "ibc" },
                           { label: "JUBAC", value: "jubac" },
@@ -288,10 +289,11 @@ export function WorshipForm({
                 name="lead"
                 render={({ field }) => (
                   <FormItem className="col-span-2 flex flex-col">
-                    <FormLabel>Lead</FormLabel>
+                    <FormLabel>Ministro</FormLabel>
                     <FormControl>
                       <Selectable
                         {...field}
+                        placeholder="Selecione..."
                         options={singers.map((singer) => {
                           return {
                             value: singer.id,
@@ -311,10 +313,11 @@ export function WorshipForm({
                 name="musics"
                 render={({ field }) => (
                   <FormItem className="flex-1">
-                    <FormLabel>Musics</FormLabel>
+                    <FormLabel>Músicas</FormLabel>
                     <FormControl>
                       <Creatable
                         {...field}
+                        placeholder="Selecione..."
                         isMulti
                         options={musics.map((music) => {
                           return { value: music.title, label: music.title };
@@ -330,10 +333,11 @@ export function WorshipForm({
                 name="singers"
                 render={({ field }) => (
                   <FormItem className="flex-1">
-                    <FormLabel>Singers</FormLabel>
+                    <FormLabel>Cantores</FormLabel>
                     <FormControl>
                       <Selectable
                         {...field}
+                        placeholder="Selecione..."
                         isMulti
                         options={singers.map((a) => {
                           return {
@@ -350,7 +354,7 @@ export function WorshipForm({
           </CardContent>
           <CardFooter className="justify-end">
             <Button type="submit">
-              {(worship?.formAction ?? "Add") + " worship"}
+              {(worship?.formAction ?? "Registrar") + " louvor"}
             </Button>
           </CardFooter>
         </Card>

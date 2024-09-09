@@ -1,4 +1,5 @@
 import { format } from "date-fns";
+import { ptBR } from "date-fns/locale";
 import { SingerDTO, WorshipDTO } from "@/dtos";
 
 import { ColumnDef } from "@tanstack/react-table";
@@ -31,7 +32,7 @@ export const getColumns = ({
     header: ({ column }) => {
       return (
         <div className="flex cursor-default items-center gap-1">
-          <span>Date</span>
+          <span>Data</span>
           <Button
             variant="ghost"
             onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
@@ -46,7 +47,9 @@ export const getColumns = ({
       const date: string | undefined = row.getValue("worship_date");
 
       if (date) {
-        const formattedDate = format(new Date(date), `MMMM dd yyyy`);
+        const formattedDate = format(new Date(date), "dd MMMM yyyy", {
+          locale: ptBR,
+        });
         return <div className="w-[8.25rem]">{formattedDate}</div>;
       }
 
@@ -60,7 +63,7 @@ export const getColumns = ({
     header: ({ column }) => {
       return (
         <div className="flex cursor-default items-center gap-1">
-          <span>Lead</span>
+          <span>Ministro</span>
           <Button
             variant="ghost"
             onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
@@ -87,7 +90,7 @@ export const getColumns = ({
 
   {
     accessorKey: "singers",
-    header: "Singers",
+    header: "Cantores",
     cell: ({ row }) => {
       const singers: SingerDTO[] = row.getValue("singers");
 
@@ -113,7 +116,7 @@ export const getColumns = ({
   },
   {
     accessorKey: "music_titles",
-    header: "Musics",
+    header: "Músicas",
     cell: ({ row }) => {
       const musics: string[] = row.getValue("music_titles");
 
@@ -147,7 +150,7 @@ export const getColumns = ({
           </DropdownMenuTrigger>
 
           <DropdownMenuContent align="start">
-            <DropdownMenuLabel>Actions</DropdownMenuLabel>
+            <DropdownMenuLabel>Ações</DropdownMenuLabel>
             <DropdownMenuItem
               onClick={() => {
                 onEdit(worship);
@@ -155,14 +158,14 @@ export const getColumns = ({
               className="text-md flex items-center gap-1"
             >
               <Pen size={16} />
-              <span className="mt-[1px]">Edit worship</span>
+              <span className="mt-[1px]">Editar louvor</span>
             </DropdownMenuItem>
             <DropdownMenuItem
               onClick={() => onDelete(worship)}
               className="text-md flex items-center gap-1 text-red-700 hover:text-red-500 focus:text-red-500 dark:text-red-600"
             >
               <Trash size={16} />
-              <span className="mt-[1px]">Delete</span>
+              <span className="mt-[1px]">Deletar</span>
             </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>

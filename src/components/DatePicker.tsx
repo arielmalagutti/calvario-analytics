@@ -15,6 +15,7 @@ import { FormControl } from "./ui/form";
 import { WorshipFormType } from "./Forms/WorshipForm";
 
 import { Calendar as CalendarIcon } from "lucide-react";
+import { ptBR } from "date-fns/locale";
 
 export function DatePicker({
   field,
@@ -33,9 +34,9 @@ export function DatePicker({
             )}
           >
             {field.value ? (
-              format(field.value, "PPP")
+              format(field.value, "PPP", { locale: ptBR })
             ) : (
-              <span>Pick a date</span>
+              <span>Escolha uma data</span>
             )}
             <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
           </Button>

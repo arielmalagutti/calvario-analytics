@@ -29,10 +29,10 @@ export function LoginSheet() {
       await signIn(user);
     } catch (error) {
       const errorMessage =
-        error instanceof Error ? error.message : "Invalid username or password";
+        error instanceof Error ? error.message : "Usuário ou senha inválida";
 
       toast({
-        title: "Something went wrong",
+        title: "Algo deu errado",
         description: errorMessage,
         variant: "destructive",
       });

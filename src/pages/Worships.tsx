@@ -26,7 +26,7 @@ export default function Worships() {
   };
 
   const onWorshipEdit = (worship: WorshipDTO) => {
-    setWorshipFormData({ ...worship, formAction: "Update" });
+    setWorshipFormData({ ...worship, formAction: "Atualizar" });
     setWorshipFormOpen(true);
   };
 
@@ -42,7 +42,7 @@ export default function Worships() {
       fetchWorships(selectedOrg);
 
       toast({
-        title: `Worship session of ${worship_date} deleted`,
+        title: `Louvor do dia ${worship_date} deletado`,
       });
     } catch (error) {
       if (error instanceof Error) {
@@ -65,7 +65,7 @@ export default function Worships() {
         <div className="flex flex-1 items-center justify-between">
           <div className="flex items-center gap-2">
             <h1 className="text-lg font-medium text-gray-500 dark:text-gray-400">
-              WORSHIPS
+              LOUVORES
             </h1>
 
             <ChevronRight className="h-8 w-8 font-medium text-gray-500" />
@@ -77,7 +77,7 @@ export default function Worships() {
             onClick={() => setWorshipFormOpen(true)}
           >
             <Plus className="mr-2 h-4 w-4" />
-            <span>Add Worship</span>
+            <span>Registrar louvor</span>
           </Button>
         </div>
       </div>

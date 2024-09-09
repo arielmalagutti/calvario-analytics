@@ -1,4 +1,5 @@
-import { format } from "date-fns";
+import { format } from "date-fns/format";
+import { ptBR } from "date-fns/locale";
 import { MusicInfoDTO } from "@/dtos";
 
 import { ColumnDef } from "@tanstack/react-table";
@@ -12,7 +13,7 @@ export const getColumns = (): ColumnDef<MusicInfoDTO>[] => [
     header: ({ column }) => {
       return (
         <div className="flex cursor-default items-center gap-1">
-          <span>Title</span>
+          <span>Título</span>
           <Button
             variant="ghost"
             onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
@@ -36,7 +37,7 @@ export const getColumns = (): ColumnDef<MusicInfoDTO>[] => [
     header: ({ column }) => {
       return (
         <div className="flex cursor-default items-center gap-1">
-          <span>Last Played Date</span>
+          <span>Última vez</span>
           <Button
             variant="ghost"
             onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
@@ -53,7 +54,7 @@ export const getColumns = (): ColumnDef<MusicInfoDTO>[] => [
 
       if (lastPlayedDate) {
         const date = new Date(lastPlayedDate);
-        const formattedDate = format(date, `MMMM dd yyyy`);
+        const formattedDate = format(date, "dd MMMM yyyy", { locale: ptBR });
         return <div className="w-full max-w-64">{formattedDate}</div>;
       }
 
@@ -65,7 +66,7 @@ export const getColumns = (): ColumnDef<MusicInfoDTO>[] => [
     header: ({ column }) => {
       return (
         <div className="flex cursor-default items-center gap-1">
-          <span>This month</span>
+          <span>Este mês</span>
           <Button
             variant="ghost"
             onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
@@ -89,7 +90,7 @@ export const getColumns = (): ColumnDef<MusicInfoDTO>[] => [
     header: ({ column }) => {
       return (
         <div className="flex cursor-default items-center gap-1">
-          <span>This year</span>
+          <span>Este ano</span>
           <Button
             variant="ghost"
             onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
