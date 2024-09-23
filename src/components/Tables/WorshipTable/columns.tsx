@@ -100,7 +100,7 @@ export const getColumns = ({
         <ul className="w-full max-w-64">
           {singers.map((singer, id) => {
             return (
-              <li key={id} className="dark:text-gray-300">
+              <li key={id} className="text-nowrap dark:text-gray-300">
                 <TooltipProvider>
                   <Tooltip>
                     <TooltipTrigger>- {singer.name}</TooltipTrigger>

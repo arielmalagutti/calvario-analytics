@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { ChevronRight, Plus } from "lucide-react";
 
 import { OrganizationDTO, WorshipDTO } from "@/dtos";
-import { useWorship } from "@/hooks";
+import { useAuth, useWorship } from "@/hooks";
 
 import { OrgSelection, WorshipTable } from "@/components";
 import { WorshipForm } from "@/components/Forms/WorshipForm";
@@ -19,6 +19,8 @@ export default function Worships() {
   const [worshipFormData, setWorshipFormData] = useState<
     (WorshipDTO & { formAction: string }) | null
   >(null);
+
+  const { userRole } = useAuth();
 
   const onFormClose = () => {
     setWorshipFormData(null);
@@ -72,13 +74,15 @@ export default function Worships() {
 
             <OrgSelection selectedOrg={selectedOrg} setOrg={setSelectedOrg} />
           </div>
-          <Button
-            className="rounded-lg bg-transparent p-2 transition-colors hover:bg-zinc-800 dark:text-foreground"
-            onClick={() => setWorshipFormOpen(true)}
-          >
-            <Plus className="mr-2 h-4 w-4" />
-            <span>Registrar louvor</span>
-          </Button>
+          {userRole === "admin" ? (
+            <Button
+              className="rounded-lg bg-transparent p-2 transition-colors hover:bg-zinc-800 dark:text-foreground"
+              onClick={() => setWorshipFormOpen(true)}
+            >
+              <Plus className="mr-2 h-4 w-4" />
+              <span>Registrar louvor</span>
+            </Button>
+          ) : null}
         </div>
       </div>
 
@@ -93,6 +97,7 @@ export default function Worships() {
 
         <WorshipTable
           data={worships}
+          userRole={userRole}
           onEdit={onWorshipEdit}
           onDelete={onWorshipDelete}
           onRefresh={() => fetchWorships(selectedOrg)}

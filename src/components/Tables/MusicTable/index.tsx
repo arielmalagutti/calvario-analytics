@@ -46,11 +46,17 @@ import { translateColumns } from "@/utils/utils";
 
 type MusicTableProps = {
   data: MusicTagsDTO[];
+  userRole: string;
   tags: TagDTO[];
   onRefresh: () => void;
 };
 
-export function MusicTable({ data, tags, onRefresh }: MusicTableProps) {
+export function MusicTable({
+  data,
+  userRole,
+  tags,
+  onRefresh,
+}: MusicTableProps) {
   const isLoading = false;
 
   const { toast } = useToast();
@@ -175,7 +181,7 @@ export function MusicTable({ data, tags, onRefresh }: MusicTableProps) {
     state: {
       sorting,
       columnFilters,
-      columnVisibility,
+      columnVisibility: { ...columnVisibility, actions: userRole === "admin" },
     },
   });
 

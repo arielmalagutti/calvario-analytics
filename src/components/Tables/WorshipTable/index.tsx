@@ -39,6 +39,7 @@ import { translateColumns } from "@/utils/utils";
 
 type WorshipTableProps = {
   data: WorshipDTO[];
+  userRole: string;
   onRefresh: () => void;
   onDelete: ({ worship_id, worship_date }: WorshipDTO) => void;
   onEdit: (worship: WorshipDTO) => void;
@@ -46,6 +47,7 @@ type WorshipTableProps = {
 
 export function WorshipTable({
   data,
+  userRole,
   onRefresh,
   onEdit,
   onDelete,
@@ -79,7 +81,7 @@ export function WorshipTable({
     state: {
       sorting,
       columnFilters,
-      columnVisibility,
+      columnVisibility: { ...columnVisibility, actions: userRole === "admin" },
     },
   });
 

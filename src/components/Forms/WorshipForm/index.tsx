@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { supabase } from "@/lib/supabase";
 import { useForm } from "react-hook-form";
 
-import { useAuth, useWorship } from "@/hooks";
+import { useWorship } from "@/hooks";
 
 import { DatePicker } from "@/components";
 import { useToast } from "@/components/ui/use-toast";
@@ -48,8 +48,6 @@ export function WorshipForm({
   onClose,
   selectedOrg,
 }: WorshipFormProps) {
-  const { user } = useAuth();
-
   const { handleWorship, fetchWorships } = useWorship();
   const { toast } = useToast();
 
@@ -228,8 +226,6 @@ export function WorshipForm({
     fetchMusics();
     fetchSingers();
   }, []);
-
-  if (user.role !== "authenticated") return <></>;
 
   return (
     <Form {...form}>

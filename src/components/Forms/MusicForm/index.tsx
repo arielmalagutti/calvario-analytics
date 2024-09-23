@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
 import { supabase } from "@/lib/supabase";
 import { useForm } from "react-hook-form";
-import { useAuth } from "@/hooks";
 import { useToast } from "@/components/ui/use-toast";
 
 import {
@@ -38,8 +37,6 @@ type MusicFormProps = {
 };
 
 export function MusicForm({ onClose, handleMusicInsertion }: MusicFormProps) {
-  const { user } = useAuth();
-
   const { toast } = useToast();
 
   const [tags, setTags] = useState<TagDTO[]>([]);
@@ -108,8 +105,6 @@ export function MusicForm({ onClose, handleMusicInsertion }: MusicFormProps) {
   useEffect(() => {
     fetchTags();
   }, []);
-
-  if (user.role !== "authenticated") return <></>;
 
   return (
     <Form {...form}>

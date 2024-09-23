@@ -1,14 +1,18 @@
 import { useEffect, useState } from "react";
 import { ChevronRight } from "lucide-react";
 
-import { MusicInfoDTO, OrganizationDTO } from "@/dtos";
+import { supabase } from "@/lib/supabase";
+
+import { useToast } from "@/components/ui/use-toast";
+import { useAuth } from "@/hooks";
 
 import { OrgSelection } from "@/components";
 import { DashboardTable } from "@/components/Tables/DashboardTable";
-import { supabase } from "@/lib/supabase";
-import { useToast } from "@/components/ui/use-toast";
+
+import { MusicInfoDTO, OrganizationDTO } from "@/dtos";
 
 export default function Dashboard() {
+  const { userRole } = useAuth();
   const { toast } = useToast();
 
   const [musicsInfo, setMusicsInfo] = useState<MusicInfoDTO[]>([]);
@@ -57,6 +61,7 @@ export default function Dashboard() {
       <div className="flex flex-1 flex-col gap-6">
         <DashboardTable
           data={musicsInfo}
+          userRole={userRole}
           onRefresh={() => fetchMusics(selectedOrg)}
         />
       </div>

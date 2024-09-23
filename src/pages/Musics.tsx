@@ -1,14 +1,20 @@
 import { useEffect, useState } from "react";
 import { Plus } from "lucide-react";
 
-import { MusicTagsDTO, TagDTO } from "@/dtos";
+import { supabase } from "@/lib/supabase";
+
+import { useToast } from "@/components/ui/use-toast";
+import { useAuth } from "@/hooks";
+
 import { MusicTable } from "@/components/Tables/MusicTable";
 import { Button } from "@/components/ui/button";
 import { MusicForm } from "@/components/Forms/MusicForm";
-import { supabase } from "@/lib/supabase";
-import { useToast } from "@/components/ui/use-toast";
+
+import { MusicTagsDTO, TagDTO } from "@/dtos";
 
 export default function Musics() {
+  const { userRole } = useAuth();
+
   const { toast } = useToast();
   const [musics, setMusics] = useState<MusicTagsDTO[]>([]);
   const [tags, setTags] = useState<TagDTO[]>([]);
@@ -74,13 +80,15 @@ export default function Musics() {
               MÚSICAS
             </h1>
           </div>
-          <Button
-            className="rounded-lg bg-transparent p-2 transition-colors hover:bg-zinc-800 dark:text-foreground"
-            onClick={() => setMusicFormOpen(true)}
-          >
-            <Plus className="mr-2 h-4 w-4" />
-            <span>Registrar Música</span>
-          </Button>
+          {userRole === "admin" ? (
+            <Button
+              className="rounded-lg bg-transparent p-2 transition-colors hover:bg-zinc-800 dark:text-foreground"
+              onClick={() => setMusicFormOpen(true)}
+            >
+              <Plus className="mr-2 h-4 w-4" />
+              <span>Registrar Música</span>
+            </Button>
+          ) : null}
         </div>
       </div>
 
@@ -92,7 +100,12 @@ export default function Musics() {
           />
         )}
 
-        <MusicTable data={musics} tags={tags} onRefresh={() => fetchMusics()} />
+        <MusicTable
+          data={musics}
+          userRole={userRole}
+          tags={tags}
+          onRefresh={() => fetchMusics()}
+        />
       </div>
     </>
   );

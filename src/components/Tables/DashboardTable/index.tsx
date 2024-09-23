@@ -37,10 +37,15 @@ import { MusicInfoDTO } from "@/dtos/MusicDTO";
 
 type DashboardTableProps = {
   data: MusicInfoDTO[];
+  userRole: string;
   onRefresh: () => void;
 };
 
-export function DashboardTable({ data, onRefresh }: DashboardTableProps) {
+export function DashboardTable({
+  data,
+  onRefresh,
+  userRole,
+}: DashboardTableProps) {
   const isLoading = false;
 
   const [sorting, setSorting] = React.useState<SortingState>([
@@ -70,7 +75,7 @@ export function DashboardTable({ data, onRefresh }: DashboardTableProps) {
     state: {
       sorting,
       columnFilters,
-      columnVisibility,
+      columnVisibility: { ...columnVisibility, actions: userRole === "admin" },
     },
   });
 
