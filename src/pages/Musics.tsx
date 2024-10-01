@@ -1,40 +1,75 @@
 import { useEffect, useState } from "react";
-import { ChevronRight, EllipsisVertical, Plus } from "lucide-react";
+import { Plus } from "lucide-react";
 
-import { MusicTagsDTO, OrganizationDTO } from "@/dtos";
+import { supabase } from "@/lib/supabase";
 
-import { OrgSelection } from "@/components";
-import { WorshipForm } from "@/components/WorshipForm";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
+import { useToast } from "@/components/ui/use-toast";
+import { useAuth } from "@/hooks";
+
 import { MusicTable } from "@/components/Tables/MusicTable";
-import { MUSICS_TAGS_MOCK } from "@/MOCK_DATA";
+import { Button } from "@/components/ui/button";
+import { MusicForm } from "@/components/Forms/MusicForm";
+
+import { MusicTagsDTO, TagDTO } from "@/dtos";
 
 export default function Musics() {
+  const { userRole } = useAuth();
+
+  const { toast } = useToast();
   const [musics, setMusics] = useState<MusicTagsDTO[]>([]);
+  const [tags, setTags] = useState<TagDTO[]>([]);
 
-  const [selectedOrg, setSelectedOrg] = useState<OrganizationDTO>("ibc");
-  const [worshipFormOpen, setWorshipFormOpen] = useState(false);
+  const [musicFormOpen, setMusicFormOpen] = useState(false);
 
-  async function fetchMusics(organization: OrganizationDTO) {
-    console.log(organization);
+  const onFormClose = () => {
+    setMusicFormOpen(false);
+  };
+
+  async function fetchMusics() {
     try {
-      // const { data } = await supabase.rpc("music_info").select();
-      // console.log("dataaa", data);
-      // if (data) setMusics(data);
-      setMusics(MUSICS_TAGS_MOCK);
+      const { data, error } = await supabase
+        .rpc("get_musics_with_tags")
+        .select();
+
+      if (error) throw new Error(error.message);
+
+      if (data) setMusics(data);
     } catch (error) {
-      console.error(error);
+      if (error instanceof Error) {
+        toast({
+          title: error.name,
+          description: error.message,
+          variant: "destructive",
+        });
+      }
+    }
+  }
+
+  async function fetchTags() {
+    try {
+      const { data, error } = await supabase.from("tag").select("*");
+
+      if (error) throw new Error(error.message);
+
+      const sortedData = data.sort((a, b) => a.name.localeCompare(b.name));
+
+      setTags(sortedData);
+    } catch (error) {
+      if (error instanceof Error) {
+        toast({
+          title: error.name,
+          description: error.message,
+          variant: "destructive",
+        });
+      }
+      setTags([]);
     }
   }
 
   useEffect(() => {
-    fetchMusics(selectedOrg);
-  }, [selectedOrg]);
+    fetchMusics();
+    fetchTags();
+  }, []);
 
   return (
     <>
@@ -42,42 +77,35 @@ export default function Musics() {
         <div className="flex flex-1 items-center justify-between">
           <div className="flex items-center gap-2">
             <h1 className="text-lg font-medium text-gray-500 dark:text-gray-400">
-              MUSICS
+              MÚSICAS
             </h1>
-
-            {/**<ChevronRight className="h-8 w-8 font-medium text-gray-500" />
-
-            <OrgSelection selectedOrg={selectedOrg} setOrg={setSelectedOrg} /> */}
           </div>
-
-          <DropdownMenu>
-            <DropdownMenuTrigger className="rounded-lg p-2 text-gray-500 transition-colors hover:bg-zinc-800 dark:text-gray-500 dark:hover:text-gray-300">
-              <EllipsisVertical size={24} />
-            </DropdownMenuTrigger>
-            <DropdownMenuContent align="end">
-              <DropdownMenuItem
-                onClick={() => setWorshipFormOpen((prev) => !prev)}
-              >
-                <Plus className="mr-2 h-4 w-4" />
-                <span>Add Worship</span>
-              </DropdownMenuItem>
-              <DropdownMenuItem>
-                <Plus className="mr-2 h-4 w-4" />
-                <span>Add Singer</span>
-              </DropdownMenuItem>
-              <DropdownMenuItem>
-                <Plus className="mr-2 h-4 w-4" />
-                <span>Add Music</span>
-              </DropdownMenuItem>
-            </DropdownMenuContent>
-          </DropdownMenu>
+          {userRole === "admin" ? (
+            <Button
+              className="rounded-lg bg-transparent p-2 transition-colors hover:bg-zinc-800 dark:text-foreground"
+              onClick={() => setMusicFormOpen(true)}
+            >
+              <Plus className="mr-2 h-4 w-4" />
+              <span>Registrar Música</span>
+            </Button>
+          ) : null}
         </div>
       </div>
 
       <div className="flex flex-1 flex-col gap-6">
-        {worshipFormOpen && <WorshipForm />}
+        {musicFormOpen && (
+          <MusicForm
+            onClose={onFormClose}
+            handleMusicInsertion={() => fetchMusics()}
+          />
+        )}
 
-        <MusicTable data={musics} onRefresh={() => fetchMusics(selectedOrg)} />
+        <MusicTable
+          data={musics}
+          userRole={userRole}
+          tags={tags}
+          onRefresh={() => fetchMusics()}
+        />
       </div>
     </>
   );

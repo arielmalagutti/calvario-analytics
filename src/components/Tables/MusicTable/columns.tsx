@@ -12,7 +12,7 @@ import { Badge } from "@/components/ui/badge";
 import Creatable from "@/components/ui/CustomSelect/Creatable";
 import { Input } from "@/components/ui/input";
 
-import { MusicTagsDTO, MusicDTO } from "@/dtos";
+import { MusicTagsDTO, MusicDTO, TagDTO } from "@/dtos";
 
 import {
   ArrowUpDown,
@@ -22,7 +22,6 @@ import {
   Trash,
   X,
 } from "lucide-react";
-import { TAGS_MOCK } from "@/MOCK_DATA";
 import Select from "node_modules/react-select/dist/declarations/src/Select";
 import { RefObject } from "react";
 import { GroupBase, Options } from "react-select";
@@ -33,6 +32,7 @@ type MusicTableRowProps = {
   selectedTags: RefObject<Select<unknown, boolean, GroupBase<unknown>>>;
   editingCell: EditingCellType;
   setEditingCell: React.Dispatch<React.SetStateAction<EditingCellType>>;
+  tags: TagDTO[];
   updateTitle: (value: MusicDTO) => void;
   updateTags: (value: MusicTagsDTO) => Promise<void>;
   onDelete: (id: string, title: string) => void;
@@ -45,6 +45,7 @@ export const getColumns = ({
   updateTitle,
   updateTags,
   onDelete,
+  tags,
 }: MusicTableRowProps): ColumnDef<MusicTagsDTO>[] => {
   return [
     {
@@ -52,7 +53,7 @@ export const getColumns = ({
       header: ({ column }) => {
         return (
           <div className="flex cursor-default items-center gap-1">
-            <span>Title</span>
+            <span>Título</span>
             <Button
               variant="ghost"
               onClick={() =>
@@ -75,22 +76,41 @@ export const getColumns = ({
         return (
           <>
             {isEditingTitle ? (
-              <Input
-                defaultValue={title}
-                onKeyUp={(e) => {
-                  if (e.code === "Enter") {
-                    updateTitle({
-                      id: row.original.id,
-                      title: (e.target as HTMLInputElement).value,
-                    });
+              <div className="flex items-center gap-2">
+                <Input
+                  defaultValue={title}
+                  onKeyUp={(e) => {
+                    if (e.code === "Enter") {
+                      if (
+                        row.original.title !==
+                        (e.target as HTMLInputElement).value
+                      )
+                        updateTitle({
+                          id: row.original.id,
+                          title: (e.target as HTMLInputElement).value,
+                        });
+                      setEditingCell({
+                        rowId: row.id,
+                        column: "title",
+                        isEditing: false,
+                      });
+                    }
+                  }}
+                  autoFocus
+                />
+                <Button
+                  onClick={() =>
                     setEditingCell({
                       rowId: row.id,
                       column: "title",
                       isEditing: false,
-                    });
+                    })
                   }
-                }}
-              />
+                  className="h-fit w-fit bg-transparent p-1 hover:bg-zinc-800"
+                >
+                  <X size={24} className="text-red-600" />
+                </Button>
+              </div>
             ) : (
               <div>{title}</div>
             )}
@@ -108,13 +128,13 @@ export const getColumns = ({
       accessorKey: "tags",
       header: "Tags",
       cell: ({ row }) => {
-        const tags: string[] = row.getValue("tags");
+        const musicTags: string[] = row.getValue("tags");
 
         const { rowId, column, isEditing } = editingCell;
         const isEditingTags =
           rowId === row.id && column === "tags" && isEditing;
 
-        const musicHasTags = tags[0] !== null;
+        const musicHasTags = musicTags[0] !== null;
 
         const handleOnCLick = async () => {
           const newTags = selectedTags
@@ -141,13 +161,13 @@ export const getColumns = ({
                 <Creatable
                   ref={selectedTags}
                   isMulti
-                  placeholder="Add tags to the music"
-                  options={TAGS_MOCK.map((tag) => {
+                  placeholder="Adicione tags à música"
+                  options={tags.map((tag) => {
                     return { label: tag.name, value: tag.name };
                   })}
                   defaultValue={
                     musicHasTags
-                      ? tags.map((tag: string) => {
+                      ? musicTags.map((tag: string) => {
                           return { label: tag, value: tag };
                         })
                       : null
@@ -180,7 +200,7 @@ export const getColumns = ({
               </div>
             ) : musicHasTags ? (
               <div className="flex w-full max-w-64 flex-wrap gap-2">
-                {tags.map((tag, id) => {
+                {musicTags.map((tag, id) => {
                   return (
                     <Badge
                       key={id}
@@ -216,7 +236,7 @@ export const getColumns = ({
             </DropdownMenuTrigger>
 
             <DropdownMenuContent align="start">
-              <DropdownMenuLabel>Actions</DropdownMenuLabel>
+              <DropdownMenuLabel>Ações</DropdownMenuLabel>
               <DropdownMenuItem
                 onClick={() =>
                   setEditingCell({
@@ -228,7 +248,7 @@ export const getColumns = ({
                 className="text-md flex items-center gap-1"
               >
                 <Pen size={16} />
-                <span className="mt-[1px]">Edit title</span>
+                <span className="mt-[1px]">Editar título</span>
               </DropdownMenuItem>
               <DropdownMenuItem
                 onClick={() =>
@@ -241,14 +261,14 @@ export const getColumns = ({
                 className="text-md flex items-center gap-1"
               >
                 <Pen size={16} />
-                <span className="mt-[1px]">Edit tags</span>
+                <span className="mt-[1px]">Editar tags</span>
               </DropdownMenuItem>
               <DropdownMenuItem
                 onClick={() => onDelete(music.id, music.title)}
                 className="text-md flex items-center gap-1 text-red-700 hover:text-red-500 focus:text-red-500 dark:text-red-600"
               >
                 <Trash size={16} />
-                <span className="mt-[1px]">Delete</span>
+                <span className="mt-[1px]">Deletar</span>
               </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>

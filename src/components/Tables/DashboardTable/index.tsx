@@ -32,16 +32,20 @@ import { Loading } from "@/components";
 import { getColumns } from "./columns";
 
 import { ChevronDown, RotateCw } from "lucide-react";
+import { translateColumns } from "@/utils/utils";
+import { MusicInfoDTO } from "@/dtos/MusicDTO";
 
-type DashboardTableProps<TData> = {
-  data: TData[];
+type DashboardTableProps = {
+  data: MusicInfoDTO[];
+  userRole: string;
   onRefresh: () => void;
 };
 
-export function DashboardTable<TData>({
+export function DashboardTable({
   data,
   onRefresh,
-}: DashboardTableProps<TData>) {
+  userRole,
+}: DashboardTableProps) {
   const isLoading = false;
 
   const [sorting, setSorting] = React.useState<SortingState>([
@@ -71,7 +75,7 @@ export function DashboardTable<TData>({
     state: {
       sorting,
       columnFilters,
-      columnVisibility,
+      columnVisibility: { ...columnVisibility, actions: userRole === "admin" },
     },
   });
 
@@ -93,7 +97,7 @@ export function DashboardTable<TData>({
     <div className="w-full">
       <div className="flex items-center justify-between gap-8 py-4">
         <Input
-          placeholder={"Filter titles..."}
+          placeholder={"Filtrar títulos..."}
           value={(table.getColumn("title")?.getFilterValue() as string) ?? ""}
           onChange={(event) =>
             table.getColumn("title")?.setFilterValue(event.target.value)
@@ -105,7 +109,7 @@ export function DashboardTable<TData>({
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <Button variant="outline" className="ml-auto">
-                Columns <ChevronDown className="ml-2 h-4 w-4" />
+                Colunas <ChevronDown className="ml-2 h-4 w-4" />
               </Button>
             </DropdownMenuTrigger>
 
@@ -123,7 +127,7 @@ export function DashboardTable<TData>({
                         column.toggleVisibility(!!value)
                       }
                     >
-                      {column.id}
+                      {translateColumns(column.id)}
                     </DropdownMenuCheckboxItem>
                   );
                 })}
@@ -181,7 +185,7 @@ export function DashboardTable<TData>({
 
       <div className="flex items-center justify-end space-x-2 py-4">
         <div className="flex-1 text-sm text-muted-foreground">
-          {table.getFilteredRowModel().rows.length} item(s) found
+          {table.getFilteredRowModel().rows.length} item(s) encontrados
         </div>
         <div className="space-x-2">
           <Button
@@ -190,7 +194,7 @@ export function DashboardTable<TData>({
             onClick={() => table.previousPage()}
             disabled={!table.getCanPreviousPage()}
           >
-            Previous
+            Anterior
           </Button>
 
           <Button
@@ -199,7 +203,7 @@ export function DashboardTable<TData>({
             onClick={() => table.nextPage()}
             disabled={!table.getCanNextPage()}
           >
-            Next
+            Próximo
           </Button>
         </div>
       </div>

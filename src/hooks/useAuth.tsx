@@ -1,5 +1,4 @@
 import { createContext, useContext, useEffect, useState } from "react";
-import * as z from "zod";
 
 import { UserDTO } from "@/dtos";
 
@@ -8,39 +7,55 @@ import { User as UserType } from "@supabase/supabase-js";
 
 type AuthProviderType = {
   user: UserType;
+  userRole: string;
   signIn: (user: UserDTO) => Promise<void>;
 };
-
-const loginSchema = z.object({
-  name: z
-    .string({ message: "Invalid username" })
-    .includes(import.meta.env.VITE_USERNAME),
-  password: z
-    .string({ message: "Invalid password" })
-    .includes(import.meta.env.VITE_PASSWORD),
-});
 
 const AuthContext = createContext<AuthProviderType>({} as AuthProviderType);
 
 export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const [user, setUser] = useState({} as UserType);
+  const [userRole, setUserRole] = useState<string>("");
 
   async function getUser() {
-    const { data: userData, error } = await supabase.auth.getUser();
-    if (error) throw new Error(error.message);
+    const { data: userData, error: userError } = await supabase.auth.getUser();
+
+    if (userError) throw new Error(userError.message);
+    if (!userData) throw new Error("Usuário não encontrado");
+
+    const { data: userRoleData, error: userRoleError } = await supabase
+      .from("user")
+      .select("role")
+      .eq("id", userData.user.id)
+      .single();
+
+    if (userRoleError) throw new Error(userRoleError.message);
 
     setUser(userData.user);
+    setUserRole(userRoleData.role);
   }
 
-  async function signIn(user: UserDTO) {
-    const login = loginSchema.safeParse(user);
-    if (login.error) throw new Error("Wrong credentials.");
+  async function signIn({ email, password }: UserDTO) {
+    const { data: userData, error: userError } =
+      await supabase.auth.signInWithPassword({
+        email,
+        password,
+      });
 
-    const { error } = await supabase.auth.signInWithOAuth({
-      provider: "github",
-    });
+    if (userError) throw new Error(userError.message);
 
-    if (error) throw new Error(error.message);
+    if (!userData) throw new Error("Usuário não encontrado");
+
+    const { data: userRoleData, error: userRoleError } = await supabase
+      .from("user")
+      .select("role")
+      .eq("id", userData.user.id)
+      .single();
+
+    if (userRoleError) throw new Error(userRoleError.message);
+
+    setUser(userData.user);
+    setUserRole(userRoleData.role);
   }
 
   useEffect(() => {
@@ -48,7 +63,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   }, []);
 
   return (
-    <AuthContext.Provider value={{ user, signIn }}>
+    <AuthContext.Provider value={{ user, signIn, userRole }}>
       {children}
     </AuthContext.Provider>
   );

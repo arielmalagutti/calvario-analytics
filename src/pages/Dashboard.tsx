@@ -1,35 +1,40 @@
 import { useEffect, useState } from "react";
-import { ChevronRight, EllipsisVertical, Plus } from "lucide-react";
+import { ChevronRight } from "lucide-react";
+
+import { supabase } from "@/lib/supabase";
+
+import { useToast } from "@/components/ui/use-toast";
+import { useAuth } from "@/hooks";
+
+import { OrgSelection } from "@/components";
+import { DashboardTable } from "@/components/Tables/DashboardTable";
 
 import { MusicInfoDTO, OrganizationDTO } from "@/dtos";
 
-import { OrgSelection } from "@/components";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-import { DashboardTable } from "@/components/Tables/DashboardTable";
-import { MUSICS_INFO_MOCK } from "@/MOCK_DATA";
+export default function Dashboard() {
+  const { userRole } = useAuth();
+  const { toast } = useToast();
 
-export default function Worships() {
   const [musicsInfo, setMusicsInfo] = useState<MusicInfoDTO[]>([]);
-  const [selectedOrg, setSelectedOrg] = useState<OrganizationDTO>("ibc");
-  // const [worshipFormOpen, setWorshipFormOpen] = useState(false);
+  const [selectedOrg, setSelectedOrg] = useState<OrganizationDTO>("jubac");
 
   async function fetchMusics(p_org: OrganizationDTO) {
-    console.log(p_org);
     try {
-      // const { data,error } = await supabase.rpc("musics_info", {p_org}).select('*');
+      const { data, error } = await supabase
+        .rpc("musics_info", { p_org })
+        .select("*");
 
-      const data = MUSICS_INFO_MOCK;
-
-      // if (error) throw new Error(error.message);
+      if (error) throw new Error(error.message);
 
       setMusicsInfo(data);
     } catch (error) {
-      console.error(error);
+      if (error instanceof Error) {
+        toast({
+          title: error.name,
+          description: error.message,
+          variant: "destructive",
+        });
+      }
     }
   }
 
@@ -50,34 +55,13 @@ export default function Worships() {
 
             <OrgSelection selectedOrg={selectedOrg} setOrg={setSelectedOrg} />
           </div>
-
-          <DropdownMenu>
-            <DropdownMenuTrigger className="rounded-lg p-2 text-gray-500 transition-colors hover:bg-zinc-800 dark:text-gray-500 dark:hover:text-gray-300">
-              <EllipsisVertical size={24} />
-            </DropdownMenuTrigger>
-            <DropdownMenuContent align="end">
-              <DropdownMenuItem onClick={() => {}}>
-                <Plus className="mr-2 h-4 w-4" />
-                <span>Add Worship</span>
-              </DropdownMenuItem>
-              <DropdownMenuItem>
-                <Plus className="mr-2 h-4 w-4" />
-                <span>Add Singer</span>
-              </DropdownMenuItem>
-              <DropdownMenuItem>
-                <Plus className="mr-2 h-4 w-4" />
-                <span>Add Music</span>
-              </DropdownMenuItem>
-            </DropdownMenuContent>
-          </DropdownMenu>
         </div>
       </div>
 
       <div className="flex flex-1 flex-col gap-6">
-        {/* {worshipFormOpen && <WorshipForm />} */}
-
         <DashboardTable
           data={musicsInfo}
+          userRole={userRole}
           onRefresh={() => fetchMusics(selectedOrg)}
         />
       </div>

@@ -1,7 +1,4 @@
 import * as React from "react";
-import { supabase } from "@/lib/supabase";
-
-import { useToast } from "@/components/ui/use-toast";
 import { useWorship } from "@/hooks";
 
 import {
@@ -38,15 +35,23 @@ import { getColumns } from "./columns";
 import { WorshipDTO } from "@/dtos/index";
 
 import { ChevronDown, RotateCw } from "lucide-react";
+import { translateColumns } from "@/utils/utils";
 
 type WorshipTableProps = {
   data: WorshipDTO[];
+  userRole: string;
   onRefresh: () => void;
+  onDelete: ({ worship_id, worship_date }: WorshipDTO) => void;
   onEdit: (worship: WorshipDTO) => void;
 };
 
-export function WorshipTable({ data, onRefresh, onEdit }: WorshipTableProps) {
-  const { toast } = useToast();
+export function WorshipTable({
+  data,
+  userRole,
+  onRefresh,
+  onEdit,
+  onDelete,
+}: WorshipTableProps) {
   const { isWorshipLoading: isLoading } = useWorship();
 
   const [sorting, setSorting] = React.useState<SortingState>([
@@ -60,23 +65,6 @@ export function WorshipTable({ data, onRefresh, onEdit }: WorshipTableProps) {
   );
   const [columnVisibility, setColumnVisibility] =
     React.useState<VisibilityState>({});
-
-  const onDelete = async ({ worship_id, worship_date }: WorshipDTO) => {
-    try {
-      await supabase.from("worship").delete().eq("id", worship_id);
-      toast({
-        title: `Worship session of ${worship_date} deleted`,
-      });
-    } catch (error) {
-      if (error instanceof Error) {
-        toast({
-          title: error.name,
-          description: error.message,
-          variant: "destructive",
-        });
-      }
-    }
-  };
 
   const columns = getColumns({ onDelete, onEdit });
 
@@ -93,7 +81,7 @@ export function WorshipTable({ data, onRefresh, onEdit }: WorshipTableProps) {
     state: {
       sorting,
       columnFilters,
-      columnVisibility,
+      columnVisibility: { ...columnVisibility, actions: userRole === "admin" },
     },
   });
 
@@ -115,21 +103,21 @@ export function WorshipTable({ data, onRefresh, onEdit }: WorshipTableProps) {
     <div className="w-full">
       <div className="flex items-center justify-between gap-8 py-4">
         <Input
-          placeholder={"Filter dates..."}
+          placeholder={"Filtrar datas: YYYY-MM-DD ou MM-DD..."}
           value={
             (table.getColumn("worship_date")?.getFilterValue() as string) ?? ""
           }
           onChange={(event) =>
             table.getColumn("worship_date")?.setFilterValue(event.target.value)
           }
-          className="max-w-72"
+          className="max-w-80"
         />
 
         <div className="flex items-center justify-center gap-4">
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <Button variant="outline" className="ml-auto">
-                Columns <ChevronDown className="ml-2 h-4 w-4" />
+                Colunas <ChevronDown className="ml-2 h-4 w-4" />
               </Button>
             </DropdownMenuTrigger>
 
@@ -147,7 +135,7 @@ export function WorshipTable({ data, onRefresh, onEdit }: WorshipTableProps) {
                         column.toggleVisibility(!!value)
                       }
                     >
-                      {column.id}
+                      {translateColumns(column.id)}
                     </DropdownMenuCheckboxItem>
                   );
                 })}
@@ -205,8 +193,7 @@ export function WorshipTable({ data, onRefresh, onEdit }: WorshipTableProps) {
 
       <div className="flex items-center justify-end space-x-2 py-4">
         <div className="flex-1 text-sm text-muted-foreground">
-          {table.getFilteredSelectedRowModel().rows.length} of{" "}
-          {table.getFilteredRowModel().rows.length} row(s) selected.
+          {table.getFilteredRowModel().rows.length} item(s) encontrados
         </div>
         <div className="space-x-2">
           <Button
@@ -215,7 +202,7 @@ export function WorshipTable({ data, onRefresh, onEdit }: WorshipTableProps) {
             onClick={() => table.previousPage()}
             disabled={!table.getCanPreviousPage()}
           >
-            Previous
+            Anterior
           </Button>
 
           <Button
@@ -224,7 +211,7 @@ export function WorshipTable({ data, onRefresh, onEdit }: WorshipTableProps) {
             onClick={() => table.nextPage()}
             disabled={!table.getCanNextPage()}
           >
-            Next
+            Próximo
           </Button>
         </div>
       </div>

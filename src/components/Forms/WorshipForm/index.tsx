@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { supabase } from "@/lib/supabase";
 import { useForm } from "react-hook-form";
 
-import { useAuth, useWorship } from "@/hooks";
+import { useWorship } from "@/hooks";
 
 import { DatePicker } from "@/components";
 import { useToast } from "@/components/ui/use-toast";
@@ -48,8 +48,6 @@ export function WorshipForm({
   onClose,
   selectedOrg,
 }: WorshipFormProps) {
-  const { user } = useAuth();
-
   const { handleWorship, fetchWorships } = useWorship();
   const { toast } = useToast();
 
@@ -96,28 +94,36 @@ export function WorshipForm({
   async function fetchMusics() {
     try {
       const { data, error } = await supabase.from("music").select("*");
-      // const data = MUSICS_MOCK;
-      //
-      // console.error(data);
+
       if (error) throw new Error(error.message);
 
       setMusics(data);
-    } catch (err) {
-      console.error("fetchMusics", err);
+    } catch (error) {
+      if (error instanceof Error) {
+        toast({
+          title: error.name,
+          description: error.message,
+          variant: "destructive",
+        });
+      }
     }
   }
 
   async function fetchSingers() {
     try {
       const { data, error } = await supabase.from("singer").select("*");
-      // const data = SINGERS_MOCK;
-      //
-      // console.error(data);
+
       if (error) throw new Error(error.message);
 
       setSingers(data);
-    } catch (err) {
-      console.error("fetchSingers", err);
+    } catch (error) {
+      if (error instanceof Error) {
+        toast({
+          title: error.name,
+          description: error.message,
+          variant: "destructive",
+        });
+      }
     }
   }
 
@@ -190,7 +196,6 @@ export function WorshipForm({
         singers_id: parsedData.singers?.map((singer) => singer.value) ?? null,
         worship_id: worship?.worship_id,
       };
-      console.log(handleWorshipProps);
 
       await handleWorship(handleWorshipProps);
 
@@ -200,8 +205,8 @@ export function WorshipForm({
       if (worship) onClose();
 
       const title = worship?.worship_id
-        ? "Worship session updated"
-        : "Worship session added";
+        ? "Sessão de louvor atualizada"
+        : "Sessão de louvor registrada";
 
       toast({
         title,
@@ -222,8 +227,6 @@ export function WorshipForm({
     fetchSingers();
   }, []);
 
-  if (user.role !== "authenticated") return <></>;
-
   return (
     <Form {...form}>
       <form
@@ -234,7 +237,7 @@ export function WorshipForm({
           <CardHeader>
             <div className="flex justify-between">
               <CardTitle>
-                {(worship?.formAction ?? "Add") + " worship session"}
+                {(worship?.formAction ?? "Registrar") + " sessão de louvor"}
               </CardTitle>
               <Button
                 onClick={() => onClose()}
@@ -251,7 +254,7 @@ export function WorshipForm({
                 name="date"
                 render={({ field }) => (
                   <FormItem className="col-span-1 flex flex-col">
-                    <FormLabel>Date</FormLabel>
+                    <FormLabel>Data</FormLabel>
                     <DatePicker field={field}></DatePicker>
                   </FormItem>
                 )}
@@ -266,6 +269,7 @@ export function WorshipForm({
                     <FormControl>
                       <Selectable
                         {...field}
+                        placeholder="Selecione..."
                         options={[
                           { label: "IBC", value: "ibc" },
                           { label: "JUBAC", value: "jubac" },
@@ -281,10 +285,11 @@ export function WorshipForm({
                 name="lead"
                 render={({ field }) => (
                   <FormItem className="col-span-2 flex flex-col">
-                    <FormLabel>Lead</FormLabel>
+                    <FormLabel>Ministro</FormLabel>
                     <FormControl>
                       <Selectable
                         {...field}
+                        placeholder="Selecione..."
                         options={singers.map((singer) => {
                           return {
                             value: singer.id,
@@ -304,10 +309,11 @@ export function WorshipForm({
                 name="musics"
                 render={({ field }) => (
                   <FormItem className="flex-1">
-                    <FormLabel>Musics</FormLabel>
+                    <FormLabel>Músicas</FormLabel>
                     <FormControl>
                       <Creatable
                         {...field}
+                        placeholder="Selecione..."
                         isMulti
                         options={musics.map((music) => {
                           return { value: music.title, label: music.title };
@@ -323,10 +329,11 @@ export function WorshipForm({
                 name="singers"
                 render={({ field }) => (
                   <FormItem className="flex-1">
-                    <FormLabel>Singers</FormLabel>
+                    <FormLabel>Cantores</FormLabel>
                     <FormControl>
                       <Selectable
                         {...field}
+                        placeholder="Selecione..."
                         isMulti
                         options={singers.map((a) => {
                           return {
@@ -343,7 +350,7 @@ export function WorshipForm({
           </CardContent>
           <CardFooter className="justify-end">
             <Button type="submit">
-              {(worship?.formAction ?? "Add") + " worship"}
+              {(worship?.formAction ?? "Registrar") + " louvor"}
             </Button>
           </CardFooter>
         </Card>

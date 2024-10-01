@@ -1,10 +1,7 @@
-import { useState } from "react";
-
 import { useAuth } from "@/hooks/index";
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
 import {
   Sheet,
   SheetClose,
@@ -16,25 +13,34 @@ import {
 } from "@/components/ui/sheet";
 import { useToast } from "@/components/ui/use-toast";
 import { UserDTO } from "@/dtos";
+import { useForm } from "react-hook-form";
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+} from "@/components/ui/form";
+
+export type LoginFormType = {
+  email: string;
+  password: string;
+};
 
 export function LoginSheet() {
+  const form = useForm<LoginFormType>();
+
   const { signIn } = useAuth();
   const { toast } = useToast();
-
-  const [username, setUsername] = useState("");
-  const [password, setPassword] = useState("");
 
   async function handleLogin(user: UserDTO) {
     try {
       await signIn(user);
     } catch (error) {
-      const errorMessage =
-        error instanceof Error ? error.message : "Invalid username or password";
-
-      console.error(error);
+      const errorMessage = "Credenciais de login inválidas";
 
       toast({
-        title: "Something went wrong",
+        title: "Algo deu errado",
         description: errorMessage,
         variant: "destructive",
       });
@@ -47,54 +53,52 @@ export function LoginSheet() {
         <Button variant="outline">Login</Button>
       </SheetTrigger>
 
-      <SheetContent>
-        <SheetHeader>
-          <SheetTitle>Login</SheetTitle>
-        </SheetHeader>
-
+      <Form {...form}>
         <form
-          onSubmit={() => handleLogin({ name: username, password })}
+          onSubmit={form.handleSubmit(handleLogin)}
           className="grid gap-4 py-4"
         >
-          <div className="grid grid-cols-4 items-center gap-4">
-            <Label htmlFor="name" className="text-right">
-              Username
-            </Label>
+          <SheetContent className="flex flex-col gap-6">
+            <SheetHeader>
+              <SheetTitle>Login</SheetTitle>
+            </SheetHeader>
+            <div className="flex flex-col gap-3">
+              <FormField
+                control={form.control}
+                name="email"
+                render={({ field }) => (
+                  <FormItem className="flex flex-col">
+                    <FormLabel>Email</FormLabel>
+                    <FormControl>
+                      <Input {...field} placeholder="exemplo@gmail.com" />
+                    </FormControl>
+                  </FormItem>
+                )}
+              ></FormField>
+              <FormField
+                control={form.control}
+                name="password"
+                render={({ field }) => (
+                  <FormItem className="flex flex-col">
+                    <FormLabel>Senha</FormLabel>
+                    <FormControl>
+                      <Input {...field} placeholder="Insira sua senha" />
+                    </FormControl>
+                  </FormItem>
+                )}
+              ></FormField>
+            </div>
 
-            <Input
-              id="username"
-              type="text"
-              value={username}
-              onChange={(e) => setUsername(e.target.value)}
-              className="col-span-3"
-            />
-          </div>
-          <div className="grid grid-cols-4 items-center gap-4">
-            <Label htmlFor="username" className="text-right">
-              Password
-            </Label>
-
-            <Input
-              id="password"
-              type="password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              className="col-span-3"
-            />
-          </div>
+            <SheetFooter>
+              <SheetClose asChild>
+                <Button type="submit" onClick={form.handleSubmit(handleLogin)}>
+                  Autenticar
+                </Button>
+              </SheetClose>
+            </SheetFooter>
+          </SheetContent>
         </form>
-
-        <SheetFooter>
-          <SheetClose asChild>
-            <Button
-              type="submit"
-              onClick={() => handleLogin({ name: username, password })}
-            >
-              Authenticate
-            </Button>
-          </SheetClose>
-        </SheetFooter>
-      </SheetContent>
+      </Form>
     </Sheet>
   );
 }
