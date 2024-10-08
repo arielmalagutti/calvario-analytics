@@ -104,16 +104,30 @@ export function WorshipTable({
   return (
     <div className="w-full">
       <div className="flex flex-col-reverse gap-4 py-4 sm:flex-row sm:items-center sm:justify-between sm:gap-8">
-        <Input
-          placeholder={"Filtrar datas: YYYY-MM-DD ou MM-DD..."}
-          value={
-            (table.getColumn("worship_date")?.getFilterValue() as string) ?? ""
-          }
-          onChange={(event) =>
-            table.getColumn("worship_date")?.setFilterValue(event.target.value)
-          }
-          className="sm:max-w-80"
-        />
+        <div className="flex flex-1 flex-col gap-4 sm:flex-row">
+          <Input
+            placeholder={"Filtrar datas: YYYY-MM-DD ou MM-DD..."}
+            value={
+              (table.getColumn("worship_date")?.getFilterValue() as string) ??
+              ""
+            }
+            onChange={(event) =>
+              table
+                .getColumn("worship_date")
+                ?.setFilterValue(event.target.value)
+            }
+            className="sm:max-w-80"
+          />
+
+          <Input
+            placeholder={"Filtrar ministro..."}
+            value={(table.getColumn("lead")?.getFilterValue() as string) ?? ""}
+            onChange={(event) =>
+              table.getColumn("lead")?.setFilterValue(event.target.value)
+            }
+            className="sm:max-w-80"
+          />
+        </div>
 
         <div className="flex items-center justify-center gap-4">
           <DropdownMenu>
