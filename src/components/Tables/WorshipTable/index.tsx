@@ -87,6 +87,16 @@ export function WorshipTable({
     },
   });
 
+  const [isRotateDisabled, setIsRotateDisabled] = React.useState(false);
+
+  const handleRefreshClick = () => {
+    if (!isRotateDisabled) {
+      onRefresh();
+      setIsRotateDisabled(true);
+      setTimeout(() => setIsRotateDisabled(false), 3000); // Disable for 3 seconds
+    }
+  };
+
   const tableRow = isLoading ? (
     <TableRow>
       <TableCell colSpan={columns.length} className="h-24 text-center">
@@ -158,7 +168,12 @@ export function WorshipTable({
             </DropdownMenuContent>
           </DropdownMenu>
 
-          <Button variant="outline" className="group" onClick={onRefresh}>
+          <Button
+            variant="outline"
+            className="group"
+            onClick={handleRefreshClick}
+            disabled={isRotateDisabled}
+          >
             <RotateCw className="h-4 w-4 font-medium group-hover:animate-spin-once" />
           </Button>
         </div>
