@@ -6,7 +6,7 @@ import { router } from "./routes";
 
 function App() {
   return (
-    <ThemeProvider defaultTheme="light">
+    <ThemeProvider>
       <div className="flex h-screen w-full flex-col">
         <AuthProvider>
           <WorshipProvider>
