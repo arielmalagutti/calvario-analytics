@@ -43,7 +43,7 @@ export default function Dashboard() {
   }, [selectedOrg]);
 
   return (
-    <>
+    <div className="flex flex-1 flex-col gap-8">
       <div className="sticky flex w-full items-center justify-between">
         <div className="flex flex-1 items-center justify-between">
           <div className="flex items-center gap-2">
@@ -65,6 +65,6 @@ export default function Dashboard() {
           onRefresh={() => fetchMusics(selectedOrg)}
         />
       </div>
-    </>
+    </div>
   );
 }

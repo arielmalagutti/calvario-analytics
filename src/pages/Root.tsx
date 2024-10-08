@@ -10,7 +10,7 @@ export default function Root() {
       <Header user={user} />
 
       <div className="flex flex-1 justify-center px-12 py-6">
-        <div className="flex w-full max-w-screen-xl flex-1 flex-col gap-6">
+        <div className="w-full max-w-screen-xl">
           <Outlet />
         </div>
       </div>

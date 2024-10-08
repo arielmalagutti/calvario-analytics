@@ -201,15 +201,15 @@ export function MusicTable({
 
   return (
     <div className="w-full">
-      <div className="flex items-center justify-between gap-8 py-4">
-        <div className="flex flex-1 gap-4">
+      <div className="flex flex-col-reverse gap-4 py-4 sm:flex-row sm:items-center sm:justify-between sm:gap-8">
+        <div className="flex flex-1 flex-col gap-4 sm:flex-row">
           <Input
             placeholder={"Filtrar títulos..."}
             value={(table.getColumn("title")?.getFilterValue() as string) ?? ""}
             onChange={(event) =>
               table.getColumn("title")?.setFilterValue(event.target.value)
             }
-            className="max-w-72"
+            className="flex-1 sm:max-w-72"
           />
 
           <Selectable

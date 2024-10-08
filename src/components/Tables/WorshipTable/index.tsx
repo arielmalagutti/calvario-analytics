@@ -36,6 +36,7 @@ import { WorshipDTO } from "@/dtos/index";
 
 import { ChevronDown, RotateCw } from "lucide-react";
 import { translateColumns } from "@/utils/utils";
+import { cn } from "@/lib/utils";
 
 type WorshipTableProps = {
   data: WorshipDTO[];
@@ -82,6 +83,7 @@ export function WorshipTable({
       sorting,
       columnFilters,
       columnVisibility: { ...columnVisibility, actions: userRole === "admin" },
+      columnPinning: { left: ["worship_date"] },
     },
   });
 
@@ -101,7 +103,7 @@ export function WorshipTable({
 
   return (
     <div className="w-full">
-      <div className="flex items-center justify-between gap-8 py-4">
+      <div className="flex flex-col-reverse gap-4 py-4 sm:flex-row sm:items-center sm:justify-between sm:gap-8">
         <Input
           placeholder={"Filtrar datas: YYYY-MM-DD ou MM-DD..."}
           value={
@@ -110,7 +112,7 @@ export function WorshipTable({
           onChange={(event) =>
             table.getColumn("worship_date")?.setFilterValue(event.target.value)
           }
-          className="max-w-80"
+          className="sm:max-w-80"
         />
 
         <div className="flex items-center justify-center gap-4">
@@ -155,7 +157,13 @@ export function WorshipTable({
               <TableRow key={headerGroup.id}>
                 {headerGroup.headers.map((header) => {
                   return (
-                    <TableHead key={header.id}>
+                    <TableHead
+                      key={header.id}
+                      className={cn({
+                        "sticky left-0 z-10 bg-[hsl(var(--background))] shadow-[-4px_0_4px_-4px_gray_inset] sm:shadow-none":
+                          header.column.getIsPinned(),
+                      })}
+                    >
                       {header.isPlaceholder
                         ? null
                         : flexRender(
@@ -177,7 +185,13 @@ export function WorshipTable({
                     data-state={row.getIsSelected() && "selected"}
                   >
                     {row.getVisibleCells().map((cell) => (
-                      <TableCell key={cell.id}>
+                      <TableCell
+                        key={cell.id}
+                        className={cn({
+                          "sticky left-0 z-10 bg-[hsl(var(--background))] shadow-[-4px_0_4px_-4px_gray_inset] sm:shadow-none":
+                            cell.column.getIsPinned(),
+                        })}
+                      >
                         {flexRender(
                           cell.column.columnDef.cell,
                           cell.getContext(),

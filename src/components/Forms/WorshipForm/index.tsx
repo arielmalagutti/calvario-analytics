@@ -248,12 +248,12 @@ export function WorshipForm({
             </div>
           </CardHeader>
           <CardContent className="flex flex-col gap-4">
-            <div className="grid grid-cols-4 gap-4">
+            <div className="grid gap-4 sm:grid-cols-2 md:grid-cols-4">
               <FormField
                 control={form.control}
                 name="date"
                 render={({ field }) => (
-                  <FormItem className="col-span-1 flex flex-col">
+                  <FormItem className="flex flex-col">
                     <FormLabel>Data</FormLabel>
                     <DatePicker field={field}></DatePicker>
                   </FormItem>
@@ -264,7 +264,7 @@ export function WorshipForm({
                 control={form.control}
                 name="org"
                 render={({ field }) => (
-                  <FormItem className="col-span-1 flex flex-col">
+                  <FormItem className="flex flex-col">
                     <FormLabel>Org</FormLabel>
                     <FormControl>
                       <Selectable
@@ -284,7 +284,7 @@ export function WorshipForm({
                 control={form.control}
                 name="lead"
                 render={({ field }) => (
-                  <FormItem className="col-span-2 flex flex-col">
+                  <FormItem className="flex flex-col sm:col-span-2">
                     <FormLabel>Ministro</FormLabel>
                     <FormControl>
                       <Selectable
@@ -301,14 +301,11 @@ export function WorshipForm({
                   </FormItem>
                 )}
               ></FormField>
-            </div>
-
-            <div className="flex gap-4">
               <FormField
                 control={form.control}
                 name="musics"
                 render={({ field }) => (
-                  <FormItem className="flex-1">
+                  <FormItem className="sm:col-span-2">
                     <FormLabel>Músicas</FormLabel>
                     <FormControl>
                       <Creatable
@@ -328,7 +325,7 @@ export function WorshipForm({
                 control={form.control}
                 name="singers"
                 render={({ field }) => (
-                  <FormItem className="flex-1">
+                  <FormItem className="sm:col-span-2">
                     <FormLabel>Cantores</FormLabel>
                     <FormControl>
                       <Selectable

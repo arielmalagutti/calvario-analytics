@@ -50,10 +50,14 @@ export const getColumns = ({
         const formattedDate = format(new Date(date), "dd MMMM yyyy", {
           locale: ptBR,
         });
-        return <div className="w-[8.25rem]">{formattedDate}</div>;
+        return (
+          <div className="w-[8.25rem] max-w-10 sm:max-w-none">
+            {formattedDate}
+          </div>
+        );
       }
 
-      return <div className="w-[8.25rem]">-</div>;
+      return <div className="w-[8.25rem] max-w-10 sm:max-w-none">-</div>;
     },
   },
 
