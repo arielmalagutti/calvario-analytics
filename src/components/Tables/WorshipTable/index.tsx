@@ -174,7 +174,7 @@ export function WorshipTable({
                     <TableHead
                       key={header.id}
                       className={cn({
-                        "sticky left-0 z-10 bg-[hsl(var(--background))] shadow-[-4px_0_4px_-4px_gray_inset] sm:shadow-none":
+                        "sticky left-0 z-10 bg-background shadow-[-4px_0_4px_-4px_gray_inset] sm:bg-transparent sm:shadow-none":
                           header.column.getIsPinned(),
                       })}
                     >
@@ -202,7 +202,7 @@ export function WorshipTable({
                       <TableCell
                         key={cell.id}
                         className={cn({
-                          "sticky left-0 z-10 bg-[hsl(var(--background))] shadow-[-4px_0_4px_-4px_gray_inset] sm:shadow-none":
+                          "sticky left-0 z-10 bg-background shadow-[-4px_0_4px_-4px_gray_inset] sm:bg-transparent sm:shadow-none":
                             cell.column.getIsPinned(),
                         })}
                       >
