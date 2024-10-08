@@ -47,7 +47,7 @@ export function Header({ user }: HeaderProps) {
               <Link
                 key={page.label}
                 to={page.href}
-                className="text-sm font-medium text-zinc-500 transition-colors hover:text-zinc-300"
+                className="text-sm font-medium text-muted-foreground transition-colors hover:text-accent-foreground"
               >
                 {page.label}
               </Link>
@@ -78,7 +78,7 @@ export function Header({ user }: HeaderProps) {
           <Link
             key={page.label}
             to={page.href}
-            className="text-md font-medium text-zinc-500 transition-colors hover:text-zinc-300"
+            className="text-md font-medium text-muted-foreground transition-colors hover:text-accent-foreground"
           >
             {page.label}
           </Link>
