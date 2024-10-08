@@ -34,6 +34,7 @@ import { getColumns } from "./columns";
 import { ChevronDown, RotateCw } from "lucide-react";
 import { translateColumns } from "@/utils/utils";
 import { MusicInfoDTO } from "@/dtos/MusicDTO";
+import { cn } from "@/lib/utils";
 
 type DashboardTableProps = {
   data: MusicInfoDTO[];
@@ -76,6 +77,7 @@ export function DashboardTable({
       sorting,
       columnFilters,
       columnVisibility: { ...columnVisibility, actions: userRole === "admin" },
+      columnPinning: { left: ["title"] },
     },
   });
 
@@ -95,17 +97,17 @@ export function DashboardTable({
 
   return (
     <div className="w-full">
-      <div className="flex items-center justify-between gap-8 py-4">
+      <div className="flex flex-col-reverse gap-4 py-4 sm:flex-row sm:items-center sm:justify-between">
         <Input
           placeholder={"Filtrar títulos..."}
           value={(table.getColumn("title")?.getFilterValue() as string) ?? ""}
           onChange={(event) =>
             table.getColumn("title")?.setFilterValue(event.target.value)
           }
-          className="max-w-72"
+          className="max-w-none sm:max-w-96"
         />
 
-        <div className="flex items-center justify-center gap-4">
+        <div className="flex items-center gap-4 sm:flex sm:justify-center">
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <Button variant="outline" className="ml-auto">
@@ -147,7 +149,13 @@ export function DashboardTable({
               <TableRow key={headerGroup.id}>
                 {headerGroup.headers.map((header) => {
                   return (
-                    <TableHead key={header.id}>
+                    <TableHead
+                      key={header.id}
+                      className={cn({
+                        "sticky left-0 z-10 bg-[hsl(var(--background))] shadow-[-4px_0_4px_-4px_gray_inset] sm:shadow-none":
+                          header.column.getIsPinned(),
+                      })}
+                    >
                       {header.isPlaceholder
                         ? null
                         : flexRender(
@@ -169,7 +177,13 @@ export function DashboardTable({
                     data-state={row.getIsSelected() && "selected"}
                   >
                     {row.getVisibleCells().map((cell) => (
-                      <TableCell key={cell.id}>
+                      <TableCell
+                        className={cn({
+                          "sticky left-0 z-10 bg-[hsl(var(--background))] shadow-[-4px_0_4px_-4px_gray_inset] sm:shadow-none":
+                            cell.column.getIsPinned(),
+                        })}
+                        key={cell.id}
+                      >
                         {flexRender(
                           cell.column.columnDef.cell,
                           cell.getContext(),

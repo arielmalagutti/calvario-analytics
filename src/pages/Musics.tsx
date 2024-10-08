@@ -72,17 +72,18 @@ export default function Musics() {
   }, []);
 
   return (
-    <>
+    <div className="flex flex-1 flex-col sm:gap-8">
       <div className="sticky flex w-full items-center justify-between">
-        <div className="flex flex-1 items-center justify-between">
+        <div className="flex w-full flex-col gap-6 sm:flex-row sm:items-center sm:justify-between">
           <div className="flex items-center gap-2">
             <h1 className="text-lg font-medium text-gray-500 dark:text-gray-400">
               MÚSICAS
             </h1>
           </div>
+
           {userRole === "admin" ? (
             <Button
-              className="rounded-lg bg-transparent p-2 transition-colors hover:bg-zinc-800 dark:text-foreground"
+              className="ml-auto w-fit rounded-lg border border-input bg-transparent p-2 transition-colors hover:bg-zinc-800 dark:text-foreground"
               onClick={() => setMusicFormOpen(true)}
             >
               <Plus className="mr-2 h-4 w-4" />
@@ -107,6 +108,6 @@ export default function Musics() {
           onRefresh={() => fetchMusics()}
         />
       </div>
-    </>
+    </div>
   );
 }
