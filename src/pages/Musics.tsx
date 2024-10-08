@@ -83,7 +83,7 @@ export default function Musics() {
 
           {userRole === "admin" ? (
             <Button
-              className="ml-auto w-fit rounded-lg border border-input bg-transparent p-2 transition-colors hover:bg-zinc-800 dark:text-foreground"
+              className="ml-auto w-fit rounded-lg border border-input bg-transparent p-2 text-foreground transition-colors hover:bg-accent hover:text-accent-foreground"
               onClick={() => setMusicFormOpen(true)}
             >
               <Plus className="mr-2 h-4 w-4" />
