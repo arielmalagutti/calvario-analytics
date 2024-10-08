@@ -241,9 +241,9 @@ export function WorshipForm({
               </CardTitle>
               <Button
                 onClick={() => onClose()}
-                className="bg-transparent hover:bg-zinc-800"
+                className="bg-transparent hover:bg-accent hover:text-accent-foreground"
               >
-                <X className="text-white" />
+                <X className="text-foreground" />
               </Button>
             </div>
           </CardHeader>
