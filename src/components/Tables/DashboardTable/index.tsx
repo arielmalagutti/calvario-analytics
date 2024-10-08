@@ -152,7 +152,7 @@ export function DashboardTable({
                     <TableHead
                       key={header.id}
                       className={cn({
-                        "sticky left-0 z-10 bg-[hsl(var(--background))] shadow-[-4px_0_4px_-4px_gray_inset] sm:shadow-none":
+                        "sticky left-0 z-10 bg-background shadow-[-4px_0_4px_-4px_gray_inset] sm:bg-transparent sm:shadow-none":
                           header.column.getIsPinned(),
                       })}
                     >
@@ -179,7 +179,7 @@ export function DashboardTable({
                     {row.getVisibleCells().map((cell) => (
                       <TableCell
                         className={cn({
-                          "sticky left-0 z-10 bg-[hsl(var(--background))] shadow-[-4px_0_4px_-4px_gray_inset] sm:shadow-none":
+                          "sticky left-0 z-10 bg-background shadow-[-4px_0_4px_-4px_gray_inset] sm:bg-transparent sm:shadow-none":
                             cell.column.getIsPinned(),
                         })}
                         key={cell.id}
